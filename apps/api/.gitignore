@@ -1,0 +1,8 @@
+codegen/gormgen/query
+codegen/legacy-sqlc/*
+!codegen/legacy-sqlc/di.go
+
+**/cmd.local/**
+**/cmd.local.**/**
+.goreload
+.goreload.*

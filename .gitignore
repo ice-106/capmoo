@@ -28,9 +28,20 @@ yarn-error.log*
 .env.development.local
 .env.test.local
 .env.production.local
+config.yaml
 
 # turbo
 .turbo
 
-# ui
+# build
 dist/
+
+# graph
+graph.png
+graph.html
+graph.pdf
+graph.svg
+
+.idea
+
+volumes

@@ -1,0 +1,19 @@
+env: development
+port: 4000
+database:
+  url: postgres://postgres:123456@localhost:5432/capmoo
+cors:
+  allow_origins: "http://localhost:3000"
+  allow_headers: "Origin, Content-Type, Accept, Authorization"
+redis:
+  url: "localhost:6379"
+  password: ""
+  db: 0
+auth:
+  refresh_ttl: "720h" # 1 month
+  access_ttl: "1h"
+  secret: secret
+  aud: capmoo
+  iss: capmoo
+swagger:
+  host_url: "localhost:4000"

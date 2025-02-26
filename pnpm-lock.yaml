@@ -18,63 +18,10 @@ importers:
         specifier: ^2.4.4
         version: 2.4.4
 
-  apps/docs:
-    dependencies:
-      '@repo/ui':
-        specifier: workspace:*
-        version: link:../../packages/ui
-      next:
-        specifier: ^15.1.6
-        version: 15.1.6(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
-      react:
-        specifier: ^19.0.0
-        version: 19.0.0
-      react-dom:
-        specifier: ^19.0.0
-        version: 19.0.0(react@19.0.0)
-    devDependencies:
-      '@next/eslint-plugin-next':
-        specifier: ^15.1.6
-        version: 15.1.6
-      '@repo/eslint-config':
-        specifier: workspace:*
-        version: link:../../packages/eslint-config
-      '@repo/tailwind-config':
-        specifier: workspace:*
-        version: link:../../packages/tailwind-config
-      '@repo/typescript-config':
-        specifier: workspace:*
-        version: link:../../packages/typescript-config
-      '@types/node':
-        specifier: ^22.12.0
-        version: 22.13.0
-      '@types/react':
-        specifier: ^19.0.7
-        version: 19.0.8
-      '@types/react-dom':
-        specifier: ^19.0.3
-        version: 19.0.3(@types/react@19.0.8)
-      autoprefixer:
-        specifier: ^10.4.20
-        version: 10.4.20(postcss@8.5.1)
-      eslint:
-        specifier: ^9.21.0
-        version: 9.21.0(jiti@1.21.7)
-      postcss:
-        specifier: ^8.5.1
-        version: 8.5.1
-      tailwindcss:
-        specifier: ^3.4.17
-        version: 3.4.17
-      typescript:
-        specifier: 5.7.3
-        version: 5.7.3
+  apps/api: {}
 
   apps/web:
     dependencies:
-      '@repo/ui':
-        specifier: workspace:*
-        version: link:../../packages/ui
       next:
         specifier: ^15.1.6
         version: 15.1.6(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -85,18 +32,18 @@ importers:
         specifier: ^19.0.0
         version: 19.0.0(react@19.0.0)
     devDependencies:
+      '@capmoo/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@capmoo/tailwind-config':
+        specifier: workspace:*
+        version: link:../../packages/tailwind-config
+      '@capmoo/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
       '@next/eslint-plugin-next':
         specifier: ^15.1.6
         version: 15.1.6
-      '@repo/eslint-config':
-        specifier: workspace:*
-        version: link:../../packages/eslint-config
-      '@repo/tailwind-config':
-        specifier: workspace:*
-        version: link:../../packages/tailwind-config
-      '@repo/typescript-config':
-        specifier: workspace:*
-        version: link:../../packages/typescript-config
       '@types/node':
         specifier: ^22.12.0
         version: 22.13.0
@@ -160,7 +107,7 @@ importers:
 
   packages/tailwind-config:
     devDependencies:
-      '@repo/typescript-config':
+      '@capmoo/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
       tailwindcss:
@@ -168,40 +115,6 @@ importers:
         version: 3.4.17
 
   packages/typescript-config: {}
-
-  packages/ui:
-    dependencies:
-      react:
-        specifier: ^19
-        version: 19.0.0
-    devDependencies:
-      '@repo/eslint-config':
-        specifier: workspace:*
-        version: link:../eslint-config
-      '@repo/tailwind-config':
-        specifier: workspace:*
-        version: link:../tailwind-config
-      '@repo/typescript-config':
-        specifier: workspace:*
-        version: link:../typescript-config
-      '@types/react':
-        specifier: ^19.0.7
-        version: 19.0.8
-      autoprefixer:
-        specifier: ^10.4.20
-        version: 10.4.20(postcss@8.5.1)
-      eslint:
-        specifier: ^9.21.0
-        version: 9.21.0(jiti@1.21.7)
-      postcss:
-        specifier: ^8.5.1
-        version: 8.5.1
-      tailwindcss:
-        specifier: ^3.4.17
-        version: 3.4.17
-      typescript:
-        specifier: 5.7.3
-        version: 5.7.3
 
 packages:
 
