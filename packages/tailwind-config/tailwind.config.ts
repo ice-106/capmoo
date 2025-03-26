@@ -28,37 +28,31 @@ const config: Omit<Config, "content"> = {
   plugins: [function({addBase}: { addBase: (styles: Record<string, any>) => void })  {
     addBase({
         h1: {
-          fontFamily: 'Poppins, sans-serif',
           fontWeight: '700',
           fontSize: '36px',
           lineHeight: '44px',
         },
         h2: {
-          fontFamily: 'Poppins, sans-serif',
           fontWeight: '600',
           fontSize: '24px',
           lineHeight: '32px',
         },
         h3: {
-          fontFamily: 'Poppins, sans-serif',
           fontWeight: '600',
           fontSize: '20px',
           lineHeight: '28px',
         },
         h4: {
-          fontFamily: 'Poppins, sans-serif',
           fontWeight: '600',
           fontSize: '16px',
           lineHeight: '24px',
         },
         p: {
-          fontFamily: 'IBM Plex Sans Thai, sans-serif',
           fontWeight: '400',
           fontSize: '14px',
           lineHeight: '22px',
         },
         button: {
-          fontFamily: 'Poppins, sans-serif',
           fontWeight: '600',
           fontSize: '14px',
           lineHeight: '20px',

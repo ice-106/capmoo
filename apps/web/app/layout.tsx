@@ -36,9 +36,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${poppins.variable} ${ibmPlexSansThai.variable} ${ibmPlexSansThaiLooped.variable}`}
+        className={`${poppins.variable} ${ibmPlexSansThai.variable} ${ibmPlexSansThaiLooped.variable}
+           bg-gray-100 flex justify-center`}
       >
-        {children}
+        {/* Recolor to white when finish dev*/}
+        <div className="flex w-[375px] h-screen bg-white px-6 pt-[7.5rem] pb-28 justify-center items-start overflow-scroll">
+          {children}
+        </div>
       </body>
     </html>
   );

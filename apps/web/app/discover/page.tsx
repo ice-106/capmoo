@@ -4,15 +4,27 @@ import Footer from "../_components/footer";
 export default function Page() {
   return (
     <main>
-      <div className={`bg-gray-100 flex justify-center`}>
-        {/* Outer wrapper for full-screen background/header/footer */}
-        <Header text="Discover" />
-        <Footer />
-        <div className="min-h-screen w-full flex justify-center items-center">
-          {/* Mobile fixed-width frame */}
-          <div className="w-[375px] min-h-[812px] bg-white">Discover</div>
-        </div>
-      </div>
+      <Header text="Discover" />
+      <Footer />
+      <p className="font-poppins">This is a placeholder for reference</p>
+      <p className="font-poppins">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+        velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+        occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+        mollit anim id est laborum.
+      </p>
+      <p className="font-poppins">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+        velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+        occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+        mollit anim id est laborum.
+      </p>
     </main>
   );
 }
