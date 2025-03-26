@@ -1,29 +1,25 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 interface TextBoxProps {
+  name?: string; // Name for form submission
   placeholder?: string;
   width?: string; // CSS width values (e.g., "100%", "200px")
   errorMessage?: string;
-  value?: string;
-  onChange?: (value: string) => void;
+  defaultValue?: string; // Prefilled value
+  onBlur?: (value: string) => void; // Callback for blur event
 }
 
 const TextBox: React.FC<TextBoxProps> = ({
+  name,
   placeholder = "",
   width = "100%",
   errorMessage = "",
-  value = "",
-  onChange = () => {},
+  defaultValue = "",
+  onBlur = () => {}, // Default no-op function
 }) => {
-  const [localValue, setLocalValue] = useState(value);
   const [isFocused, setIsFocused] = useState(false);
-
-  // Synchronize localValue with the value prop
-  useEffect(() => {
-    setLocalValue(value);
-  }, [value]);
 
   // Define styles
   const baseStyles = `p-2 rounded-lg border-2 outline-none bg-lightgrey/50 text-caption w-full placeholder:italic`;
@@ -42,15 +38,15 @@ const TextBox: React.FC<TextBoxProps> = ({
     <div style={{ width }}>
       <input
         type="text"
+        name={name} // Name for form submission
         placeholder={placeholder}
-        value={localValue} // Local value for typing
-        onChange={(e) => setLocalValue(e.target.value)} // Update local value
-        onBlur={() => {
-          setIsFocused(false);
-          onChange(localValue); // Trigger onChange only on blur
-        }}
+        defaultValue={defaultValue}
+        className={`${baseStyles} ${currentStyles}`} // Apply dynamic styles
         onFocus={() => setIsFocused(true)} // Set focus state
-        className={`${baseStyles} ${currentStyles}`} // Combine styles dynamically
+        onBlur={(e) => {
+          setIsFocused(false); // Remove focus state
+          onBlur(e.target.value); // Trigger onBlur callback with the input value
+        }}
       />
       {errorMessage && (
         <p className="text-red text-caption mt-1">{errorMessage}</p>
