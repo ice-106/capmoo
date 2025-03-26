@@ -8,8 +8,63 @@ const config: Omit<Config, "content"> = {
         "glow-conic":
           "conic-gradient(from 180deg at 50% 50%, #2a8af6 0deg, #a853ba 180deg, #e92a67 360deg)",
       },
+      colors: {
+        lemon: '#F6BF27',
+        orange: '#F28123',
+        pumpkin: '#F3752B',
+        white: '#FFFFFF',
+        lightgrey: '#CCCCCC',
+        grey: '#666666',
+        darkgrey: '#333333',
+        black: '#000000',
+      },
+      fontFamily: {
+        poppins: ['var(--font-poppins)'],
+        ibm_thai: ['var(--font-ibm-plex-sans-thai)'],
+        ibm_thai_looped: ['var(--font-ibm-plex-sans-thai-looped)'],
+      },
     },
   },
-  plugins: [],
+  plugins: [function({addBase}: { addBase: (styles: Record<string, any>) => void })  {
+    addBase({
+        h1: {
+          fontFamily: 'Poppins, sans-serif',
+          fontWeight: '700',
+          fontSize: '36px',
+          lineHeight: '44px',
+        },
+        h2: {
+          fontFamily: 'Poppins, sans-serif',
+          fontWeight: '600',
+          fontSize: '24px',
+          lineHeight: '32px',
+        },
+        h3: {
+          fontFamily: 'Poppins, sans-serif',
+          fontWeight: '600',
+          fontSize: '20px',
+          lineHeight: '28px',
+        },
+        h4: {
+          fontFamily: 'Poppins, sans-serif',
+          fontWeight: '600',
+          fontSize: '16px',
+          lineHeight: '24px',
+        },
+        p: {
+          fontFamily: 'IBM Plex Sans Thai, sans-serif',
+          fontWeight: '400',
+          fontSize: '14px',
+          lineHeight: '22px',
+        },
+        button: {
+          fontFamily: 'Poppins, sans-serif',
+          fontWeight: '600',
+          fontSize: '14px',
+          lineHeight: '20px',
+        },
+    })
+  },
+  ],
 };
 export default config;
