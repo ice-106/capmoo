@@ -17,6 +17,7 @@ const config: Omit<Config, "content"> = {
         grey: '#666666',
         darkgrey: '#333333',
         black: '#000000',
+        red: '#C12022'
       },
       fontFamily: {
         poppins: ['var(--font-poppins)'],
