@@ -1,11 +1,15 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { Poppins, IBM_Plex_Sans_Thai, IBM_Plex_Sans_Thai_Looped } from "next/font/google";
+import {
+  Poppins,
+  IBM_Plex_Sans_Thai,
+  IBM_Plex_Sans_Thai_Looped,
+} from "next/font/google";
 
-const poppins = Poppins({ 
+const poppins = Poppins({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
-  variable: "--font-poppins" 
+  variable: "--font-poppins",
 });
 
 const ibmPlexSansThai = IBM_Plex_Sans_Thai({
@@ -31,7 +35,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${poppins.variable} ${ibmPlexSansThai.variable} ${ibmPlexSansThaiLooped.variable}`}>{children}</body>
+      <body
+        className={`${poppins.variable} ${ibmPlexSansThai.variable} ${ibmPlexSansThaiLooped.variable}`}
+      >
+        {children}
+      </body>
     </html>
   );
 }
