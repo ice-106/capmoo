@@ -4,8 +4,10 @@ import React, { useState } from "react";
 import Header from "./_components/header";
 import Footer from "./_components/footer";
 import TextBox from "./_components/textbox";
+import Dropdown from "./_components/dropdown";
 
 export default function Page() {
+  const [selected, setSelected] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState("Use case: prefilled names");
 
   return (
@@ -20,7 +22,16 @@ export default function Page() {
         errorMessage={inputValue === "" ? "Input can't be empty" : ""}
         onChange={(value) => setInputValue(value)} // Update state on change
       />
+      <Dropdown 
+        selected={selected}
+        onSelect={setSelected}
+        defaultText="Select something bro"
+        options={["a", "b", "c", "d", "e"]}
+      />
       <p className="mt-4">Current value: {inputValue}</p>
+      <button
+        onClick={() => console.log(selected)}
+      >log selected</button>
     </main>
   );
 }
