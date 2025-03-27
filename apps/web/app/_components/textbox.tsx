@@ -8,7 +8,7 @@ interface TextBoxProps {
   width?: string; // CSS width values (e.g., "100%", "200px")
   errorMessage?: string;
   defaultValue?: string; // Prefilled value
-  onBlur?: (value: string) => void; // Callback for blur event
+  onChange?: (value: string) => void; // Callback for change event
 }
 
 const TextBox: React.FC<TextBoxProps> = ({
@@ -17,8 +17,9 @@ const TextBox: React.FC<TextBoxProps> = ({
   width = "100%",
   errorMessage = "",
   defaultValue = "",
-  onBlur = () => {}, // Default no-op function
+  onChange = () => {}, // Default no-op function
 }) => {
+  const [value, setValue] = useState(defaultValue); // State to manage input value
   const [isFocused, setIsFocused] = useState(false);
 
   // Define styles
@@ -31,8 +32,8 @@ const TextBox: React.FC<TextBoxProps> = ({
   const currentStyles = errorMessage
     ? errorStyles
     : isFocused
-      ? focusStyles
-      : defaultStyles;
+    ? focusStyles
+    : defaultStyles;
 
   return (
     <div style={{ width }}>
@@ -40,12 +41,14 @@ const TextBox: React.FC<TextBoxProps> = ({
         type="text"
         name={name} // Name for form submission
         placeholder={placeholder}
-        defaultValue={defaultValue}
+        value={value} // Controlled input value
         className={`${baseStyles} ${currentStyles}`} // Apply dynamic styles
         onFocus={() => setIsFocused(true)} // Set focus state
-        onBlur={(e) => {
-          setIsFocused(false); // Remove focus state
-          onBlur(e.target.value); // Trigger onBlur callback with the input value
+        onBlur={() => setIsFocused(false)} // Remove focus state
+        onChange={(e) => {
+          const newValue = e.target.value;
+          setValue(newValue); // Update local state
+          onChange(newValue); // Trigger onChange callback with the input value
         }}
       />
       {errorMessage && (

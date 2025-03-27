@@ -7,16 +7,6 @@ import TextBox from "./_components/textbox";
 
 export default function Page() {
   const [inputValue, setInputValue] = useState("Use case: prefilled names");
-  const [errorMessage, setErrorMessage] = useState("");
-
-  const handleBlur = (value: string) => {
-    setInputValue(value);
-    if (value.trim() === "") {
-      setErrorMessage("This field is required");
-    } else {
-      setErrorMessage("");
-    }
-  };
 
   return (
     <main className="font-poppins w-full">
@@ -27,10 +17,10 @@ export default function Page() {
         name="test"
         placeholder="Enter text here"
         defaultValue={inputValue}
-        errorMessage={errorMessage}
-        onBlur={handleBlur} // Validate on blur
+        errorMessage={inputValue === "" ? "Input can't be empty" : ""}
+        onChange={(value) => setInputValue(value)} // Update state on change
       />
-      <p className="mt-4">Value after blur: {inputValue}</p>
+      <p className="mt-4">Current value: {inputValue}</p>
     </main>
   );
 }
