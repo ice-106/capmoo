@@ -25,7 +25,7 @@ const TextBox: React.FC<TextBoxProps> = ({
   const baseStyles = `p-2 rounded-lg border-2 outline-none bg-lightgrey/50 text-caption w-full placeholder:italic`;
   const defaultStyles = `border-darkgrey`;
   const focusStyles = `border-orange`;
-  const errorStyles = `border-red text-red`;
+  const errorStyles = `border-red`;
 
   // Determine the current styles
   const currentStyles = errorMessage
