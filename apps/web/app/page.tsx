@@ -22,16 +22,14 @@ export default function Page() {
         errorMessage={inputValue === "" ? "Input can't be empty" : ""}
         onChange={(value) => setInputValue(value)} // Update state on change
       />
-      <Dropdown 
+      <Dropdown
         selected={selected}
         onSelect={setSelected}
         defaultText="Select something bro"
         options={["a", "b", "c", "d", "e"]}
       />
       <p className="mt-4">Current value: {inputValue}</p>
-      <button
-        onClick={() => console.log(selected)}
-      >log selected</button>
+      <button onClick={() => console.log(selected)}>log selected</button>
     </main>
   );
 }

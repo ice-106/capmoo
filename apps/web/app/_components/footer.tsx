@@ -16,7 +16,7 @@ const Footer = () => {
   const isActive = (path: string) => pathname.startsWith(path);
 
   return (
-    <nav className="fixed h-28 bottom-0 left-0 right-0 flex justify-center items-start bg-white p-4 shadow-lg shadow-darkgrey/50">
+    <nav className="fixed h-28 bottom-0 left-0 right-0 flex justify-center items-start bg-white p-4 shadow-lg shadow-darkgrey/50 z-10">
       <div className="flex space-x-7">
         <div
           className={`p-2 rounded-md ${isActive("/discover") ? "text-pumpkin" : "text-darkgrey"}`}
