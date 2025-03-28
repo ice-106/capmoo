@@ -34,9 +34,9 @@ const ImageCard: React.FC<ImageCardProps> = ({
   };
 
   return (
-    <div className="cursor-pointer gap-y-2" onClick={handleClick}>
+    <div className="cursor-pointer flex flex-col gap-y-2" onClick={handleClick}>
       <div
-        className={`relative flex-shrink-0 overflow-hidden rounded-lg bg-lightgrey ${aspectRatioClasses[aspectRatio]}`}
+        className={`relative flex-shrink-0 overflow-hidden rounded-2xl bg-lightgrey ${aspectRatioClasses[aspectRatio]}`}
       >
         <Image
           src={imageUrl}
@@ -46,7 +46,7 @@ const ImageCard: React.FC<ImageCardProps> = ({
         />
       </div>
       <div>
-        <p className="flex-shrink-0 w-full text-caption leading-tight line-clamp-2 text-ellipsis">
+        <p className="flex-shrink-0 w-full text-xs leading-tight line-clamp-2 text-ellipsis">
           {text}
         </p>
       </div>
