@@ -1,30 +1,71 @@
+"use client";
+
 import Header from "../_components/header";
 import Footer from "../_components/footer";
+import ImageCard from "../_components/imagecard";
 
 export default function Page() {
+  // Example image array usage
+  // Replace with actual image URLs and corresponding text and URLs
+  const imgArray = [
+    { imgUrl: "", text: "Image Card 1", onClickUrl: "/" },
+    {
+      imgUrl: "",
+      text: "Image Card 2 Long ass name kinda bad help me please there's an earthquake",
+      onClickUrl: "/",
+    },
+    { imgUrl: "", text: "Image Card 3", onClickUrl: "/" },
+  ];
+
   return (
-    <main>
+    <main className="font-poppins w-full">
       <Header text="Discover" />
       <Footer />
-      <p className="font-poppins">This is a placeholder for reference</p>
-      <p className="font-poppins">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-        velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-        occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-        mollit anim id est laborum.
-      </p>
-      <p className="font-poppins">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-        velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-        occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-        mollit anim id est laborum.
-      </p>
+      <div className="flex flex-col gap-y-8">
+        <section className="relative flex flex-col gap-y-3">
+          <div className="flex justify-between items-center">
+            <h3 className="text-lg font-semibold">Popular Activities</h3>
+            <a href="#" className="text-xs underline italic text-pumpkin">
+              Explore all {">"}
+            </a>
+          </div>
+          {/* -mx-6 and px-6 is for horizontal scroll*/}
+          <div className="-mx-6 px-6 flex gap-x-4 overflow-x-scroll">
+            {imgArray.map((img, index) => {
+              return (
+                <ImageCard
+                  key={index}
+                  aspectRatio="sm"
+                  imageUrl={img.imgUrl}
+                  text={img.text}
+                  onClickUrl={img.onClickUrl}
+                />
+              );
+            })}
+          </div>
+        </section>
+        <section className="relative flex flex-col gap-y-3">
+          <div className="flex justify-between items-center">
+            <h3 className="text-lg font-semibold">Upcoming Activities</h3>
+            <a href="#" className="text-xs underline italic text-pumpkin">
+              Explore all {">"}
+            </a>
+          </div>
+          <div className="-mx-6 px-6 flex gap-x-4 overflow-x-scroll">
+            {imgArray.map((img, index) => {
+              return (
+                <ImageCard
+                  key={index}
+                  aspectRatio="sm"
+                  imageUrl={img.imgUrl}
+                  text={img.text}
+                  onClickUrl={img.onClickUrl}
+                />
+              );
+            })}
+          </div>
+        </section>
+      </div>
     </main>
   );
 }
