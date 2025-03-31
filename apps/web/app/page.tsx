@@ -1,10 +1,35 @@
-"use client";
+'use client';
 
 import React, { useState } from "react";
 import Header from "./_components/header";
 import Footer from "./_components/footer";
 import TextBox from "./_components/textbox";
 import Dropdown from "./_components/dropdown";
+import Galleryr from './_components/galleryrect';  // Import the Gallery component
+import Gallerys from './_components/gallerysquare';  // Import the Gallery component
+// Sample posts data for the gallery
+const posts = [
+  {
+    id: 'post1',
+    images: [
+      {
+        src: 'https://m.media-amazon.com/images/M/MV5BNDUwNjBkMmUtZjM2My00NmM4LTlmOWQtNWE5YTdmN2Y2MTgxXkEyXkFqcGdeQXRyYW5zY29kZS13b3JrZmxvdw@@._V1_QL75_UX500_CR0,0,500,281_.jpg',
+      },
+      {
+        src: 'https://m.media-amazon.com/images/M/MV5BNDUwNjBkMmUtZjM2My00NmM4LTlmOWQtNWE5YTdmN2Y2MTgxXkEyXkFqcGdeQXRyYW5zY29kZS13b3JrZmxvdw@@._V1_QL75_UX500_CR0,0,500,281_.jpg',
+      },
+      {
+        src: 'https://m.media-amazon.com/images/M/MV5BNDUwNjBkMmUtZjM2My00NmM4LTlmOWQtNWE5YTdmN2Y2MTgxXkEyXkFqcGdeQXRyYW5zY29kZS13b3JrZmxvdw@@._V1_QL75_UX500_CR0,0,500,281_.jpg',
+      },
+      {
+        src: 'https://m.media-amazon.com/images/M/MV5BNDUwNjBkMmUtZjM2My00NmM4LTlmOWQtNWE5YTdmN2Y2MTgxXkEyXkFqcGdeQXRyYW5zY29kZS13b3JrZmxvdw@@._V1_QL75_UX500_CR0,0,500,281_.jpg',
+      },
+      {
+        src: 'https://m.media-amazon.com/images/M/MV5BNDUwNjBkMmUtZjM2My00NmM4LTlmOWQtNWE5YTdmN2Y2MTgxXkEyXkFqcGdeQXRyYW5zY29kZS13b3JrZmxvdw@@._V1_QL75_UX500_CR0,0,500,281_.jpg',
+      },
+    ],
+  },
+];
 
 export default function Page() {
   const [selected, setSelected] = useState<string[]>([]);
@@ -32,6 +57,9 @@ export default function Page() {
       <button
         onClick={() => console.log(selected)}
       >log selected</button>
+
+      {/* Pass the images array directly to the Gallery component */}
+      <Galleryr images={posts[0].images} />
     </main>
   );
 }
