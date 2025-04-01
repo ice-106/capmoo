@@ -2,7 +2,7 @@
 
 import Header from "../_components/header";
 import Footer from "../_components/footer";
-import ImageCard from "../_components/imagecard";
+import Carousel from "../_components/carousel";
 
 export default function Page() {
   // Example image array usage
@@ -22,49 +22,16 @@ export default function Page() {
       <Header text="Discover" />
       <Footer />
       <div className="flex flex-col gap-y-8">
-        <section className="relative flex flex-col gap-y-3">
-          <div className="flex justify-between items-center">
-            <h3 className="text-lg font-semibold">Popular Activities</h3>
-            <a href="#" className="text-xs underline italic text-pumpkin">
-              Explore all {">"}
-            </a>
-          </div>
-          {/* -mx-6 and px-6 is for horizontal scroll*/}
-          <div className="-mx-6 px-6 flex gap-x-4 overflow-x-scroll">
-            {imgArray.map((img, index) => {
-              return (
-                <ImageCard
-                  key={index}
-                  aspectRatio="sm"
-                  imageUrl={img.imgUrl}
-                  text={img.text}
-                  onClickUrl={img.onClickUrl}
-                />
-              );
-            })}
-          </div>
-        </section>
-        <section className="relative flex flex-col gap-y-3">
-          <div className="flex justify-between items-center">
-            <h3 className="text-lg font-semibold">Upcoming Activities</h3>
-            <a href="#" className="text-xs underline italic text-pumpkin">
-              Explore all {">"}
-            </a>
-          </div>
-          <div className="-mx-6 px-6 flex gap-x-4 overflow-x-scroll">
-            {imgArray.map((img, index) => {
-              return (
-                <ImageCard
-                  key={index}
-                  aspectRatio="sm"
-                  imageUrl={img.imgUrl}
-                  text={img.text}
-                  onClickUrl={img.onClickUrl}
-                />
-              );
-            })}
-          </div>
-        </section>
+        <Carousel
+          header="Popular Activities"
+          images={imgArray}
+          exploreLink="/discover"
+        />
+        <Carousel
+          header="Upcoming Activities"
+          images={imgArray}
+          exploreLink="/discover"
+        />
       </div>
     </main>
   );
