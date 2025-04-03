@@ -85,7 +85,7 @@ function Cropper({ src, onCropComplete }: CropperProps) {
         aspect={1 / 1}
         keepSelection={true}
         circularCrop={true}
-        // ruleOfThirds={true}
+        ruleOfThirds={true}
         className="max-h-[50vh]"
       >
         <Image
