@@ -32,8 +32,8 @@ const TextBox: React.FC<TextBoxProps> = ({
   const currentStyles = errorMessage
     ? errorStyles
     : isFocused
-    ? focusStyles
-    : defaultStyles;
+      ? focusStyles
+      : defaultStyles;
 
   return (
     <div style={{ width }}>
