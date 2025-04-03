@@ -39,7 +39,17 @@ export default function ProfilePhoto({ allowEdit = false }: ProfilePhotoProps) {
   // read the upload image and open modal for cropping
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
+    // Check if the file size exceeds the limit (in bytes)
+    const maxSize = 5 * 1024 * 1024; // 5 MB (adjust as necessary)
+
     if (file) {
+      if (file.size > maxSize) {
+        alert("File size exceeds the 5 MB limit!");
+        // Optionally reset the input value
+        event.target.value = "";
+        return;
+      }
+
       try {
         const reader = new FileReader();
         reader.onload = () => {
