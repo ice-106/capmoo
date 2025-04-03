@@ -80,8 +80,8 @@ export default function Gallery({ images }: GalleryProps) {
 
   return (
     <div className="w-full max-w-xs mx-auto mt-10">
-      {/* Image Section */}
-      <div className="relative w-37 h-70 overflow-hidden rounded-xl">
+      {/* Image Section with fixed rectangle size */}
+      <div className="relative w-full h-64 overflow-hidden rounded-xl">
         <img
           src={visibleImages[slideIdx].src}
           alt="carousel image"
