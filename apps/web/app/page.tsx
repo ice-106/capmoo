@@ -5,6 +5,7 @@ import Header from "./_components/header";
 import Footer from "./_components/footer";
 import TextBox from "./_components/textbox";
 import Dropdown from "./_components/dropdown";
+import ProfilePhoto from "./_components/profilephoto";
 
 export default function Page() {
   const [selected, setSelected] = useState<string[]>([]);
@@ -30,6 +31,9 @@ export default function Page() {
       />
       <p className="mt-4">Current value: {inputValue}</p>
       <button onClick={() => console.log(selected)}>log selected</button>
+      <ProfilePhoto 
+        allowEdit={true}
+      />
     </main>
   );
 }
