@@ -6,6 +6,9 @@ import Footer from "./_components/footer";
 import TextBox from "./_components/textbox";
 import Dropdown from "./_components/dropdown";
 import ProfilePhoto from "./_components/profilephoto";
+import IconWithLabel from "./_components/iconwithlabel";
+// add
+import { MapPin } from "lucide-react";
 
 export default function Page() {
   const [selected, setSelected] = useState<string[]>([]);
@@ -31,9 +34,8 @@ export default function Page() {
       />
       <p className="mt-4">Current value: {inputValue}</p>
       <button onClick={() => console.log(selected)}>log selected</button>
-      <ProfilePhoto 
-        allowEdit={true}
-      />
+      <ProfilePhoto allowEdit={true} />
+      <IconWithLabel icon={MapPin} label="Chulalongkorn University" size={24} />
     </main>
   );
 }
