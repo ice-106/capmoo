@@ -6,10 +6,12 @@ import Footer from "./_components/footer";
 import TextBox from "./_components/textbox";
 import Dropdown from "./_components/dropdown";
 import ProfilePhoto from "./_components/profilephoto";
+import SearchBar from "./_components/searchbar";
 
 export default function Page() {
   const [selected, setSelected] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState("Use case: prefilled names");
+  const [searchQuery, setSearchQuery] = useState("");
 
   return (
     <main className="font-poppins w-full">
@@ -34,6 +36,12 @@ export default function Page() {
       <ProfilePhoto 
         allowEdit={true}
       />
-    </main>
+      <SearchBar 
+        placeholder="Search activities..."
+        width="300px"
+        defaultValue="Initial search term"
+        onChange={(query) => setSearchQuery(query)}
+      />    
+      </main>
   );
 }
