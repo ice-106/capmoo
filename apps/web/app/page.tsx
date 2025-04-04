@@ -6,7 +6,9 @@ import Footer from "./_components/footer";
 import TextBox from "./_components/textbox";
 import Dropdown from "./_components/dropdown";
 import ProfilePhoto from "./_components/profilephoto";
-import SearchBar from "./_components/searchbar";
+import IconWithLabel from "./_components/iconwithlabel";
+// add
+import { MapPin } from "lucide-react";
 
 export default function Page() {
   const [selected, setSelected] = useState<string[]>([]);
@@ -33,15 +35,8 @@ export default function Page() {
       />
       <p className="mt-4">Current value: {inputValue}</p>
       <button onClick={() => console.log(selected)}>log selected</button>
-      <ProfilePhoto 
-        allowEdit={true}
-      />
-      <SearchBar 
-        placeholder="Search activities..."
-        width="300px"
-        defaultValue="Initial search term"
-        onChange={(query) => setSearchQuery(query)}
-      />    
-      </main>
+      <ProfilePhoto allowEdit={true} />
+      <IconWithLabel icon={MapPin} label="Chulalongkorn University" size={24} />
+    </main>
   );
 }
