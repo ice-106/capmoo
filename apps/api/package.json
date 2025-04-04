@@ -17,7 +17,9 @@
     "migrate": "GOWORK=off atlas migrate apply --env gorm",
     "prebuild": "./scripts/optimize.sh",
     "preci": "./scripts/preci.sh",
-    "build": "CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags=\"-w -s -X 'main.Version=v$VERSION'\" -o ./bin/main ./cmd/api/main.go",
-    "test": "go test ./...;"
+    "build:amd64": "CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags=\"-w -s -X 'main.Version=v$VERSION'\" -o ./bin/main_amd64 ./cmd/api/main.go",
+    "build:arm64": "CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -ldflags=\"-w -s -X 'main.Version=v$VERSION'\" -o ./bin/main_arm64 ./cmd/api/main.go",
+    "build": "npm run build:amd64 && npm run build:arm64",
+    "test": "go test ./..."
   }
 }
