@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { X } from "lucide-react";
+import Modal from "../_components/Modal";
 
 type BannerSize = "sm" | "md" | "lg";
 
@@ -49,21 +50,26 @@ const useBanner = (): UseBannerReturn => {
     };
 
     return (
-      <div
-        className={`fixed top-12 left-1/2 transform -translate-x-1/2 flex flex-col gap-5 bg-white border-2 border-black rounded-[8px] p-[8px] ${sizeClasses[size]} z-50`}
+      <Modal
+        isOpen={isVisible}
+        onClose={hideBanner}
       >
-        <div className="relative flex items-center justify-between">
-          <h2 className="text-orange">{header}</h2>
-          <X
-            color="orange"
-            strokeWidth={4}
-            onClick={hideBanner}
-            className="cursor-pointer"
-          />
-        </div>
+        <div
+          className={`fixed top-12 left-1/2 transform -translate-x-1/2 flex flex-col gap-5 bg-white border-2 border-black rounded-[8px] p-[8px] ${sizeClasses[size]} z-50`}
+        >
+          <div className="relative flex items-center justify-between">
+            <h2 className="text-orange">{header}</h2>
+            <X
+              color="orange"
+              strokeWidth={4}
+              onClick={hideBanner}
+              className="cursor-pointer"
+            />
+          </div>
 
-        <div>{content}</div>
-      </div>
+          <div>{content}</div>
+        </div>
+      </Modal>
     );
   };
 
