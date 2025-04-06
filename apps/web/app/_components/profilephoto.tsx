@@ -7,11 +7,17 @@ import Cropper from "./cropper";
 
 interface ProfilePhotoProps {
   allowEdit?: boolean;
+  size?: "sm" | "md" | "lg";
 }
 
 const defaultProfilePhoto = "/images/default_profile.png";
+const sizeClasses = {
+  sm: "w-24 h-24",
+  md: "w-44 h-44",
+  lg: "w-64 h-64",
+};
 
-export default function ProfilePhoto({ allowEdit = false }: ProfilePhotoProps) {
+export default function ProfilePhoto({ allowEdit = false, size = "md" }: ProfilePhotoProps) {
   const photoInputRef = useRef<HTMLInputElement>(null);
   const { Banner, showBanner, hideBanner } = useBanner();
   const [profilePhoto, setProfilePhoto] = useState("");
@@ -89,7 +95,7 @@ export default function ProfilePhoto({ allowEdit = false }: ProfilePhotoProps) {
 
   return (
     <>
-      <div className="relative w-44 h-44">
+      <div className={`relative ${sizeClasses[size]}`}>
         <div className="flex justify-center items-center w-full h-full rounded-full overflow-hidden border-2 border-lightgrey">
           {/* Display profile photo if available */}
           <Image
