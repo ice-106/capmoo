@@ -4,6 +4,7 @@ import SearchBar from './searchbar';
 import Dropdown from './dropdown';
 import TextBox from './textbox';
 import TextBtn from './textBtn';
+import { useSwipeGesture } from '../_hooks/useSwipeGesture';
 
 interface SearchDrawerProps {
   value: string;
@@ -24,6 +25,12 @@ const SearchDrawer: React.FC<SearchDrawerProps> = ({
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  
+  // Use our custom hook
+  const [translateX, swipeHandlers] = useSwipeGesture({
+    direction: 'right',
+    onSwipeComplete: onClose
+  });
 
   useLayoutEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -41,7 +48,13 @@ const SearchDrawer: React.FC<SearchDrawerProps> = ({
 
   return (
     <div className="fixed inset-0 flex justify-center z-30">
-      <div className="absolute w-[375px] top-[7.5rem] bottom-28 bg-white overflow-y-scroll">
+      <div 
+        className="absolute w-[375px] top-[7.5rem] bottom-28 bg-white overflow-y-scroll"
+        style={swipeHandlers.style}
+        onTouchStart={swipeHandlers.onTouchStart}
+        onTouchMove={swipeHandlers.onTouchMove}
+        onTouchEnd={swipeHandlers.onTouchEnd}
+      >
         <form 
           onSubmit={(e) => {
             e.preventDefault();
@@ -68,7 +81,6 @@ const SearchDrawer: React.FC<SearchDrawerProps> = ({
             />
           </div>
 
-    
           <div className="flex flex-col gap-y-6">
             {/* Location Dropdown */}
             <div className="flex flex-col gap-y-2">
