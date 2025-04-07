@@ -1,14 +1,16 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 interface TextBoxProps {
-  name?: string; // Name for form submission
+  name?: string;
   placeholder?: string;
-  width?: string; // CSS width values (e.g., "100%", "200px")
+  width?: string;
   errorMessage?: string;
-  defaultValue?: string; // Prefilled value
-  onChange?: (value: string) => void; // Callback for change event
+  value?: string;
+  onChange?: (value: string) => void;
+  size?: 'default' | 'small';
+  variant?: 'default' | 'light'; // Add color variant
 }
 
 const TextBox: React.FC<TextBoxProps> = ({
@@ -16,40 +18,57 @@ const TextBox: React.FC<TextBoxProps> = ({
   placeholder = "",
   width = "100%",
   errorMessage = "",
-  defaultValue = "",
-  onChange = () => {}, // Default no-op function
+  value = "",
+  onChange = () => {},
+  size = 'default',
+  variant = 'default', // Default color variant
 }) => {
-  const [value, setValue] = useState(defaultValue); // State to manage input value
   const [isFocused, setIsFocused] = useState(false);
+  const [inputValue, setInputValue] = useState(value);
+
+  useEffect(() => {
+    setInputValue(value);
+  }, [value]);
 
   // Define styles
-  const baseStyles = `p-2 rounded-lg border-2 outline-none bg-lightgrey/50 text-caption w-full placeholder:italic`;
-  const defaultStyles = `border-darkgrey`;
-  const focusStyles = `border-orange`;
-  const errorStyles = `border-red`;
+  const sizeStyles = {
+    default: 'p-2',
+    small: 'py-1 px-2'
+  };
 
-  // Determine the current styles
+  const variantStyles = {
+    default: 'bg-lightgrey/50 border-darkgrey',
+    light: 'bg-transparent border-lightgrey/50'
+  };
+  
+  const baseStyles = `rounded-lg border-2 outline-none text-caption w-full placeholder:italic ${sizeStyles[size]}`;
+  const defaultStyles = variantStyles[variant];
+  const focusStyles = `border-orange ${variant === 'light' ? 'bg-transparent' : ''}`;
+  const errorStyles = `border-red`;
+  
   const currentStyles = errorMessage
     ? errorStyles
     : isFocused
       ? focusStyles
       : defaultStyles;
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    setInputValue(newValue);
+    onChange(newValue);
+  };
+
   return (
     <div style={{ width }}>
       <input
         type="text"
-        name={name} // Name for form submission
+        name={name}
         placeholder={placeholder}
-        value={value} // Controlled input value
-        className={`${baseStyles} ${currentStyles}`} // Apply dynamic styles
-        onFocus={() => setIsFocused(true)} // Set focus state
-        onBlur={() => setIsFocused(false)} // Remove focus state
-        onChange={(e) => {
-          const newValue = e.target.value;
-          setValue(newValue); // Update local state
-          onChange(newValue); // Trigger onChange callback with the input value
-        }}
+        value={inputValue}
+        className={`${baseStyles} ${currentStyles}`}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
+        onChange={handleChange}
       />
       {errorMessage && (
         <p className="text-red text-caption mt-1">{errorMessage}</p>
