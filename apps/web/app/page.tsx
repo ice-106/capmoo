@@ -8,6 +8,7 @@ import Dropdown from "./_components/dropdown";
 import ProfilePhoto from "./_components/profilephoto";
 import IconWithLabel from "./_components/iconwithlabel";
 import { MapPin } from "lucide-react";
+import SearchBar from "./_components/searchbar";
 
 export default function Page() {
   const [selected, setSelected] = useState<string[]>([]);
@@ -66,6 +67,11 @@ export default function Page() {
       </button>
       <ProfilePhoto allowEdit={true} />
       <IconWithLabel icon={MapPin} label="Chulalongkorn University" size={24} />
+      <SearchBar 
+        onSearch={(value => console.log(value))}
+        placeholder="Search..."
+        enableDrawer={true}
+      />
     </main>
   );
 }
