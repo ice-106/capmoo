@@ -2,41 +2,49 @@
 
 import React, { useState } from "react";
 import { Search } from "lucide-react";
-// import Drawer from "./drawer";
+import SearchDrawer from "./searchDrawer";
 
 interface SearchBarProps {
   placeholder?: string;
   width?: string;
   defaultValue?: string;
-  onChange?: (value: string) => void; // Callback for change event
+  onSearch: (value: string) => void;
+  onChange?: (value: string) => void;
+  enableDrawer?: boolean;
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({
   placeholder = "Search...",
   width = "100%",
   defaultValue = "",
-  onChange = () => {}, // Default no-op function
+  onSearch,
+  onChange = () => {},
+  enableDrawer = true,
 }) => {
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState(defaultValue);
   const [isFocused, setIsFocused] = useState(false);
 
-  // Define styles (matching TextBox)
-  const baseStyles = `p-2 rounded-lg border-2 outline-none text-caption w-full placeholder:italic pl-10`;
-  const defaultStyles = `border-lightgrey`;
-  const focusStyles = `border-orange`;
+  const baseStyles = `p-1 rounded-lg border-2 outline-none text-caption w-full placeholder:italic pl-10`;
+  const currentStyles = isFocused ? 'border-orange' : 'border-lightgrey/50';
 
-    // Determine the current styles
-    const currentStyles = isFocused
-      ? focusStyles
-      : defaultStyles;
+  const handleSubmit = () => {
+    onSearch(searchQuery);
+    setIsDrawerOpen(false);
+  };
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    setSearchQuery(newValue);
+    onChange(newValue);
+  };
 
   return (
     <>
-      {/* Search Input Trigger */}
       <div 
         className="relative cursor-pointer"
         style={{ width }}
+        onClick={() => enableDrawer && setIsDrawerOpen(true)}
       >
         <Search 
           className="absolute left-2 top-1/2 -translate-y-1/2 text-darkgrey"
@@ -46,17 +54,23 @@ const SearchBar: React.FC<SearchBarProps> = ({
           type="text"
           placeholder={placeholder}
           value={searchQuery}
-          className={`${baseStyles} ${currentStyles} cursor-pointer`}
-          onChange={(e) => {
-            const newSearchQuery = e.target.value;
-            setSearchQuery(newSearchQuery); // Update local state
-            onChange(newSearchQuery); // Trigger onChange callback with the input value
-          }}
-          onFocus={() => setIsFocused(true)} // Set focus state
-          onBlur={() => setIsFocused(false)} // Remove focus state
+          readOnly={enableDrawer}
+          className={`${baseStyles} ${currentStyles} ${enableDrawer ? 'cursor-pointer' : ''}`}
+          onChange={enableDrawer ? undefined : handleChange}
+          onFocus={() => !enableDrawer && setIsFocused(true)}
+          onBlur={() => !enableDrawer && setIsFocused(false)}
         />
       </div>
 
+      {enableDrawer && isDrawerOpen && (
+        <SearchDrawer
+          value={searchQuery}
+          onChange={setSearchQuery}
+          onSubmit={handleSubmit}
+          onClose={() => setIsDrawerOpen(false)}
+          placeholder={placeholder}
+        />
+      )}
     </>
   );
 };
