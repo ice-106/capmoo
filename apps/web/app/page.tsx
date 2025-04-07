@@ -23,7 +23,7 @@ export default function Page() {
       <TextBox
         name="test"
         placeholder="Enter text here"
-        defaultValue={inputValue}
+        value={inputValue}
         errorMessage={inputValue === "" ? "Input can't be empty" : ""}
         onChange={(value) => setInputValue(value)} // Update state on change
       />
