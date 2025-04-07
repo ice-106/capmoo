@@ -1,34 +1,28 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, forwardRef } from "react";
 
-interface TextBoxProps {
+interface TextBoxProps extends React.InputHTMLAttributes<HTMLInputElement> {
   name?: string;
   placeholder?: string;
   width?: string;
   errorMessage?: string;
-  value?: string;
-  onChange?: (value: string) => void;
-  size?: 'default' | 'small';
-  variant?: 'default' | 'light'; // Add color variant
+  textSize?: 'default' | 'small';
+  variant?: 'default' | 'light';
 }
 
-const TextBox: React.FC<TextBoxProps> = ({
+const TextBox = forwardRef<HTMLInputElement, TextBoxProps>(({
   name,
   placeholder = "",
   width = "100%",
   errorMessage = "",
-  value = "",
-  onChange = () => {},
-  size = 'default',
-  variant = 'default', // Default color variant
-}) => {
+  value,
+  onChange,
+  textSize = 'default',
+  variant = 'default',
+  ...props
+}, ref) => {
   const [isFocused, setIsFocused] = useState(false);
-  const [inputValue, setInputValue] = useState(value);
-
-  useEffect(() => {
-    setInputValue(value);
-  }, [value]);
 
   // Define styles
   const sizeStyles = {
@@ -41,7 +35,7 @@ const TextBox: React.FC<TextBoxProps> = ({
     light: 'bg-transparent border-lightgrey/50'
   };
   
-  const baseStyles = `rounded-lg border-2 outline-none text-caption w-full placeholder:italic ${sizeStyles[size]}`;
+  const baseStyles = `rounded-lg border-2 outline-none text-caption w-full placeholder:italic ${sizeStyles[textSize]}`;
   const defaultStyles = variantStyles[variant];
   const focusStyles = `border-orange ${variant === 'light' ? 'bg-transparent' : ''}`;
   const errorStyles = `border-red`;
@@ -52,29 +46,31 @@ const TextBox: React.FC<TextBoxProps> = ({
       ? focusStyles
       : defaultStyles;
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value;
-    setInputValue(newValue);
-    onChange(newValue);
-  };
+  // Check if it's being used as controlled or uncontrolled
+  const isControlled = value !== undefined;
 
   return (
     <div style={{ width }}>
       <input
+        ref={ref}
         type="text"
         name={name}
         placeholder={placeholder}
-        value={inputValue}
+        // Only pass value if this is being used as a controlled component
+        {...(isControlled ? { value } : {})}
         className={`${baseStyles} ${currentStyles}`}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
-        onChange={handleChange}
+        onChange={onChange}
+        {...props}
       />
       {errorMessage && (
         <p className="text-red text-caption mt-1">{errorMessage}</p>
       )}
     </div>
   );
-};
+});
+
+TextBox.displayName = "TextBox";
 
 export default TextBox;
