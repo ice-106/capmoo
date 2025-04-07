@@ -3,6 +3,7 @@ import { ArrowLeft } from 'lucide-react';
 import SearchBar from './searchbar';
 import Dropdown from './dropdown';
 import TextBox from './textbox';
+import TextBtn from './textBtn';
 
 interface SearchDrawerProps {
   value: string;
@@ -74,13 +75,7 @@ const SearchDrawer: React.FC<SearchDrawerProps> = ({
               <div className="flex justify-between items-center">
                 <h3>Location</h3>
                 {selectedLocation.length > 0 && (
-                  <button
-                    type="button"
-                    onClick={clearLocation}
-                    className="text-xs italic underline text-orange"
-                  >
-                    clear
-                  </button>
+                  <TextBtn text="clear" onClick={clearLocation} />
                 )}
               </div>
               <Dropdown
@@ -96,13 +91,7 @@ const SearchDrawer: React.FC<SearchDrawerProps> = ({
               <div className="flex justify-between items-center">
                 <h3>Price</h3>
                 {(minPrice || maxPrice) && (
-                  <button
-                    type="button"
-                    onClick={clearPrice}
-                    className="text-xs italic underline text-orange"
-                  >
-                    clear
-                  </button>
+                  <TextBtn text="clear" onClick={clearPrice} />
                 )}
               </div>
               <div className="flex items-center gap-x-2">
@@ -132,13 +121,7 @@ const SearchDrawer: React.FC<SearchDrawerProps> = ({
               <div className="flex justify-between items-center">
                 <h3>Category</h3>
                 {selectedCategories.length > 0 && (
-                  <button
-                    type="button"
-                    onClick={clearCategories}
-                    className="text-xs italic underline text-orange"
-                  >
-                    clear
-                  </button>
+                  <TextBtn text="clear" onClick={clearCategories} />
                 )}
               </div>
               <Dropdown
