@@ -1,4 +1,5 @@
 import React, { useState, useLayoutEffect, useRef } from 'react';
+import { SearchFormValues } from '../_types/search';
 import { ArrowLeft } from 'lucide-react';
 import SearchBar from './searchbar';
 import Dropdown from './dropdown';
@@ -8,8 +9,8 @@ import { useSwipeGesture } from '../_hooks/useSwipeGesture';
 
 interface SearchDrawerProps {
   value: string;
-  onChange: (value: string) => void;
-  onSubmit: () => void;
+  onChange?: (value: string) => void;
+  onSubmit: (formValues?: SearchFormValues) => void;
   onClose: () => void;
   placeholder?: string;
 }
@@ -74,8 +75,9 @@ const SearchDrawer: React.FC<SearchDrawerProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form values:', getFormValues());
-    onSubmit();
+    const formValues = getFormValues();
+    console.log('Form values:', formValues);
+    onSubmit(formValues); // Pass the form values to parent
   };
 
   return (

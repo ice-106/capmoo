@@ -1,14 +1,16 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react"
+import { SearchFormValues } from '../_types/search';
 import { Search } from "lucide-react";
 import SearchDrawer from "./searchDrawer";
 
 interface SearchBarProps {
   placeholder?: string;
   width?: string;
+  value?: string;
   defaultValue?: string;
-  onSearch: (value: string) => void;
+  onSearch: (formValues?: SearchFormValues) => void;
   onChange?: (value: string) => void;
   enableDrawer?: boolean;
 }
@@ -19,54 +21,84 @@ const SearchBar: React.FC<SearchBarProps> = ({
   defaultValue = "",
   onSearch,
   onChange = () => {},
+  value,
   enableDrawer = true,
 }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState(defaultValue);
+  const [searchValue, setSearchValue] = useState(defaultValue || value || "");
   const [isFocused, setIsFocused] = useState(false);
 
   const baseStyles = `p-1 rounded-lg border-2 outline-none text-caption w-full placeholder:italic pl-10`;
   const currentStyles = isFocused ? 'border-orange' : 'border-lightgrey/50';
 
-  const handleSubmit = () => {
-    onSearch(searchQuery);
-    setIsDrawerOpen(false);
-  };
+  useEffect(() => {
+    if (value !== undefined) {
+      setSearchValue(value);
+    }
+  }, [value]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
-    setSearchQuery(newValue);
-    onChange(newValue);
+    setSearchValue(newValue);
+    if (onChange) onChange(newValue);
+  };
+
+  const handleSubmit = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    onSearch({ searchTerm: searchValue }); // Pass basic search data
+  };
+
+  const handleDrawerSubmit = (formValues?: SearchFormValues) => {
+    // Pass the complete form values from drawer
+    onSearch(formValues);
+    setIsDrawerOpen(false);
   };
 
   return (
     <>
-      <div 
-        className="relative cursor-pointer"
-        style={{ width }}
-        onClick={() => enableDrawer && setIsDrawerOpen(true)}
-      >
-        <Search 
-          className="absolute left-2 top-1/2 -translate-y-1/2 text-darkgrey"
-          size={20}
-        />
-        <input
-          type="text"
-          placeholder={placeholder}
-          value={searchQuery}
-          readOnly={enableDrawer}
-          className={`${baseStyles} ${currentStyles} ${enableDrawer ? 'cursor-pointer' : ''}`}
-          onChange={enableDrawer ? undefined : handleChange}
-          onFocus={() => !enableDrawer && setIsFocused(true)}
-          onBlur={() => !enableDrawer && setIsFocused(false)}
-        />
-      </div>
+      {/* Use a div instead of form when drawer is enabled */}
+      {enableDrawer ? (
+        <div 
+          className="relative cursor-pointer"
+          style={{ width }}
+          onClick={() => setIsDrawerOpen(true)}
+        >
+          <Search 
+            className="absolute left-2 top-1/2 -translate-y-1/2 text-darkgrey"
+            size={20}
+          />
+          <input
+            type="text"
+            placeholder={placeholder}
+            value={searchValue}
+            readOnly={true}
+            className={`${baseStyles} ${currentStyles} cursor-pointer`}
+          />
+        </div>
+      ) : (
+        // Only use form when drawer is disabled
+        <form onSubmit={handleSubmit} className="relative" style={{ width }}>
+          <Search 
+            className="absolute left-2 top-1/2 -translate-y-1/2 text-darkgrey"
+            size={20}
+          />
+          <input
+            type="text"
+            placeholder={placeholder}
+            value={searchValue}
+            className={`${baseStyles} ${currentStyles}`}
+            onChange={handleChange}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+          />
+        </form>
+      )}
 
       {enableDrawer && isDrawerOpen && (
         <SearchDrawer
-          value={searchQuery}
-          onChange={setSearchQuery}
-          onSubmit={handleSubmit}
+          value={searchValue}
+          onChange={(value: string) => handleChange({ target: { value } } as React.ChangeEvent<HTMLInputElement>)}
+          onSubmit={handleDrawerSubmit}
           onClose={() => setIsDrawerOpen(false)}
           placeholder={placeholder}
         />
