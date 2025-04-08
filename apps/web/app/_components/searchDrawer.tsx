@@ -13,6 +13,11 @@ interface SearchDrawerProps {
   onSubmit: (formValues?: SearchFormValues) => void;
   onClose: () => void;
   placeholder?: string;
+  // Added new props for initial values
+  initialLocation?: string[];
+  initialMinPrice?: string;
+  initialMaxPrice?: string;
+  initialCategories?: string[];
 }
 
 const SearchDrawer: React.FC<SearchDrawerProps> = ({
@@ -20,12 +25,18 @@ const SearchDrawer: React.FC<SearchDrawerProps> = ({
   onChange,
   onSubmit,
   onClose,
-  placeholder = 'Search...'
+  placeholder = 'Search...',
+  // Default to empty arrays/values for new props
+  initialLocation = [],
+  initialMinPrice = '',
+  initialMaxPrice = '',
+  initialCategories = []
 }) => {
-  const [selectedLocation, setSelectedLocation] = useState<string[]>([]);
-  const [minPrice, setMinPrice] = useState('');
-  const [maxPrice, setMaxPrice] = useState('');
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  // Initialize state with the passed initial values
+  const [selectedLocation, setSelectedLocation] = useState<string[]>(initialLocation);
+  const [minPrice, setMinPrice] = useState(initialMinPrice);
+  const [maxPrice, setMaxPrice] = useState(initialMaxPrice);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(initialCategories);
   
   // Create refs for the TextBox components
   const minPriceRef = useRef<HTMLInputElement>(null);

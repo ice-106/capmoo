@@ -13,6 +13,10 @@ interface SearchBarProps {
   onSearch: (formValues?: SearchFormValues) => void;
   onChange?: (value: string) => void;
   enableDrawer?: boolean;
+  initialLocation?: string[];
+  initialMinPrice?: string;
+  initialMaxPrice?: string;
+  initialCategories?: string[];
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({
@@ -23,6 +27,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   onChange = () => {},
   value,
   enableDrawer = true,
+  ...props
 }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [searchValue, setSearchValue] = useState(defaultValue || value || "");
@@ -79,6 +84,11 @@ const SearchBar: React.FC<SearchBarProps> = ({
           onSubmit={handleDrawerSubmit}
           onClose={() => setIsDrawerOpen(false)}
           placeholder={placeholder}
+          // Pass URL parameters if available through props
+          initialLocation={props.initialLocation}
+          initialMinPrice={props.initialMinPrice}
+          initialMaxPrice={props.initialMaxPrice}
+          initialCategories={props.initialCategories}
         />
       )}
     </>
