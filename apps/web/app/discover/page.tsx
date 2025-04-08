@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from 'next/navigation';
 import { SearchFormValues } from '../_types/search';
 import Header from "../_components/header";
 import Footer from "../_components/footer";
@@ -7,7 +8,8 @@ import Carousel from "../_components/carousel";
 import SearchBar from "../_components/searchbar";
 
 export default function Page() {
-  
+  const router = useRouter();
+
   const defaultImageUrl = "/images/default_profile.png";
   const imgArray = [
     { imgUrl: defaultImageUrl, text: "Image Card 1", onClickUrl: "/" },
@@ -52,9 +54,15 @@ export default function Page() {
     if (formValues) {
       // Convert form values to URL parameters
       const urlParams = formValuesToUrlParams(formValues);
+
+      if (!urlParams) {
+        return;
+      }
       
       // Log the URL that would be created
-      console.log(`Would navigate to: /search?${urlParams}`);
+      console.log(`Would navigate to: /discover/search?${urlParams}`);
+      
+      router.push(`/discover/search?${urlParams}`);
     }
   };
 
