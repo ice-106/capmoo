@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect } from 'react';
+import React, { useState, useLayoutEffect, useRef } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import SearchBar from './searchbar';
 import Dropdown from './dropdown';
@@ -26,6 +26,10 @@ const SearchDrawer: React.FC<SearchDrawerProps> = ({
   const [maxPrice, setMaxPrice] = useState('');
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   
+  // Create refs for the TextBox components
+  const minPriceRef = useRef<HTMLInputElement>(null);
+  const maxPriceRef = useRef<HTMLInputElement>(null);
+  
   // Use our custom hook
   const [translateX, swipeHandlers] = useSwipeGesture({
     direction: 'right',
@@ -40,11 +44,39 @@ const SearchDrawer: React.FC<SearchDrawerProps> = ({
   }, []);
 
   const clearLocation = () => setSelectedLocation([]);
+  
   const clearPrice = () => {
     setMinPrice('');
     setMaxPrice('');
   };
+  
   const clearCategories = () => setSelectedCategories([]);
+
+  // Handle text input changes
+  const handleMinPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setMinPrice(e.target.value);
+  };
+
+  const handleMaxPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setMaxPrice(e.target.value);
+  };
+
+  // Get all form values for submission
+  const getFormValues = () => {
+    return {
+      searchTerm: value,
+      location: selectedLocation,
+      minPrice: minPrice,
+      maxPrice: maxPrice,
+      categories: selectedCategories
+    };
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log('Form values:', getFormValues());
+    onSubmit();
+  };
 
   return (
     <div className="fixed inset-0 flex justify-center z-30">
@@ -56,15 +88,11 @@ const SearchDrawer: React.FC<SearchDrawerProps> = ({
         onTouchEnd={swipeHandlers.onTouchEnd}
       >
         <form 
-          onSubmit={(e) => {
-            e.preventDefault();
-            onSubmit();
-          }} 
+          onSubmit={handleSubmit} 
           className="flex flex-col p-6 gap-y-8"
         >
           {/* Back Button and Search Bar */}
           <div className="flex flex-col gap-4 mb-4">
-            {/* To Do: Change to Actual Back Button */}
             <button
               type="button"
               onClick={onClose}
@@ -108,20 +136,22 @@ const SearchDrawer: React.FC<SearchDrawerProps> = ({
               </div>
               <div className="flex items-center gap-x-2">
                 <TextBox
+                  ref={minPriceRef}
                   placeholder="Min"
                   value={minPrice}
-                  onChange={(minPrice) => setMinPrice(minPrice)}
+                  onChange={handleMinPriceChange}
                   width="100%"
-                  size="small"
+                  textSize="small"
                   variant="light"
                 />
                 <span className="flex-shrink-0 text-sm">Baht -</span>
                 <TextBox
+                  ref={maxPriceRef}
                   placeholder="Max"
                   value={maxPrice}
-                  onChange={(maxPrice) => setMaxPrice(maxPrice)}
+                  onChange={handleMaxPriceChange}
                   width="100%"
-                  size="small"
+                  textSize="small"
                   variant="light"
                 />
                 <span className="flex-shrink-0 text-sm">Baht</span>
