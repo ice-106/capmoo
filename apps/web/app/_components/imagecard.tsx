@@ -14,9 +14,9 @@ const aspectRatioClasses: Record<
   string
 > = {
   sm: "w-32 h-40",
-  "md-1:1": "w-40 h-40",
-  "md-4:5": "w-40 h-48",
-  "md-3:4": "w-40 h-52",
+  "md-1:1": "w-36 h-36",
+  "md-4:5": "w-36 h-44",
+  "md-3:4": "w-36 h-48",
 };
 
 const ImageCard: React.FC<ImageCardProps> = ({
