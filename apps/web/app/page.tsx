@@ -9,13 +9,6 @@ export default function Page() {
   const auth = useAuth();
   const router = useRouter();
 
-  const signOutRedirect = () => {
-    const clientId = "45pi75s2fqmpp08p51pdupv5jc";
-    const logoutUri = "http://localhost:3000/";
-    const cognitoDomain = "https://ap-southeast-1kabcq3yw4.auth.ap-southeast-1.amazoncognito.com";
-    window.location.href = `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(logoutUri)}`;
-  };
-
   useEffect(() => {
     // Only redirect if the user is authenticated
     if (auth.isAuthenticated) {
@@ -64,11 +57,12 @@ export default function Page() {
               Loading...
             </div>
           ) : (
-            <>
-              <button onClick={() => auth.signinRedirect()}>Login</button>
-              <button onClick={() => signOutRedirect()}>Sign out</button>
-            </>
-
+            // Replace with Button component later
+            <button
+              className="bg-orange rounded-lg text-white px-4 py-2 w-[200px] text-lg font-semibold"
+              onClick={() => auth.signinRedirect()}>
+              Get started
+            </button>
           )}
 
           {auth.error && (
