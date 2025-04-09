@@ -1,11 +1,6 @@
 import React from "react";
 import ImageCard from "./imagecard";
-
-interface ImageItem {
-  imgUrl: string;
-  text: string;
-  onClickUrl: string;
-}
+import { ImageItem } from "../_types/images";
 
 interface CarouselProps {
   header: string;

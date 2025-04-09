@@ -1,16 +1,22 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react"
+import { SearchFormValues } from '../_types/search';
 import { Search } from "lucide-react";
 import SearchDrawer from "./searchDrawer";
 
 interface SearchBarProps {
   placeholder?: string;
   width?: string;
+  value?: string;
   defaultValue?: string;
-  onSearch: (value: string) => void;
+  onSearch: (formValues?: SearchFormValues) => void;
   onChange?: (value: string) => void;
   enableDrawer?: boolean;
+  initialLocation?: string[];
+  initialMinPrice?: string;
+  initialMaxPrice?: string;
+  initialCategories?: string[];
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({
@@ -19,24 +25,33 @@ const SearchBar: React.FC<SearchBarProps> = ({
   defaultValue = "",
   onSearch,
   onChange = () => {},
+  value,
   enableDrawer = true,
+  ...props
 }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState(defaultValue);
+  const [searchValue, setSearchValue] = useState(defaultValue || value || "");
   const [isFocused, setIsFocused] = useState(false);
 
   const baseStyles = `p-1 rounded-lg border-2 outline-none text-caption w-full placeholder:italic pl-10`;
   const currentStyles = isFocused ? 'border-orange' : 'border-lightgrey/50';
 
-  const handleSubmit = () => {
-    onSearch(searchQuery);
-    setIsDrawerOpen(false);
-  };
+  useEffect(() => {
+    if (value !== undefined) {
+      setSearchValue(value);
+    }
+  }, [value]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
-    setSearchQuery(newValue);
-    onChange(newValue);
+    setSearchValue(newValue);
+    if (onChange) onChange(newValue);
+  };
+
+  const handleDrawerSubmit = (formValues?: SearchFormValues) => {
+    // Pass the complete form values from drawer
+    onSearch(formValues);
+    setIsDrawerOpen(false);
   };
 
   return (
@@ -53,7 +68,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
         <input
           type="text"
           placeholder={placeholder}
-          value={searchQuery}
+          value={searchValue}
           readOnly={enableDrawer}
           className={`${baseStyles} ${currentStyles} ${enableDrawer ? 'cursor-pointer' : ''}`}
           onChange={enableDrawer ? undefined : handleChange}
@@ -64,11 +79,16 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
       {enableDrawer && isDrawerOpen && (
         <SearchDrawer
-          value={searchQuery}
-          onChange={setSearchQuery}
-          onSubmit={handleSubmit}
+          value={searchValue}
+          onChange={(value: string) => handleChange({ target: { value } } as React.ChangeEvent<HTMLInputElement>)}
+          onSubmit={handleDrawerSubmit}
           onClose={() => setIsDrawerOpen(false)}
           placeholder={placeholder}
+          // Pass URL parameters if available through props
+          initialLocation={props.initialLocation}
+          initialMinPrice={props.initialMinPrice}
+          initialMaxPrice={props.initialMaxPrice}
+          initialCategories={props.initialCategories}
         />
       )}
     </>
