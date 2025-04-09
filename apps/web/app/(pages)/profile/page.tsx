@@ -1,5 +1,6 @@
 'use client'
 import React, { useState } from "react";
+import { useAuth } from "react-oidc-context";
 import { useRouter } from "next/navigation";
 import Header from "../../_components/header";
 import Footer from "../../_components/footer";
@@ -8,9 +9,11 @@ import IconWithLabel from "../../_components/iconwithlabel";
 import Carousel from "../../_components/carousel";
 import { Star, PencilLine } from "lucide-react";
 
+const username = "anonymous user";
+
 export default function ProfilePage() {
+    const auth = useAuth();
     const router = useRouter();
-    const [username, setUsername] = useState("username");
     const [userRating, setUserRating] = useState(0);
     const [savedActivites, setSavedActivities] = useState([
         {
@@ -27,8 +30,20 @@ export default function ProfilePage() {
         }
     ]);
 
+    const signOutRedirect = () => {
+        const clientId = "45pi75s2fqmpp08p51pdupv5jc";
+        const logoutUri = "http://localhost:3000/";
+        const cognitoDomain = "https://ap-southeast-1kabcq3yw4.auth.ap-southeast-1.amazoncognito.com";
+        window.location.href = `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(logoutUri)}`;
+    };
+
+    const handleSignOut = () => {
+        auth.removeUser();
+        signOutRedirect();
+    }
+
     return (
-        <main className="font-poppins w-full">
+        <main className="font-poppins w-full h-full flex flex-col justify-between pb-12">
             <Header text="Profile" />
             <div
                 className="flex flex-col gap-4"
@@ -46,7 +61,7 @@ export default function ProfilePage() {
                             className="flex flex-col justify-center gap-1"
                         >
                             <div>
-                                {username}
+                                {auth.user?.profile?.['cognito:username'] as string || username}
                             </div>
                             <div
                                 className="cursor-pointer"
@@ -76,6 +91,16 @@ export default function ProfilePage() {
                     images={savedReview}
                 />
             </div>
+            <div
+                className="flex justify-center"
+            >
+                <button
+                    className="bg-lightgrey rounded-lg text-white px-4 py-2 w-[200px] text-lg font-semibold"
+                    onClick={handleSignOut}>
+                    Sign out
+                </button>
+            </div>
+
             <Footer />
         </main>
     )

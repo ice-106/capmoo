@@ -1,14 +1,20 @@
 'use client'
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "react-oidc-context";
 import Header from "../../../_components/header";
+import Footer from "../../../_components/footer";
 import ProfilePhoto from "../../../_components/profilephoto";
 import TextBox from "../../../_components/textbox";
 import Modal from "../../../_components/Modal";
 import { PencilLine } from "lucide-react";
 
+const username = "anonymous user";
+
 export default function ProfileEditPage() {
+    const auth = useAuth();
+    const router = useRouter();
     const [isOpenEdit, setIsOpenEdit] = useState(false);
-    const [username, setUsername] = useState("username");
     const newUsername = useRef<HTMLInputElement>(null);
     const name = useRef<HTMLInputElement>(null);
     const tel = useRef<HTMLInputElement>(null);
@@ -21,12 +27,18 @@ export default function ProfileEditPage() {
         address: false,
     });
 
+    useEffect(() => {
+        if (email.current) {
+            email.current.value = auth.user?.profile?.email as string;
+        }
+    }, [auth])
+
     // Function to handle confirming the new username
     const confirmUsernameChange = () => {
         if (!newUsername.current || newUsername.current.value.trim() === "") {
             return;
         }
-        setUsername(newUsername.current.value);
+
         setIsOpenEdit(false);
     };
 
@@ -35,7 +47,7 @@ export default function ProfileEditPage() {
     };
 
     return (
-        <main className="font-poppins w-full">
+        <main className="font-poppins w-full h-full flex flex-col justify-between pb-12">
             <Header text="Profile" />
 
             <Modal isOpen={isOpenEdit} onClose={cancelUsernameChange}>
@@ -58,7 +70,7 @@ export default function ProfileEditPage() {
             <div className="flex flex-col gap-4 items-center">
                 <ProfilePhoto allowEdit={true} />
                 <div className="flex gap-2 pl-[26px]">
-                    {username}
+                    {auth.user?.profile?.['cognito:username'] as string || username}
                     <PencilLine
                         color="orange"
                         onClick={() => setIsOpenEdit(true)}
@@ -100,27 +112,22 @@ export default function ProfileEditPage() {
                 </div>
             </div>
 
-            {/* <button
-                onClick={() =>
-                    setError(prevState => ({
-                        ...prevState,
-                        name: !error.name,
-                    }))}
-            >Show error</button> */}
-
-            {/* <button
-                onClick={() => {
-                    console.log("Name:", name.current?.value);
-                    console.log("Tel:", tel.current?.value);
-                    console.log("Email:", email.current?.value);
-                    console.log("Address:", address.current?.value);
-                    console.log("Username:", username);
-                    // Add your save logic here
-                } }
-                className="bg-orange text-white rounded-md p-2 mt-4"
+            <div
+                className="flex justify-between items-center gap-4"
             >
-                Save
-            </button> */}
+                <button
+                    className="bg-lightgrey rounded-lg text-white px-4 py-2 w-full text-lg font-semibold"
+                    onClick={() => router.push("/profile")}
+                >
+                    cancel
+                </button>
+                <button
+                    className="bg-orange rounded-lg text-white px-4 py-2 w-full text-lg font-semibold"
+                >
+                    save
+                </button>
+            </div>
+            <Footer />
         </main>
     );
 };
