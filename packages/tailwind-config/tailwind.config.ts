@@ -7,6 +7,8 @@ const config: Omit<Config, "content"> = {
       backgroundImage: {
         "glow-conic":
           "conic-gradient(from 180deg at 50% 50%, #2a8af6 0deg, #a853ba 180deg, #e92a67 360deg)",
+        "pumpkin-lemon":
+          "linear-gradient(0deg, rgba(243, 117, 43, 0) 0%, #F3752B 50%), linear-gradient(180deg, rgba(246, 191, 39, 0) 0%, #F6BF27 50%)",
       },
       colors: {
         lemon: '#F6BF27',

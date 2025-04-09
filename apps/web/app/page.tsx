@@ -1,77 +1,77 @@
 "use client";
 
-import React, { useRef, useState } from "react";
-import Header from "./_components/header";
-import Footer from "./_components/footer";
-import TextBox from "./_components/textbox";
-import Dropdown from "./_components/dropdown";
-import ProfilePhoto from "./_components/profilephoto";
-import IconWithLabel from "./_components/iconwithlabel";
-import { MapPin } from "lucide-react";
-import SearchBar from "./_components/searchbar";
+import React, { useEffect } from "react";
+import { useAuth } from 'react-oidc-context';
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
-  const [selected, setSelected] = useState<string[]>([]);
-  const [inputValue, setInputValue] = useState("");
-  const [hasError, setHasError] = useState(false);
-  const input1Ref = useRef<HTMLInputElement>(null);
-  const input2Ref = useRef<HTMLInputElement>(null);
+  const auth = useAuth();
+  const router = useRouter();
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
-    console.log(e.target.value);
-  };
-
-  // Validate on blur
-  const validateInput = () => {
-    const isEmpty = input1Ref.current?.value === "";
-    setHasError(isEmpty || false);
-  };
+  useEffect(() => {
+    // Only redirect if the user is authenticated
+    if (auth.isAuthenticated) {
+      router.push("/discover");
+    }
+  }, [auth.isAuthenticated, router]);
 
   return (
-    <main className="font-poppins w-full">
-      <Header text="Page" />
-      <Footer />
-      This is a page
-      <TextBox
-        ref={input1Ref}
-        name="defaultExample"
-        placeholder="Enter text here"
-        // No value prop for uncontrolled
-        defaultValue="" // Use defaultValue instead
-        onBlur={validateInput}
-        errorMessage={hasError ? "Input can't be empty" : ""}
-      />
-      <TextBox
-        ref={input2Ref}
-        name="defaultExample"
-        placeholder="Enter text here"
-        value={inputValue}
-        onChange={handleInputChange}
-        errorMessage={inputValue === "" ? "Input can't be empty" : ""}
-      />
-      <Dropdown
-        selected={selected}
-        onSelect={setSelected}
-        defaultText="Select something bro"
-        options={["a", "b", "c", "d", "e"]}
-      />
-      <p className="mt-4">Current value 1: {input1Ref.current?.value}</p>
-      <p className="mt-4">Current value 2: {input2Ref.current?.value}</p>
+    <main className="font-poppins w-full relative pt-[240px]">
+      {/* Background circle and Logo */}
+      <div
+        className={`absolute top-[-512px] left-[50%] -translate-x-1/2 flex justify-center items-end h-[720px] w-[720px] pb-16 rounded-full bg-pumpkin-lemon`}
+      >
+        <Image
+          src="/images/Logo.png"
+          alt="Capmoo"
+          width={144}
+          height={144}
+          className="w-[144px] h-auto"
+        />
+      </div>
 
-      <button onClick={() => {
-        console.log("Input value:", input1Ref.current?.value);
-        console.log("Selected:", selected);
-      }}>
-        Log values
-      </button>
-      <ProfilePhoto allowEdit={true} />
-      <IconWithLabel icon={MapPin} label="Chulalongkorn University" size={24} />
-      <SearchBar 
-        onSearch={(value => console.log(value))}
-        placeholder="Search..."
-        enableDrawer={true}
-      />
+      <div
+        className="flex flex-col gap-12"
+      >
+        {/* Title */}
+        <div
+          className="flex flex-col items-center gap-4 w-full"
+        >
+          <h1
+            className="text-5xl text-black"
+          >
+            Capmoo
+          </h1>
+          <span
+            className="font-semibold text-xs"
+          >Get started, enhance your travel</span>
+        </div>
+
+        {/* Buttons */}
+        <div
+          className="flex flex-col items-center gap-2 w-full"
+        >
+          {auth.isLoading ? (
+            <div>
+              Loading...
+            </div>
+          ) : (
+            // Replace with Button component later
+            <button
+              className="bg-orange rounded-lg text-white px-4 py-2 w-[200px] text-lg font-semibold"
+              onClick={() => auth.signinRedirect()}>
+              Get started
+            </button>
+          )}
+
+          {auth.error && (
+            <div className="text-red text-md">
+              {(auth.error as Error).message}
+            </div>
+          )}
+        </div>
+      </div>
     </main>
   );
 }
