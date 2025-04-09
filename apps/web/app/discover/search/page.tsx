@@ -100,13 +100,11 @@ const openSearchDrawer = useCallback(() => {
   }, [formValuesToUrlParams, router]);
 
   return (
-    <main className="font-poppins w-full max-w-screen-md mx-auto p-4">
-      <div 
-      className="absolute top-0 left-0 w-screen h-screen opacity-0 z-60"
+    <main className="font-poppins w-full max-w-screen-md mx-auto p-4"
       onTouchStart={swipeHandlers.onTouchStart}
-    onTouchMove={swipeHandlers.onTouchMove}
-    onTouchEnd={swipeHandlers.onTouchEnd} />
-
+      onTouchMove={swipeHandlers.onTouchMove}
+      onTouchEnd={swipeHandlers.onTouchEnd}
+    >
       <Header text="Discover" />
       
       <div className="mb-6">
