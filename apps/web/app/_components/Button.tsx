@@ -2,17 +2,24 @@
 import React from 'react';
 
 interface ButtonProps {
-  label: string; // Define the label prop
-  onclick?: () => void; // Optional onClick prop
+  label: string;
+  onclick?: () => void;
+  variant?: 'default' | 'orange';
 }
 
-const Button: React.FC<ButtonProps> = ({ label, onclick }) => {
+const Button: React.FC<ButtonProps> = ({ label, onclick, variant = 'default' }) => {
+  const baseClasses =
+    'w-full font-semibold py-2 px-4 border rounded-full cursor-pointer';
+  const defaultClasses =
+    'bg-white hover:bg-orange text-grey hover:text-white border-grey hover:border-transparent';
+  const orangeClasses =
+    'bg-orange text-white hover:bg-orange/90 border-transparent';
+
+  const classes =
+    variant === 'orange' ? `${baseClasses} ${orangeClasses}` : `${baseClasses} ${defaultClasses}`;
+
   return (
-    <button
-      className="w-1/6 bg-transparent hover:bg-orange-500 text-gray-700 font-semibold 
-      hover:text-white py-2 px-4 border border-gray-500 hover:border-transparent rounded-xl cursor-pointer"
-      onClick={onclick}
-    >
+    <button className={classes} onClick={onclick}>
       {label}
     </button>
   );
