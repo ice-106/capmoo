@@ -1,17 +1,18 @@
 // components/BackButton.tsx
 import React from 'react';
+import { useRouter } from 'next/navigation';
 
 const BackButton: React.FC = () => {
+  const router = useRouter();
 
   const handleBack = () => {
-    window.history.back();
+    router.back();
   };
 
   return (
     <button
       onClick={handleBack}
-      className="w-12 h-12 bg-transparent font-semibold py-2 px-2 border border-gray-500 rounded-full hover:bg-gray-500 hover:border-white 
-      flex justify-center items-center transition duration-300 ease-in-out group cursor-pointer"
+      className="w-12 h-12 bg-transparent font-semibold py-2 px-2 border border-gray-500 rounded-full hover:bg-gray-500 hover:border-white flex justify-center items-center transition duration-300 ease-in-out group"
       aria-label="Go back"
       title="Go back"
     >
