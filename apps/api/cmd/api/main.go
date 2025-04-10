@@ -12,7 +12,7 @@ import (
 	"github.com/capmoo/api/internal/config"
 	"github.com/capmoo/api/internal/middleware"
 	"github.com/capmoo/api/pkg/logger"
-	"github.com/jackc/pgx/v5" // PostgreSQL driver
+	"github.com/jackc/pgx/v5/pgxpool"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -38,17 +38,15 @@ func main() {
 	log.Print("Starting API server...")
 
 	// Connect to PostgresSQL using connection string from config
-	conn, err := pgx.Connect(ctx, cfg.Database.Url)
+	dbPool, err := pgxpool.New(context.Background(), cfg.Database.Url)
 	if err != nil {
-		slog.Error("failed to connect to PostgreSQL, exiting...", "error", err)
-		os.Exit(1)
-		return
+		log.Fatalf("failed to connect to database: %v", err)
 	}
-	defer conn.Close(ctx) // Ensure to close the connection when the app stops
+	defer dbPool.Close()
 
 	// Test the connection with a simple query
 	var greeting string
-	err = conn.QueryRow(ctx, "SELECT 'Hello, World!'").Scan(&greeting)
+	err = dbPool.QueryRow(ctx, "SELECT 'Hello, World!'").Scan(&greeting)
 	if err != nil {
 		slog.Error("failed to test PostgreSQL connection", "error", err)
 		os.Exit(1)
@@ -56,8 +54,24 @@ func main() {
 	}
 
 	// Log the successful connection test
-	log.Print("Successfully connected to PostgreSQL!")
+	log.Printf("Successfully connected to PostgreSQL! Greeting: %s", greeting)
 
+	rows, err := dbPool.Query(ctx, `
+		SELECT schema_name 
+		FROM information_schema.schemata;
+	`)
+	if err != nil {
+		log.Fatal("Failed to query tables:", err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var tableName string
+		if err := rows.Scan(&tableName); err != nil {
+			log.Fatal("Failed to scan table name:", err)
+		}
+		fmt.Println("Table:", tableName)
+	}
 	// End test
 
 	v1Handler, err := di.InitDI(ctx, cfg)
