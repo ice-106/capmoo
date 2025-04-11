@@ -1,5 +1,5 @@
 // components/ToggleButton.tsx
-import React, {useState} from 'react';
+import React from 'react';
 
 interface ToggleButtonProps {
   toggle: boolean;
