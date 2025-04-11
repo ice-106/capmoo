@@ -3,11 +3,11 @@ import React from 'react';
 
 interface ButtonProps {
   label: string;
-  onclick?: () => void;
+  onClick?: () => void;
   variant?: 'default' | 'orange';
 }
 
-const Button: React.FC<ButtonProps> = ({ label, onclick, variant = 'default' }) => {
+const Button: React.FC<ButtonProps> = ({ label, onClick, variant = 'default' }) => {
   const baseClasses =
     'w-full font-semibold py-2 px-4 border rounded-full cursor-pointer';
   const defaultClasses =
@@ -19,7 +19,7 @@ const Button: React.FC<ButtonProps> = ({ label, onclick, variant = 'default' }) 
     variant === 'orange' ? `${baseClasses} ${orangeClasses}` : `${baseClasses} ${defaultClasses}`;
 
   return (
-    <button className={classes} onClick={onclick}>
+    <button className={classes} onClick={onClick}>
       {label}
     </button>
   );
