@@ -2,12 +2,12 @@
 import React, {useState} from 'react';
 
 interface ToggleButtonProps {
-  toggle: string;
+  toggle: boolean;
   onToggleChange: (toggle: string) => void;
 }
 
 const ToggleButton: React.FC<ToggleButtonProps> = ({ toggle, onToggleChange }) => {
-  const isChecked = toggle === "th";
+  const isChecked = toggle;
 
   const handleToggle = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newToggle = event.target.checked ? "th" : "en";
@@ -17,7 +17,7 @@ const ToggleButton: React.FC<ToggleButtonProps> = ({ toggle, onToggleChange }) =
   return (
       <label className="inline-flex items-center mb-5 cursor-pointer">
       <span className={`me-3 text-sm font-medium ${isChecked ? 'text-grey' : 'text-orange'}`}>EN</span>
-      <label htmlFor={toggle} />
+      <label htmlFor={toggle.toString()} />
       <input type="checkbox" value="" className="sr-only peer" checked={isChecked} onChange={handleToggle}/>
       <div className="relative w-11 h-6 bg-slate-100 rounded-full transition-colors duration-300">
         <img
