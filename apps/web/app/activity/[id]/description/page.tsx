@@ -1,21 +1,38 @@
 "use client";
 
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import NameSection from '../../_components/nameSection';
 import ReviewCard from '../../_components/reviewCard';
 import TextBtn from '../../../_components/textBtn';
 import FooterTemplate from '../../../_components/footerTemplate';
 import Button from '../../../_components/Button';
+
 export default function Page() {
   const router = useRouter();
+  const params = useParams();
+  const activityId = params.id as string;
+  
+  // We could use this state for real API data
+  // const [activityData, setActivityData] = useState(null);
+  
+  // Log the ID from the route
+  useEffect(() => {
+    console.log("Activity ID from route:", activityId);
+    
+    // In a real scenario, we would fetch data based on the ID
+    // fetchActivityData(activityId).then(data => setActivityData(data));
+    // For now, we'll continue using mock data
+  }, [activityId]);
 
   const handleBooking = () => {
     console.log("Book clicked");
-    router.push(`/activity/${mockData.id}/booking`);
+    router.push(`/activity/${activityId}/booking`);
   }
 
+  // Use the route ID in the mock data
   const mockData = {
-    id: 123,
+    id: activityId,
     images: [
       { src: "/images/default_profile.png" },
       { src: "/images/default_profile.png" },
