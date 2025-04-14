@@ -5,21 +5,39 @@ interface ButtonProps {
   label: string;
   onClick?: () => void;
   variant?: 'default' | 'orange';
+  rounded?: 'lg' | 'sm' | 'full';
+  className?: string;
 }
 
-const Button: React.FC<ButtonProps> = ({ label, onClick, variant = 'default' }) => {
-  const baseClasses =
-    'w-full font-semibold py-2 px-4 border rounded-full cursor-pointer';
-  const defaultClasses =
-    'bg-white hover:bg-orange text-grey hover:text-white border-grey hover:border-transparent';
-  const orangeClasses =
-    'bg-orange text-white hover:bg-orange/90 border-transparent';
-
-  const classes =
-    variant === 'orange' ? `${baseClasses} ${orangeClasses}` : `${baseClasses} ${defaultClasses}`;
+const Button: React.FC<ButtonProps> = ({ 
+  label, 
+  onClick, 
+  variant = 'default', 
+  rounded = 'full',
+  className = '' 
+}) => {
+  const baseClasses = 'w-full font-semibold py-2 px-4 border cursor-pointer';
+  
+  const variantClasses = {
+    default: 'bg-white hover:bg-orange text-grey hover:text-white border-grey hover:border-transparent',
+    orange: 'bg-orange text-white hover:bg-orange/90 border-transparent',
+  };
+  
+  const roundedClasses = {
+    sm: 'rounded-sm',
+    lg: 'rounded-lg',
+    full: 'rounded-full',
+  };
+  
+  const combinedClasses = [
+    baseClasses,
+    variantClasses[variant],
+    roundedClasses[rounded],
+    className
+  ].join(' ');
 
   return (
-    <button className={classes} onClick={onClick}>
+    <button className={combinedClasses} onClick={onClick}>
       {label}
     </button>
   );
