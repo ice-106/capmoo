@@ -9,12 +9,13 @@ import TextBox from "../../../_components/textbox";
 import Modal from "../../../_components/Modal";
 import { PencilLine } from "lucide-react";
 
-const username = "anonymous user";
+const defaultUsername = "anonymous user";
 
 export default function ProfileEditPage() {
     const auth = useAuth();
     const router = useRouter();
     const [isOpenEdit, setIsOpenEdit] = useState(false);
+    const username = useRef<HTMLDivElement>(null);
     const newUsername = useRef<HTMLInputElement>(null);
     const name = useRef<HTMLInputElement>(null);
     const tel = useRef<HTMLInputElement>(null);
@@ -22,12 +23,13 @@ export default function ProfileEditPage() {
     const address = useRef<HTMLInputElement>(null);
     const [error, setError] = useState({
         name: false,
-        tel: false,
         email: false,
-        address: false,
     });
 
     useEffect(() => {
+        if (name.current) {
+            name.current.value = auth.user?.profile?.name as string;
+        }
         if (email.current) {
             email.current.value = auth.user?.profile?.email as string;
         }
@@ -39,12 +41,36 @@ export default function ProfileEditPage() {
             return;
         }
 
+        username.current!.textContent = newUsername.current.value.trim();
+        // save to cognito logic here
+
         setIsOpenEdit(false);
     };
 
     const cancelUsernameChange = () => {
         setIsOpenEdit(false);
     };
+
+    const handleSave = () => {
+        const nameValue = name.current?.value.trim() || "";
+        const emailValue = email.current?.value.trim() || "";
+
+        const hasNameError = nameValue === "";
+        const hasEmailError = emailValue === "";
+
+        setError({
+            name: hasNameError,
+            email: hasEmailError,
+        });
+
+        if (hasNameError || hasEmailError) {
+            return;
+        }
+
+        // Proceed to save logic if inputs are valid
+
+        console.log("Save success");
+    }
 
     return (
         <main className="font-poppins w-full h-full flex flex-col justify-between pb-12">
@@ -70,7 +96,11 @@ export default function ProfileEditPage() {
             <div className="flex flex-col gap-4 items-center">
                 <ProfilePhoto allowEdit={true} />
                 <div className="flex gap-2 pl-[26px]">
-                    {auth.user?.profile?.['cognito:username'] as string || username}
+                    <div
+                        ref={username}
+                    >
+                        {auth.user?.profile?.['cognito:username'] as string || defaultUsername}
+                    </div>
                     <PencilLine
                         color="orange"
                         onClick={() => setIsOpenEdit(true)}
@@ -90,6 +120,7 @@ export default function ProfileEditPage() {
                         placeholder="Enter name"
                         variant="light"
                         ref={name}
+                        errorMessage={error.name ? "Name can't be empty" : ""}
                     />
                     Tel no.
                     <TextBox
@@ -102,6 +133,7 @@ export default function ProfileEditPage() {
                         placeholder="Enter email"
                         variant="light"
                         ref={email}
+                        errorMessage={error.email ? "Email can't be empty" : ""}
                     />
                     Address
                     <TextBox
@@ -123,6 +155,7 @@ export default function ProfileEditPage() {
                 </button>
                 <button
                     className="bg-orange rounded-lg text-white px-4 py-2 w-full text-lg font-semibold"
+                    onClick={handleSave}
                 >
                     save
                 </button>
