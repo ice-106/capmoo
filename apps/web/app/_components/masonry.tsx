@@ -5,7 +5,6 @@ import { ImageItem } from "../_types/images";
 interface MasonryProps {
   images: ImageItem[];
   aspectRatio?: "sm" | "md-1:1" | "md-4:5" | "md-3:4";
-
 }
 
 const Masonry: React.FC<MasonryProps> = ({
@@ -14,7 +13,7 @@ const Masonry: React.FC<MasonryProps> = ({
 }) => {
   return (
     <section className="relative flex flex-col gap-y-3">
-      <div className="grid w-full grid-cols-2 gap-4 place-items-center">
+      <div className="grid w-full grid-cols-2 gap-4 place-items-start">
         {images.map((img, index) => (
           <ImageCard
             key={index}
