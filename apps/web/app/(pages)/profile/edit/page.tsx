@@ -8,6 +8,7 @@ import ProfilePhoto from "../../../_components/profilephoto";
 import TextBox from "../../../_components/textbox";
 import Modal from "../../../_components/Modal";
 import { PencilLine } from "lucide-react";
+import Button from "../../../_components/Button";
 
 const defaultUsername = "anonymous user";
 
@@ -85,9 +86,16 @@ export default function ProfileEditPage() {
                         errorMessage={newUsername.current?.value.trim() === "" ? "Username can't be empty" : ""}
                         ref={newUsername}
                     />
-                    <div className="flex justify-between items-center">
-                        <button onClick={cancelUsernameChange}>Cancel</button>
-                        <button onClick={confirmUsernameChange}>Confirm</button>
+                    <div className="flex justify-between items-center gap-4">
+                        <Button
+                            label="cancel"
+                            onClick={cancelUsernameChange}
+                        />
+                        <Button
+                            label="confirm"
+                            onClick={confirmUsernameChange}
+                            variant="orange"
+                        />
                     </div>
                 </div>
             </Modal>
@@ -113,7 +121,7 @@ export default function ProfileEditPage() {
                     Contact Information
                 </h3>
                 <div
-                    className="grid grid-cols-[1fr,3fr] gap-4 justify-center items-center"
+                    className="grid grid-cols-[1fr,3fr] gap-4 justify-center items-center w-full"
                 >
                     Name
                     <TextBox
@@ -147,18 +155,15 @@ export default function ProfileEditPage() {
             <div
                 className="flex justify-between items-center gap-4"
             >
-                <button
-                    className="bg-lightgrey rounded-lg text-white px-4 py-2 w-full text-lg font-semibold"
+                <Button
+                    label="cancel"
                     onClick={() => router.push("/profile")}
-                >
-                    cancel
-                </button>
-                <button
-                    className="bg-orange rounded-lg text-white px-4 py-2 w-full text-lg font-semibold"
+                />
+                <Button
+                    label="save"
                     onClick={handleSave}
-                >
-                    save
-                </button>
+                    variant="orange"
+                />
             </div>
             <Footer />
         </main>

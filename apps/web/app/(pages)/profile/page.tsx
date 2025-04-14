@@ -8,6 +8,7 @@ import ProfilePhoto from "../../_components/profilephoto";
 import IconWithLabel from "../../_components/iconwithlabel";
 import Carousel from "../../_components/carousel";
 import { Star, PencilLine } from "lucide-react";
+import Button from "../../_components/Button";
 
 const username = "anonymous user";
 
@@ -94,11 +95,11 @@ export default function ProfilePage() {
             <div
                 className="flex justify-center"
             >
-                <button
-                    className="bg-lightgrey rounded-lg text-white px-4 py-2 w-[200px] text-lg font-semibold"
-                    onClick={handleSignOut}>
-                    Sign out
-                </button>
+                <Button
+                    label="Sign out"
+                    variant="default"
+                    onClick={handleSignOut}
+                />
             </div>
 
             <Footer />
