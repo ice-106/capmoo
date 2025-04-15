@@ -3,7 +3,6 @@ import React, { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "react-oidc-context";
 import Header from "../../../_components/header";
-import Footer from "../../../_components/footer";
 import ProfilePhoto from "../../../_components/profilephoto";
 import TextBox from "../../../_components/textbox";
 import Modal from "../../../_components/Modal";
@@ -158,10 +157,12 @@ export default function ProfileEditPage() {
                 >
                     <Button
                         label="cancel"
+                        rounded="lg"
                         onClick={() => router.push("/profile")}
                     />
                     <Button
                         label="save"
+                        rounded="lg"
                         onClick={handleSave}
                         variant="orange"
                     />
