@@ -93,6 +93,7 @@ export default function Page() {
         
         <div className="flex w-full gap-4 mt-8 px-4">
           <SelectionCard
+            variant="card"
             icon={<SoloIcon size={36} />}
             label="Solo"
             isSelected={travelerType === 'solo'}
@@ -102,6 +103,7 @@ export default function Page() {
             }}
           />
           <SelectionCard
+            variant="card"
             icon={<GroupIcon size={36} />}
             label="Group"
             isSelected={travelerType === 'group'}
@@ -123,7 +125,7 @@ export default function Page() {
           <div className="mt-3 text-center">
             <TextBtn 
               text="Skip this step"
-              className="text-xs text-grey"
+              className="text-xs text-grey underline"
               onClick={handleSkip}
             />
           </div>

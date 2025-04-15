@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import Progressbar from '../../_components/progressbar';
-import IconCheckbox from '../_components/iconCheckbox';
+import SelectionCard from '../_components/selectionCard';
 import { useSurvey } from '../SurveyContext';
 import Button from '../../_components/Button';
 import { useEffect } from 'react';
@@ -63,7 +63,8 @@ export default function Page() {
         <div className="flex flex-col gap-3 mt-8">
           <div className="grid grid-cols-2 gap-3">
             {categoryOptions.map((category) => (
-              <IconCheckbox
+              <SelectionCard
+                variant="icon"
                 key={category.id}
                 label={category.label}
                 icon={category.icon}
