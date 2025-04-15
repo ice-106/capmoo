@@ -2,16 +2,16 @@
 
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import Progressbar from '../../_components/progressbar';
+import Progressbar from '../../../_components/progressbar';
 import SelectionCard from '../_components/selectionCard';
 import { useSurvey } from '../SurveyContext';
-import Button from '../../_components/Button';
+import Button from '../../../_components/Button';
 
 import { 
   User as SoloIcon,
   Users as GroupIcon
 } from 'lucide-react';
-import TextBtn from '../../_components/textBtn';
+import TextBtn from '../../../_components/textBtn';
 
 export default function Page() {
   const router = useRouter();

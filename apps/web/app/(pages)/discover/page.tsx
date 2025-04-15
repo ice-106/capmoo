@@ -1,11 +1,11 @@
 "use client";
 
 import { useRouter } from 'next/navigation';
-import { SearchFormValues } from '../_types/search';
-import Header from "../_components/header";
-import Footer from "../_components/footer";
-import Carousel from "../_components/carousel";
-import SearchBar from "../_components/searchbar";
+import { SearchFormValues } from '../../_types/search';
+import Header from "../../_components/header";
+import Footer from "../../_components/footer";
+import Carousel from "../../_components/carousel";
+import SearchBar from "../../_components/searchbar";
 
 export default function Page() {
   const router = useRouter();

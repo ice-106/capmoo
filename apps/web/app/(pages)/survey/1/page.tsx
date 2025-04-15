@@ -1,10 +1,10 @@
 "use client";
 
 import { useRouter } from 'next/navigation';
-import Progressbar from '../../_components/progressbar';
+import Progressbar from '../../../_components/progressbar';
 import SelectionCard from '../_components/selectionCard';
 import { useSurvey } from '../SurveyContext';
-import Button from '../../_components/Button';
+import Button from '../../../_components/Button';
 import { useEffect } from 'react';
 
 import { 
@@ -17,7 +17,7 @@ import {
   Wrench as WorkshopIcon,
   Church as ReligiousIcon
 } from 'lucide-react';
-import TextBtn from '../../_components/textBtn';
+import TextBtn from '../../../_components/textBtn';
 
 export default function Page() {
   const router = useRouter();

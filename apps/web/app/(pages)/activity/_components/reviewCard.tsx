@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import TextBtn from '../../_components/textBtn';
+import TextBtn from '../../../_components/textBtn';
 
 interface ReviewCardProps {
   profileImgUrl: string;

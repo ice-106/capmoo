@@ -1,7 +1,7 @@
-import Gallery from "../../_components/galleryrect"
 import React, { useState, useEffect, useRef } from 'react';
 import { Star, MessageSquareText, Share2, Pocket, CalendarClock, MapPin, Banknote } from "lucide-react";
-import BackButton from "../../_components/BackButton";
+import BackButton from '../../../_components/BackButton';
+import Gallery from '../../../_components/galleryrect';
 
 interface ImageData {
   src: string;
