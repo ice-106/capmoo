@@ -2,7 +2,6 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
 
 type TravelerType = 'solo' | 'group' | null;
-type SurveyDataValue = string | number | boolean | null | string[];
 
 interface SurveyContextType {
   // Page 1: Activity preferences
@@ -20,9 +19,6 @@ interface SurveyContextType {
   setTravelerType: (type: TravelerType) => void;
   clearTravelerType: () => void;
   
-  // General data and submission
-  otherSurveyData: Record<string, SurveyDataValue>;
-  updateSurveyData: (key: string, value: SurveyDataValue) => void;
   submitSurvey: () => Promise<void>;
 }
 
@@ -33,7 +29,6 @@ export const SurveyProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   const [activityCategories, setActivityCategories] = useState<string[]>([]);
   const [travelConcerns, setTravelConcerns] = useState<string[]>([]);
   const [travelerType, setTravelerType] = useState<TravelerType>(null);
-  const [otherSurveyData, setOtherSurveyData] = useState<Record<string, SurveyDataValue>>({});
 
   // Activity categories functions
   const toggleActivityCategory = (category: string) => {
@@ -66,19 +61,11 @@ export const SurveyProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     setTravelerType(null);
   };
 
-  const updateSurveyData = (key: string, value: SurveyDataValue) => {
-    setOtherSurveyData(prev => ({
-      ...prev,
-      [key]: value
-    }));
-  };
-
   const submitSurvey = async () => {
     const allData = {
       activity_preferences: activityCategories,
       travel_concerns: travelConcerns,
       traveler_type: travelerType || "",
-      ...otherSurveyData
     };
     
     console.log("📤 Submitting survey data:", JSON.stringify(allData, null, 2));
@@ -116,8 +103,6 @@ export const SurveyProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       travelerType,
       setTravelerType,
       clearTravelerType,
-      otherSurveyData,
-      updateSurveyData,
       submitSurvey
     }}>
       {children}
