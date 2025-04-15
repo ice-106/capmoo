@@ -7,7 +7,7 @@ const oidcConfig = {
   client_id: '45pi75s2fqmpp08p51pdupv5jc',
   redirect_uri: 'http://localhost:3000/callback',
   response_type: 'code',
-  scope: 'openid email phone',
+  scope: 'openid email phone profile',
 };
 
 export default function ClientWrapper({ children }: { children: React.ReactNode }) {
