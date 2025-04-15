@@ -44,7 +44,7 @@ export default function ProfilePage() {
     }
 
     return (
-        <main className="font-poppins w-full h-full flex flex-col justify-between pb-12">
+        <main className="font-poppins w-full flex flex-col justify-between gap-12 pb-12">
             <Header text="Profile" />
             <div
                 className="flex flex-col gap-4"

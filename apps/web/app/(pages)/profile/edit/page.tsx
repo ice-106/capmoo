@@ -9,6 +9,7 @@ import TextBox from "../../../_components/textbox";
 import Modal from "../../../_components/Modal";
 import { PencilLine } from "lucide-react";
 import Button from "../../../_components/Button";
+import FooterTemplate from "../../../_components/footerTemplate";
 
 const defaultUsername = "anonymous user";
 
@@ -74,7 +75,7 @@ export default function ProfileEditPage() {
     }
 
     return (
-        <main className="font-poppins w-full h-full flex flex-col justify-between pb-12">
+        <main className="font-poppins w-full flex flex-col justify-between pb-12">
             <Header text="Profile" />
 
             <Modal isOpen={isOpenEdit} onClose={cancelUsernameChange}>
@@ -151,21 +152,21 @@ export default function ProfileEditPage() {
                     />
                 </div>
             </div>
-
-            <div
-                className="flex justify-between items-center gap-4"
-            >
-                <Button
-                    label="cancel"
-                    onClick={() => router.push("/profile")}
-                />
-                <Button
-                    label="save"
-                    onClick={handleSave}
-                    variant="orange"
-                />
-            </div>
-            <Footer />
+            <FooterTemplate>
+                <div
+                    className="flex justify-between items-center gap-4 px-4"
+                >
+                    <Button
+                        label="cancel"
+                        onClick={() => router.push("/profile")}
+                    />
+                    <Button
+                        label="save"
+                        onClick={handleSave}
+                        variant="orange"
+                    />
+                </div>
+            </FooterTemplate>
         </main>
     );
 };
