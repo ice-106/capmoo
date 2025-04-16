@@ -69,7 +69,7 @@ export default function ReviewPage() {
       <HeaderwithIcon
         text="Reviews"
         rightIcon={
-          <div onClick={() => router.push("/reviews/add-reviws")}>
+          <div onClick={() => router.push("/reviews/add-reviews")}>
             <CirclePlus size={24} color="white" />
           </div>
         }
