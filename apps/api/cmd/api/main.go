@@ -10,6 +10,7 @@ import (
 	"github.com/capmoo/api/cmd/api/di"
 	"github.com/capmoo/api/internal/api"
 	"github.com/capmoo/api/internal/config"
+	"github.com/capmoo/api/internal/db"
 	"github.com/capmoo/api/internal/middleware"
 	"github.com/capmoo/api/pkg/logger"
 
@@ -35,6 +36,14 @@ func main() {
 	logger.InitLogger(cfg)
 
 	log.Print("Starting API server...")
+
+	// Initialize the database connection
+	if err := db.InitDB(cfg.Database); err != nil {
+		log.Fatalf("Error initializing DB: %v", err)
+	}
+
+	// Ensure the database connection is closed when the application exits
+	defer db.CloseDB()
 
 	v1Handler, err := di.InitDI(ctx, cfg)
 	if err != nil {
