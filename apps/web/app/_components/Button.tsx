@@ -7,6 +7,7 @@ interface ButtonProps {
   variant?: 'default' | 'orange';
   rounded?: 'lg' | 'sm' | 'full';
   className?: string;
+  disabled?: boolean
 }
 
 const Button: React.FC<ButtonProps> = ({ 
