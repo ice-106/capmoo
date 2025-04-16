@@ -4,9 +4,10 @@ import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import NameSection from '../../_components/nameSection';
 import ReviewCard from '../../_components/reviewCard';
-import TextBtn from '../../../_components/textBtn';
-import FooterTemplate from '../../../_components/footerTemplate';
-import Button from '../../../_components/Button';
+import TextBtn from '../../../../_components/textBtn';
+import FooterTemplate from '../../../../_components/footerTemplate';
+import Button from '../../../../_components/Button';
+
 
 export default function Page() {
   const router = useRouter();
