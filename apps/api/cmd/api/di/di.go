@@ -7,6 +7,7 @@ import (
 
 	"github.com/capmoo/api/internal/config"
 	"github.com/capmoo/api/internal/route"
+	"github.com/capmoo/api/internal/infrastructure/db"
 )
 
 // must used to panic if error is not nil.
@@ -30,8 +31,18 @@ func InitDI(ctx context.Context, cfg *config.AppConfig) (r *route.V1Handler, err
 			}
 		}
 	}()
+	
 
+	pg := must(infradb.New(cfg.Database.Url))
+	infradb.AutoMigrate(pg, &archive.ArchivedActivity{})
+	archRepo := archive.NewRepository(pg)
+	archSvc  := archive.NewService(archRepo)
+	archH    := route.NewArchiveHandler(archSvc)
+
+	
 	v1Handler := must(route.V1NewHandler(), nil)
+
+	v1Handler.Archive = archH
 
 	return v1Handler, nil
 }
