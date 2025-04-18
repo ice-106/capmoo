@@ -7,11 +7,11 @@ import (
 	"log/slog"
 	"os"
 
+	"github.com/capmoo/api/api"
 	"github.com/capmoo/api/cmd/api/di"
-	"github.com/capmoo/api/internal/api"
-	"github.com/capmoo/api/internal/config"
-	"github.com/capmoo/api/internal/middleware"
-	"github.com/capmoo/api/pkg/logger"
+	"github.com/capmoo/api/config"
+	"github.com/capmoo/api/logger"
+	"github.com/capmoo/api/middleware"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -31,7 +31,7 @@ func main() {
 	}()
 
 	logger.SetupMinimalLogger()
-	cfg := config.Load()
+	cfg := config.LoadConfig()
 	logger.InitLogger(cfg)
 
 	log.Print("Starting API server...")
@@ -50,8 +50,8 @@ func main() {
 
 	app.Use(
 		cors.New(cors.Config{
-			AllowOrigins: cfg.Cors.AllowOrigins,
-			AllowHeaders: cfg.Cors.AllowHeaders,
+			AllowOrigins: cfg.AllowedOrigins,
+			AllowHeaders: cfg.AllowedHeaders,
 		}),
 		requestid.New(),
 		middleware.SetupUserContext,
