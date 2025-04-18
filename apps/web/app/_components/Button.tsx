@@ -7,7 +7,7 @@ interface ButtonProps {
   variant?: 'default' | 'orange';
   rounded?: 'lg' | 'sm' | 'full';
   className?: string;
-  disabled?: boolean
+  disabled?: boolean;
 }
 
 const Button: React.FC<ButtonProps> = ({ 
@@ -16,7 +16,7 @@ const Button: React.FC<ButtonProps> = ({
   variant = 'default', 
   rounded = 'full',
   className = '',
-  disabled = false, 
+  disabled = false
 }) => {
   const baseClasses = 'w-full font-semibold py-2 px-4 border cursor-pointer';
   
@@ -39,7 +39,7 @@ const Button: React.FC<ButtonProps> = ({
   ].join(' ');
 
   return (
-    <button className={combinedClasses} onClick={onClick}>
+    <button className={combinedClasses} onClick={onClick} disabled={disabled}>
       {label}
     </button>
   );

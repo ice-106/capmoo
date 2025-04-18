@@ -7,6 +7,7 @@ interface TextBoxProps extends React.InputHTMLAttributes<HTMLInputElement> {
   placeholder?: string;
   width?: string;
   errorMessage?: string;
+  type?: 'text' | 'number' | 'date';
   textSize?: 'default' | 'small';
   variant?: 'default' | 'light';
 }
@@ -17,6 +18,7 @@ const TextBox = forwardRef<HTMLInputElement, TextBoxProps>(({
   width = "100%",
   errorMessage = "",
   value,
+  type = 'text',
   onChange,
   textSize = 'default',
   variant = 'default',
@@ -53,7 +55,7 @@ const TextBox = forwardRef<HTMLInputElement, TextBoxProps>(({
     <div style={{ width }}>
       <input
         ref={ref}
-        type="text"
+        type={type}
         name={name}
         placeholder={placeholder}
         // Only pass value if this is being used as a controlled component
