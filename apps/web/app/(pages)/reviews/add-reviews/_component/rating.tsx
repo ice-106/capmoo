@@ -1,7 +1,6 @@
 "use client"
 import { useState } from 'react';
 import { Star } from 'lucide-react';
-import TextBox from './textbox';
 
 const Rating: React.FC<{ rating: number; setRating: (r: number) => void }> = ({ rating, setRating }) => {         // Current rating
   const [hovered, setHovered] = useState<number | null>(null); // Hover state
@@ -23,7 +22,15 @@ const Rating: React.FC<{ rating: number; setRating: (r: number) => void }> = ({ 
         />
       ))}
     </div>
-    <TextBox value={comment} placeholder={'Add your comment...'} onChange={setComment} />
+    <div className="flex flex-col gap-y-2 border-0">
+      <textarea
+        value={comment}
+        onChange={(e) => setComment(e.target.value)}
+        placeholder={"Add your comment..."}
+        maxLength={256}
+        className="px-4 py-2 rounded-lg bg-lightgrey h-32 align-text-top text-left placeholder:italic"
+      />
+    </div>
     </div>
   );
 };

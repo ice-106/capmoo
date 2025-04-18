@@ -2,10 +2,11 @@
 import { useState } from "react";
 import { useRouter } from 'next/navigation';
 import BackButton from '../../../_components/BackButton';
-import AddReviewFooter from "./_component/addreviewfooter";
 import PreviousActivitySelector from "./_component/previousactivity";
 import Rating from "./_component/rating";
 import ImageUploader from "./_component/imageupload";
+import FooterTemplate from "../../../_components/footerTemplate";
+import Button from "../../../_components/Button";
 
 export default function Page() {
   const router = useRouter();
@@ -60,7 +61,7 @@ export default function Page() {
 
 
   const [rating, setRating] = useState(0);
-  const isFormValid = selectedActivity.length == 1 && rating > 0
+  const isFormValid = (selectedActivity.length > 0 && rating > 0)
   const handlePost = () => {
     console.log("Keeping activity selections:", selectedActivity[selectedActivity.length-1], rating);
     router.push('/reviews');
@@ -73,7 +74,9 @@ export default function Page() {
         <BackButton/>
       </div>
     </div>
-      <AddReviewFooter isFormValid={isFormValid} handlePost={handlePost}/>
+      <FooterTemplate>
+        <Button label="Post" variant="orange" onClick={handlePost} disabled={!isFormValid} />
+      </FooterTemplate>
       <div className="flex flex-col gap-y-8">
         <ImageUploader />
         <div className="text-lg font-semibold">Activity</div>

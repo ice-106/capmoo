@@ -15,7 +15,8 @@ const Button: React.FC<ButtonProps> = ({
   onClick, 
   variant = 'default', 
   rounded = 'full',
-  className = '' 
+  className = '',
+  disabled = false, 
 }) => {
   const baseClasses = 'w-full font-semibold py-2 px-4 border cursor-pointer';
   
