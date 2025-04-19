@@ -16,44 +16,52 @@ export default function ReviewPage() {
   const defaultImageUrl = "/images/default_profile.png";
   const reviewItems = [
     {
+      id: "1",
       imgUrl: defaultImageUrl,
       text: "Review Card 1",
-      onClickUrl: "/reviews/description",
+      onClickUrl: "/reviews/description/1",
     },
     {
+      id: "2",
       imgUrl: defaultImageUrl,
       text: "Review Card 2 pingu pinga kwack kwack",
-      onClickUrl: "/reviews/description",
+      onClickUrl: "/reviews/description/2",
     },
     {
+      id: "3",
       imgUrl: defaultImageUrl,
       text: "Review Card 3",
-      onClickUrl: "/reviews/description",
+      onClickUrl: "/reviews/description/3",
     },
     {
+      id: "4",
       imgUrl: defaultImageUrl,
       text: "Review Card 4 bing bing bing",
-      onClickUrl: "/reviews/description",
+      onClickUrl: "/reviews/description/4",
     },
     {
+      id: "5",
       imgUrl: defaultImageUrl,
       text: "Review Card 5 ba ba ba ba na na na",
-      onClickUrl: "/reviews/description",
+      onClickUrl: "/reviews/description/5",
     },
     {
+      id: "6",
       imgUrl: defaultImageUrl,
       text: "Review Card 6",
-      onClickUrl: "/reviews/description",
+      onClickUrl: "/reviews/description/6",
     },
     {
+      id: "7",
       imgUrl: defaultImageUrl,
       text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque non.",
-      onClickUrl: "/reviews/description",
+      onClickUrl: "/reviews/description/7",
     },
     {
+      id: "8",
       imgUrl: defaultImageUrl,
       text: "Review Card 8",
-      onClickUrl: "/reviews/description",
+      onClickUrl: "/reviews/description/8",
     },
   ];
 
