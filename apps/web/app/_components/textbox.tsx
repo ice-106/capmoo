@@ -2,17 +2,18 @@
 
 import React, { useState, forwardRef } from "react";
 
-interface TextBoxProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface TextBoxProps extends React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> {
   name?: string;
   placeholder?: string;
   width?: string;
   errorMessage?: string;
-  type?: 'text' | 'number' | 'date';
+  type?: 'text' | 'number' | 'date' | 'textarea';
   textSize?: 'default' | 'small';
   variant?: 'default' | 'light';
+  sizeVariant?: 'original' | 'big';
 }
 
-const TextBox = forwardRef<HTMLInputElement, TextBoxProps>(({
+const TextBox = forwardRef<HTMLInputElement | HTMLTextAreaElement, TextBoxProps>(({
   name,
   placeholder = "",
   width = "100%",
@@ -22,6 +23,7 @@ const TextBox = forwardRef<HTMLInputElement, TextBoxProps>(({
   onChange,
   textSize = 'default',
   variant = 'default',
+  sizeVariant = 'original',
   ...props
 }, ref) => {
   const [isFocused, setIsFocused] = useState(false);
@@ -36,36 +38,50 @@ const TextBox = forwardRef<HTMLInputElement, TextBoxProps>(({
     default: 'bg-lightgrey/50 border-darkgrey',
     light: 'bg-transparent border-lightgrey/50'
   };
-  
-  const baseStyles = `rounded-lg border-2 outline-none text-caption w-full placeholder:italic ${sizeStyles[textSize]}`;
+
+  const boxHeight = sizeVariant === 'big' ? 'h-40' : '';
+  const baseStyles = `rounded-lg border-2 outline-none text-caption w-full placeholder:italic ${sizeStyles[textSize]} ${boxHeight}`;
   const defaultStyles = variantStyles[variant];
   const focusStyles = `border-orange ${variant === 'light' ? 'bg-transparent' : ''}`;
   const errorStyles = `border-red`;
-  
+
   const currentStyles = errorMessage
     ? errorStyles
     : isFocused
       ? focusStyles
       : defaultStyles;
 
-  // Check if it's being used as controlled or uncontrolled
   const isControlled = value !== undefined;
 
   return (
     <div style={{ width }}>
-      <input
-        ref={ref}
-        type={type}
-        name={name}
-        placeholder={placeholder}
-        // Only pass value if this is being used as a controlled component
-        {...(isControlled ? { value } : {})}
-        className={`${baseStyles} ${currentStyles}`}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
-        onChange={onChange}
-        {...props}
-      />
+      {type === 'textarea' ? (
+        <textarea
+          ref={ref as React.RefObject<HTMLTextAreaElement>}
+          name={name}
+          placeholder={placeholder}
+          rows={6}
+          {...(isControlled ? { value } : {})}
+          className={`${baseStyles} ${currentStyles}`}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          onChange={onChange}
+          {...props}
+        />
+      ) : (
+        <input
+          ref={ref as React.RefObject<HTMLInputElement>}
+          type={type}
+          name={name}
+          placeholder={placeholder}
+          {...(isControlled ? { value } : {})}
+          className={`${baseStyles} ${currentStyles}`}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          onChange={onChange}
+          {...props}
+        />
+      )}
       {errorMessage && (
         <p className="text-red text-caption mt-1">{errorMessage}</p>
       )}
