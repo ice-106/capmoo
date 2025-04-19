@@ -1,0 +1,19 @@
+name: capmoo
+
+services:
+  db:
+    image: postgres:latest
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: capmoo
+    volumes:
+      - db:/var/lib/postgresql/data
+    networks:
+      - default
+
+volumes:
+  db:
