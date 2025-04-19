@@ -18,7 +18,7 @@ const NameTag = ({ variant = 'user', image }: nameTagProps) => {
   
   return (
     <div className="flex w-full items-center py-2 justify-between">
-      {variant === 'ai' && (
+      {variant === 'ai' ? (
         <div className="flex items-center">
           <div className="bg-orange rounded-full p-0.5">
             <Image 
@@ -31,6 +31,8 @@ const NameTag = ({ variant = 'user', image }: nameTagProps) => {
           </div>
           <span className="ml-2">Capmoo</span>
         </div>
+      ) : (
+        <div></div>
       )}
       
       {variant === 'user' && (
