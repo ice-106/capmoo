@@ -1,15 +1,18 @@
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import TextBtn from '../../../_components/textBtn';
+import { ReactNode } from 'react';
 
 interface ReviewCardProps {
   profileImgUrl: string;
   userName: string;
   reviewText: string;
   reviewUrl: string;
+  leftButton?: ReactNode;
+  rightButton?: ReactNode;
 }
 
-const ReviewCard = ({profileImgUrl, userName, reviewText, reviewUrl}: ReviewCardProps) => {
+const ReviewCard = ({profileImgUrl, userName, reviewText, reviewUrl, leftButton, rightButton}: ReviewCardProps) => {
   const router = useRouter();
 
   const handleReviewClick = () => {
@@ -36,6 +39,13 @@ const ReviewCard = ({profileImgUrl, userName, reviewText, reviewUrl}: ReviewCard
       <p className="line-clamp-2 overflow-hidden text-ellipsis">
         {reviewText}
       </p>
+      {/* New Action Buttons Section */}
+      {(leftButton || rightButton) && (
+        <div className="flex gap-x-4 mt-4">
+          {leftButton}
+          {rightButton}
+        </div>
+      )}
     </div>
   )
 }
