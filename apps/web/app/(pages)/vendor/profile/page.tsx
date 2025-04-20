@@ -26,7 +26,7 @@ export default function ProfilePage() {
       label: "+\nCreate \nNew Activity",
       bg: "bg-[#EB7926]", // orange-500
       text: "text-white",
-      onClick: () => router.push("/activity/create")
+      onClick: () => router.push("/vendor/activity/create")
     },
   ];
 
@@ -56,7 +56,7 @@ export default function ProfilePage() {
           </div>
           <div
             className="cursor-pointer"
-            onClick={() => router.push("/profile/edit")}
+            onClick={() => router.push("/vendor/profile/edit")}
           >
             <IconWithLabel
               icon={PencilLine}

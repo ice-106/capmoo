@@ -185,7 +185,27 @@ export default function SchedulePage() {
                                 <div className="flex justify-between mt-3 gap-2">
                                   <button
                                     className="flex-1 border border-gray-400 text-gray-400 font-semibold py-2 rounded-xl"
-                                    onClick={() => router.push('Delete')}
+                                    onClick={async () => {
+                                        const confirmDelete = confirm("Are you sure you want to delete this activity?");
+                                        if (!confirmDelete) return;
+                                      
+                                        try {
+                                          const res = await fetch(`/api/activity/${activity}`, {
+                                            method: "DELETE",
+                                          });
+                                      
+                                          if (res.ok) {
+                                            alert("Activity deleted successfully!");
+                                            // Optionally refresh or update the UI
+                                          } else {
+                                            alert("Failed to delete activity.");
+                                          }
+                                        } catch (error) {
+                                          console.error("Error deleting:", error);
+                                          alert("An error occurred.");
+                                        }
+                                      }}
+                                      
                                   >
                                     Cancel
                                   </button>

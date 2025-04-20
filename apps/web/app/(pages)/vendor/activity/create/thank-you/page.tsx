@@ -1,10 +1,10 @@
 'use client'
 import React from "react";
 import { useRouter } from "next/navigation";
-import Header from "../../../../../../_components/header";
-import FooterTemplate from "../../../../../../_components/footerTemplate";
-import SubHeaderPayment from "../subheader";
-import Button from "../../../../../../_components/Button";
+import Header from "../../../../../_components/header";
+import FooterTemplate from "../../../../../_components/footerTemplate";
+import SubHeaderPayment from "../../../../activity/[id]/booking/subheader";
+import Button from "../../../../../_components/Button";
 import { Handshake, BadgeCheck } from "lucide-react";
 
 const titleData = {
@@ -46,7 +46,7 @@ export default function Page() {
                 <Button
                     label="Back to menu"
                     variant="orange"
-                    onClick={() => router.push("/discover")}
+                    onClick={() => router.push("/vendor/profile")}
                 />
             </FooterTemplate>
         </main>

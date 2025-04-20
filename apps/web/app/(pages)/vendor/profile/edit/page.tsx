@@ -2,13 +2,13 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "react-oidc-context";
-import Header from "../../../_components/header";
-import ProfilePhoto from "../../../_components/profilephoto";
-import TextBox from "../../../_components/textbox";
-import Modal from "../../../_components/Modal";
+import Header from "../../../../_components/header";
+import ProfilePhoto from "../../../../_components/profilephoto";
+import TextBox from "../../../../_components/textbox";
+import Modal from "../../../../_components/Modal";
 import { PencilLine } from "lucide-react";
-import Button from "../../../_components/Button";
-import FooterTemplate from "../../../_components/footerTemplate";
+import Button from "../../../../_components/Button";
+import FooterTemplate from "../../../../_components/footerTemplate";
 
 const defaultUsername = "anonymous user";
 

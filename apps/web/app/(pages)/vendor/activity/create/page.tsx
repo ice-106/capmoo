@@ -1,12 +1,12 @@
 'use client'
 import React, { useState, useRef } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import Header from "../../../../../_components/header";
-import SubHeaderPayment from "./subheader";
-import FooterTemplate from "../../../../../_components/footerTemplate";
-import Button from "../../../../../_components/Button";
-import TextBox from "../../../../../_components/textbox";
-import Dropdown from "../../../../../_components/dropdown";
+import Header from "../../../../_components/header";
+import SubHeaderPayment from "../../../activity/[id]/booking/subheader";
+import FooterTemplate from "../../../../_components/footerTemplate";
+import Button from "../../../../_components/Button";
+import TextBox from "../../../../_components/textbox";
+import Dropdown from "../../../../_components/dropdown";
 import { MapPin } from "lucide-react";
 
 const mockData = {
@@ -40,7 +40,7 @@ export default function Page() {
     const [categorySelected, setCategorySelected] = useState<string[]>([]);
 
     const handleClickContinue = () => {
-        router.push(`/vendor/activity/[id]/create-activity/page2`);
+        router.push(`/vendor/activity/create/setprice`);
     };
 
     const handleClickBack = () => {

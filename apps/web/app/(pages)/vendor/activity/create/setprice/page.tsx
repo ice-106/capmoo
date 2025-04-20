@@ -1,15 +1,14 @@
 'use client'
 import React, { useState, useRef } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import Header from "../../../../../../_components/header";
-import SubHeaderPayment from "../subheader";
-import FooterTemplate from "../../../../../../_components/footerTemplate";
-import Button from "../../../../../../_components/Button";
-import TextBox from "../../../../../../_components/textbox";
-import Dropdown from "../../../../../../_components/dropdown";
+import Header from "../../../../../_components/header";
+import SubHeaderPayment from "../../../../activity/[id]/booking/subheader";
+import FooterTemplate from "../../../../../_components/footerTemplate";
+import Button from "../../../../../_components/Button";
+import TextBox from "../../../../../_components/textbox";
+import Dropdown from "../../../../../_components/dropdown";
 import { MapPin } from "lucide-react";
-import ImageUploader from "../../../_components/imageupload";
-
+import ImageUploader from "../../../../reviews/add-reviews/_component/imageupload";
 
 const mockData = {
     name: "Capmoo Adventure",
@@ -35,7 +34,7 @@ export default function Page() {
     
 
     const handleClickPost = () => {
-        router.push(`/vendor/activity/[id]/create-activity/thank-you`);
+        router.push(`/vendor/activity/create/thank-you`);
     };
 
     const handleClickBack = () => {
