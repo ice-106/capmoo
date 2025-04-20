@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/capmoo/api/internal/config"
-	"github.com/capmoo/api/internal/route"
+	"github.com/capmoo/api/config"
+	"github.com/capmoo/api/database"
+	"github.com/capmoo/api/model"
+	"github.com/capmoo/api/route"
 )
 
 // must used to panic if error is not nil.
@@ -20,7 +22,7 @@ func must[T any](t T, err error) T {
 	return t
 }
 
-func InitDI(ctx context.Context, cfg *config.AppConfig) (r *route.V1Handler, err error) {
+func InitDI(ctx context.Context, cfg *config.Config) (r *route.V1Handler, err error) {
 	defer func() {
 		if r := recover(); r != nil {
 			if e, ok := r.(error); ok {
@@ -30,6 +32,25 @@ func InitDI(ctx context.Context, cfg *config.AppConfig) (r *route.V1Handler, err
 			}
 		}
 	}()
+
+	gormDB := must(database.New(cfg))
+
+	if err := gormDB.Exec(`
+		DO $$ 
+		BEGIN
+			IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'booking_status') THEN
+				CREATE TYPE booking_status AS ENUM ('UNKNOWN', 'CANCELLED', 'FAILED', 'PENDING', 'SUCCESS');
+			END IF;
+
+			IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'payment_status') THEN
+				CREATE TYPE payment_status AS ENUM ('UNKNOWN', 'CANCELLED', 'FAILED', 'PENDING', 'SUCCESS');
+			END IF;
+		END $$;
+	`).Error; err != nil {
+		return nil, fmt.Errorf("failed to create enum type: %w", err)
+	}
+
+	gormDB.AutoMigrate(model.Activity{}, model.Booking{}, model.Concern{}, model.Host{}, model.Location{}, model.Preference{}, model.Review{}, model.TravelType{}, model.User{})
 
 	v1Handler := must(route.V1NewHandler(), nil)
 

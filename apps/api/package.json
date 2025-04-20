@@ -6,8 +6,6 @@
     "generate": "GOWORK=off go generate ./...",
     "dev": "goreload --build=cmd/api",
     "start": "go run cmd/api/main.go",
-    "lint": "go run -mod=mod github.com/golangci/golangci-lint/cmd/golangci-lint@v1.61.0 run -v ./...",
-    "lint:migration": "GOWORK=off atlas migrate lint --dev-url \"docker://postgres/16/dev?search_path=public\" --git-base \"main\"",
     "format": "swag fmt; gofumpt -w .",
     "compose:up": "docker compose -f ../../docker-compose.dev.yaml up -d",
     "compose:down": "docker compose -f ../../docker-compose.dev.yaml down",

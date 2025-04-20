@@ -5,10 +5,10 @@ import (
 	"log/slog"
 	"os"
 
-	"github.com/capmoo/api/internal/api"
-	"github.com/capmoo/api/internal/config"
-	"github.com/capmoo/api/internal/middleware"
-	"github.com/capmoo/api/pkg/logger/plog"
+	"github.com/capmoo/api/api"
+	"github.com/capmoo/api/config"
+	"github.com/capmoo/api/logger/plog"
+	"github.com/capmoo/api/middleware"
 )
 
 // SetupMinimalLogger sets up a minimal logger when config is not available yet
@@ -17,7 +17,7 @@ func SetupMinimalLogger() {
 	slog.SetDefault(slog.New(handler))
 }
 
-func InitLogger(cfg *config.AppConfig) {
+func InitLogger(cfg *config.Config) {
 	var handler slog.Handler
 	if cfg.IsDevelopment() {
 		// Setting up pretty logger
