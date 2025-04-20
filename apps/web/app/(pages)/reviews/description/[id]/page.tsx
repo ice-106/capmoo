@@ -3,10 +3,18 @@ import { useParams } from "next/navigation";
 import React, { useState } from "react";
 import BackButton from "../../../../_components/BackButton";
 import Gallery from "../../../../_components/galleryrect";
-import Tag from "../_components/tag";
-import ReviewFooter from "../_components/reviewFooter";
-import { Star } from "lucide-react";
+import FooterTemplate from "../../../../_components/footerTemplate";
+import FilterTag from "../../../../_components/filterTag";
+import {
+  ChevronDown,
+  ChevronUp,
+  Pocket,
+  MessageCircle,
+  Share,
+  Star,
+} from "lucide-react";
 import Image from "next/image";
+import Footer from "../../../../_components/footer";
 
 export default function ReviewDescriptionPage() {
   const params = useParams();
@@ -134,8 +142,8 @@ export default function ReviewDescriptionPage() {
           </div>
           <h3>{review.activity}</h3>
           <div className="flex gap-x-3">
-            <Tag>Locaion: {review.location}</Tag>
-            <Tag>Price: {review.price}</Tag>
+            <FilterTag>Locaion: {review.location}</FilterTag>
+            <FilterTag>Price: {review.price}</FilterTag>
           </div>
           <div className="text-md border border-lightgrey rounded-lg px-2 py-2">
             {review.comment}
@@ -143,13 +151,50 @@ export default function ReviewDescriptionPage() {
         </div>
       </div>
       {/* Footer section */}
-      <ReviewFooter
-        onSave={handleSave}
-        onUpvote={handleUpvote}
-        onDownvote={handleDownvote}
-        onComment={handleComment}
-        onShare={handleShare}
-      />
+      <FooterTemplate>
+        <div className="w-full px-4 flex justify-between items-center">
+          {/* Left side for pocket button*/}
+          <div
+            className="p-2 rounded-md"
+            style={{ cursor: "pointer" }}
+            onClick={handleSave}
+          >
+            <Pocket size={24} />
+          </div>
+
+          {/* Right side for upvote, comment, and share buttons */}
+          <div className="flex gap-x-4">
+            <div
+              className="p-2 rounded-md cursor-pointer"
+              style={{ cursor: "pointer" }}
+              onClick={handleUpvote}
+            >
+              <ChevronUp size={24} />
+            </div>
+            <div
+              className="p-2 rounded-md cursor-pointer"
+              style={{ cursor: "pointer" }}
+              onClick={handleDownvote}
+            >
+              <ChevronDown size={24} />
+            </div>
+            <div
+              className="p-2 rounded-md cursor-pointer"
+              style={{ cursor: "pointer" }}
+              onClick={handleComment}
+            >
+              <MessageCircle size={24} />
+            </div>
+            <div
+              className="p-2 rounded-md cursor-pointer"
+              style={{ cursor: "pointer" }}
+              onClick={handleShare}
+            >
+              <Share size={24} />
+            </div>
+          </div>
+        </div>
+      </FooterTemplate>
     </main>
   );
 }
