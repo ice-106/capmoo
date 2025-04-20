@@ -2,12 +2,12 @@
 
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import NameSection from '../../../../activity/_components/nameSection';
-import FooterTemplate from '../../../../../_components/footerTemplate';
-import Button from '../../../../../_components/Button';
-import BackButton from '../../../../../_components/BackButton';
-import ReviewCard from '../../../../activity/_components/reviewCard';
-import TextBtn from '../../../../../_components/textBtn';
+import NameSection from '../../../activity/_components/nameSection';
+import FooterTemplate from '../../../../_components/footerTemplate';
+import Button from '../../../../_components/Button';
+import BackButton from '../../../../_components/BackButton';
+import ReviewCard from '../../../activity/_components/reviewCard';
+import TextBtn from '../../../../_components/textBtn';
 
 
 export default function Page() {
@@ -125,8 +125,8 @@ export default function Page() {
               userName={review.userName}
               reviewText={review.reviewText}
               reviewUrl={review.reviewUrl}
-              leftButton={<Button label="Respond" onClick={handleRespond} />}
-              rightButton={<Button label="Report" onClick={handleReport} />}
+              leftButton={{ label: "Respond", onClick: handleRespond }}
+              rightButton={{ label: "Report", onClick: handleReport }}
             />
           ))}
         </section>
