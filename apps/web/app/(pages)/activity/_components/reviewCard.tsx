@@ -1,43 +1,67 @@
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import TextBtn from '../../../_components/textBtn';
+import Button from '../../../_components/Button';
 
 interface ReviewCardProps {
   profileImgUrl: string;
   userName: string;
   reviewText: string;
   reviewUrl: string;
+  leftButton?: { label: string; onClick: () => void };
+  rightButton?: { label: string; onClick: () => void };
 }
 
-const ReviewCard = ({profileImgUrl, userName, reviewText, reviewUrl}: ReviewCardProps) => {
+const ReviewCard = ({ profileImgUrl, userName, reviewText, reviewUrl, leftButton, rightButton }: ReviewCardProps) => {
   const router = useRouter();
 
   const handleReviewClick = () => {
     console.log("Review clicked");
     router.push(`/reviews/${reviewUrl}`);
-  }
+  };
+
   return (
     <div 
       className="w-full p-2 border border-lightgrey rounded-lg gap-y-4 cursor-pointer"
-      onClick={handleReviewClick}
-      >
+      // onClick={handleReviewClick}
+    >
       <span className="flex justify-between items-center font-semibold mb-1">
         <div className="flex gap-x-4 items-center">
           <Image
-          src={profileImgUrl}
-          alt="Profile Image"
-          width={24}
-          height={24}
-          className="rounded-full" />
+            src={profileImgUrl}
+            alt="Profile Image"
+            width={24}
+            height={24}
+            className="rounded-full"
+          />
           {userName}
         </div>
         <TextBtn text="Read" onClick={handleReviewClick} />
       </span>
+
       <p className="line-clamp-2 overflow-hidden text-ellipsis">
         {reviewText}
       </p>
-    </div>
-  )
-}
 
-export default ReviewCard
+      {/* New Action Buttons Section */}
+      {(leftButton || rightButton) && (
+        <div className="flex gap-x-4 mt-4">
+          {leftButton && (
+            <Button
+              label={leftButton.label}
+              onClick={leftButton.onClick}
+            />
+          )}
+          {rightButton && (
+            <Button
+              label={rightButton.label}
+              onClick={rightButton.onClick}
+            />
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default ReviewCard;
