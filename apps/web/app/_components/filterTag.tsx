@@ -2,7 +2,7 @@ import React from "react";
 
 interface FilterTagProps {
   children: React.ReactNode;
-  onClick: () => void;
+  onClick?: () => void;
   className?: string;
 }
 
@@ -12,7 +12,7 @@ const FilterTag: React.FC<FilterTagProps> = ({
   className = "",
 }) => {
   return (
-    <div 
+    <div
       className={`px-3 py-1 rounded-full border border-orange text-orange text-sm flex items-center gap-1 cursor-pointer ${className}`}
       onClick={onClick}
     >
