@@ -4,6 +4,7 @@ import React, { useEffect } from "react";
 import { useAuth } from 'react-oidc-context';
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import FooterTemplate from "./_components/footerTemplate";
 
 export default function Page() {
   const auth = useAuth();
@@ -71,6 +72,18 @@ export default function Page() {
             </div>
           )}
         </div>
+        <FooterTemplate>
+          <div
+            className="flex justify-center"
+          >
+            <a 
+              href="/vendor/auth"
+              className="underline text-grey"
+            >
+              vendor portal
+            </a>
+          </div>
+        </FooterTemplate>
       </div>
     </main>
   );
