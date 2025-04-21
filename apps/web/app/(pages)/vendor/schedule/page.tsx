@@ -2,8 +2,7 @@
 
 import React, { useEffect } from 'react';
 import Header from '../../../_components/header';
-import Footer from '../../../_components/footer';
-import { useAuth } from "react-oidc-context";
+import VendorFooter from '../../../_components/vendorfooter';
 import { useRouter } from "next/navigation";
 // Schedule Data
 const scheduleDummy = [
@@ -211,7 +210,7 @@ export default function SchedulePage() {
                                   </button>
                                   <button
                                     className="flex-1 bg-[#EB7926] text-white font-semibold py-2 rounded-xl"
-                                    onClick={() => router.push('/vendor/activity/draft')}
+                                    onClick={() => router.push('/vendor/draft/1')}
                                   >
                                     Edit
                                   </button>
@@ -223,7 +222,7 @@ export default function SchedulePage() {
                     ))}
                 </div>
             </div>
-            <Footer />
+            <VendorFooter />
         </main>
     );
 };
