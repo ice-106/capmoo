@@ -7,7 +7,10 @@ import (
 
 	"github.com/capmoo/api/config"
 	"github.com/capmoo/api/database"
+	"github.com/capmoo/api/domain"
+	"github.com/capmoo/api/handler"
 	"github.com/capmoo/api/model"
+	"github.com/capmoo/api/repository"
 	"github.com/capmoo/api/route"
 )
 
@@ -52,7 +55,16 @@ func InitDI(ctx context.Context, cfg *config.Config) (r *route.V1Handler, err er
 
 	gormDB.AutoMigrate(model.Activity{}, model.Booking{}, model.Concern{}, model.Host{}, model.Location{}, model.Preference{}, model.Review{}, model.TravelType{}, model.User{})
 
-	v1Handler := must(route.V1NewHandler(), nil)
+	// repository
+	userRepository := repository.NewUserRepository(gormDB)
+
+	// domain
+	userDomain := domain.UserDomain(userRepository)
+
+	// handler
+	userHandler := handler.NewUserHandler(&userDomain)
+
+	v1Handler := route.V1NewHandler(userHandler)
 
 	return v1Handler, nil
 }
