@@ -7,7 +7,7 @@ interface TextBoxProps extends React.InputHTMLAttributes<HTMLInputElement | HTML
   placeholder?: string;
   width?: string;
   errorMessage?: string;
-  type?: 'text' | 'number' | 'date' | 'textarea';
+  type?: 'text' | 'number' | 'date' | 'textarea' | 'password';
   textSize?: 'default' | 'small';
   variant?: 'default' | 'light';
   sizeVariant?: 'original' | 'big';

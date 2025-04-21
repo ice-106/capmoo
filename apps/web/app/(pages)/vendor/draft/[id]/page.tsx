@@ -87,7 +87,7 @@ export default function Page() {
             rounded="lg"      
             onClick={() => 
               {console.log("Edit")
-                router.push("/vendor/create-activity")
+                router.push("/vendor/activity/create")
               }}
             />
             <Button

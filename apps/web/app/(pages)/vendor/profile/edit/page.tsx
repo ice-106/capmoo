@@ -158,7 +158,7 @@ export default function ProfileEditPage() {
                     <Button
                         label="cancel"
                         rounded="lg"
-                        onClick={() => router.push("/profile")}
+                        onClick={() => router.push("/vendor/profile")}
                     />
                     <Button
                         label="save"

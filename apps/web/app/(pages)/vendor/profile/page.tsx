@@ -1,9 +1,9 @@
 'use client';
-import React, { useState } from "react";
+import React from "react";
 import { useAuth } from "react-oidc-context";
 import { useRouter } from "next/navigation";
 import Header from "../../../_components/header";
-import Footer from "../../../_components/footer";
+import VendorFooter from "../../../_components/vendorfooter";
 import ProfilePhoto from "../../../_components/profilephoto";
 import IconWithLabel from "../../../_components/iconwithlabel";
 import { PencilLine, Star, BarChart2, Wallet } from "lucide-react";
@@ -118,7 +118,7 @@ export default function ProfilePage() {
                 />
             </div>
 
-            <Footer />
+            <VendorFooter />
         </main>
     )
 }
