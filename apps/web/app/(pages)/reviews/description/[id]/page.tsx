@@ -22,44 +22,45 @@ export default function ReviewDescriptionPage() {
 
   // mock data
   const userProfileUrl = "/images/default_profile.png";
-  const defaultImageUrl = [
-    { src: "/images/default_profile.png" },
-    { src: "/images/default_profile.png" },
+  const placeholderImageUrl = [
+    { src: `/images/activity/user/activity_${reviewId}.jpg` },
+    { src: "/images/placeholder.png" },
+    { src: "/images/placeholder.png" },
   ];
 
   const mockReviews = [
     {
       id: "1",
-      author: "User 1",
-      activity: "Activity 1",
-      location: "Location 1",
+      author: "Tung Tung Tung Sahur",
+      activity: "Wat Phra Kaew",
+      location: "Bangkok",
       price: "200 THB",
       rating: 3.5,
       comment:
         "Tung tung tung tung tunh sahur Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque non.",
-      images: defaultImageUrl,
+      images: placeholderImageUrl,
     },
     {
       id: "2",
-      author: "User 2",
-      activity: "Activity 2",
-      location: "Location 2",
+      author: "Singha Morzai soi 8",
+      activity: "Siam Amazing Park",
+      location: "Bangkok",
       price: "300 THB",
       rating: 1.2,
       comment:
-        "Brombodido Croccodido blah blah blah blah blah blah blah blah blah blah",
-      images: defaultImageUrl,
+        "Brombodido Croccodido kod zing kod zad add add",
+      images: placeholderImageUrl,
     },
     {
       id: "3",
-      author: "User 3",
-      activity: "Capmoo Adventure",
-      location: "Location 3",
+      author: "HumKungLnw",
+      activity: "Safari world",
+      location: "Bangkok",
       price: "400 THB",
       rating: 4.5,
       comment:
         "Talalero Tralala Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque non.",
-      images: defaultImageUrl,
+      images: placeholderImageUrl,
     },
   ];
 
@@ -142,7 +143,7 @@ export default function ReviewDescriptionPage() {
           </div>
           <h3>{review.activity}</h3>
           <div className="flex gap-x-3">
-            <FilterTag>Locaion: {review.location}</FilterTag>
+            <FilterTag>Location: {review.location}</FilterTag>
             <FilterTag>Price: {review.price}</FilterTag>
           </div>
           <div className="text-md border border-lightgrey rounded-lg px-2 py-2">

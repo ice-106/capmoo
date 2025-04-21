@@ -15,7 +15,7 @@ export default function Page() {
         if (!vendorID.current || !password.current)
             return;
 
-        if (vendorID.current.value !== "capmoo meth" || password.current.value !== "12345") {
+        if (vendorID.current.value !== "capmoo_meth" || password.current.value !== "12345") {
             vendorID.current.value = '';
             password.current.value = '';
             alert("Incorrect information");

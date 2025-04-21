@@ -8,6 +8,13 @@ import BackButton from '../../../../_components/BackButton';
 import ReviewCard from '../../../activity/_components/reviewCard';
 import TextBtn from '../../../../_components/textBtn';
 
+const dummyActivity = [
+  "Pray together 🙏🤲 Enlightenment 101", "Grand Prix 2025 - บางบ่อ circuit", "Build anything but boat 🥀🥀💔💔"
+];
+
+const dummyImg = [
+  "/images/activity/vendor/activity_4.jpg", "/images/activity/vendor/activity_5.jpg", "/images/activity/vendor/activity_6.jpg"
+];
 
 export default function Page() {
   const router = useRouter();
@@ -40,14 +47,14 @@ export default function Page() {
   const mockData = {
     id: activityId,
     images: [
-      { src: "/images/default_profile.png" },
-      { src: "/images/default_profile.png" },
-      { src: "/images/default_profile.png" },
+      { src: dummyImg[Number(activityId) - 1] || "/images/placeholder.png" },
+      { src: "/images/placeholder.png" },
+      { src: "/images/placeholder.png" },
     ],
     rating: 4.5,
-    name: "Capmoo Adventure",
+    name: dummyActivity[Number(activityId) - 1] || "Capmoo",
     date: "March 15, 2025",
-    location: "Chulalongkorn University",
+    location: "Bangkok",
     price: "200 THB/person",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. \
     Cras ligula augue, rutrum eu nunc vel, aliquam sodales nulla. Suspendisse in mauris ut lorem maximus gravida vel eu ex.\

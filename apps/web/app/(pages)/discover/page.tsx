@@ -10,15 +10,40 @@ import SearchBar from "../../_components/searchbar";
 export default function Page() {
   const router = useRouter();
 
-  const defaultImageUrl = "/images/default_profile.png";
-  const imgArray = [
-    { imgUrl: defaultImageUrl, text: "Image Card 1", onClickUrl: "/" },
-    {
-      imgUrl: defaultImageUrl,
-      text: "Image Card 2 Long ass name kinda bad help me please there's an earthquake",
-      onClickUrl: "/",
+  const imgArrayPopular = [
+    { 
+      imgUrl: "/images/activity/user/activity_1.jpg", 
+      text: "Wat Phra Kaew", 
+      onClickUrl: "/activity/1/description" 
     },
-    { imgUrl: defaultImageUrl, text: "Image Card 3", onClickUrl: "/" },
+    {
+      imgUrl: "/images/activity/user/activity_2.jpg",
+      text: "Siam Amazing Park",
+      onClickUrl: "/activity/2/description",
+    },
+    { 
+      imgUrl: "/images/activity/user/activity_3.jpg", 
+      text: "Safari World",
+       onClickUrl: "/activity/3/description" 
+    },
+  ];
+
+  const imgArrayUpcoming = [
+    { 
+      imgUrl: "/images/activity/user/activity_4.jpg", 
+      text: "Dream World", 
+      onClickUrl: "/activity/4/description" 
+    },
+    {
+      imgUrl: "/images/activity/user/activity_5.jpg",
+      text: "Bang Krachao",
+      onClickUrl: "/activity/5/description",
+    },
+    { 
+      imgUrl: "/images/activity/user/activity_6.jpg", 
+      text: "Sea Life Bangkok",
+       onClickUrl: "/activity/6/description" 
+    },
   ];
 
   // Function to convert form values to URL parameters
@@ -78,12 +103,12 @@ export default function Page() {
         />
         <Carousel
           header="Popular Activities"
-          images={imgArray}
+          images={imgArrayPopular}
           exploreLink="/discover"
         />
         <Carousel
           header="Upcoming Activities"
-          images={imgArray}
+          images={imgArrayUpcoming}
           exploreLink="/discover"
         />
       </div>
