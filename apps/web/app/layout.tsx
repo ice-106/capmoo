@@ -42,7 +42,7 @@ export default function RootLayout({
       bg-white flex justify-center`}
       >
         {/* Recolor to white when finish dev*/}
-        <div className="flex w-[375px] h-screen bg-white px-6 pt-[7.5rem] pb-28 justify-start items-start overflow-y-auto overflow-x-hidden">
+        <div className="flex w-[375px] h-screen bg-white px-6 pt-[7.5rem] pb-28 justify-start items-start overflow-y-auto overflow-x-hidden no-scrollbar">
           <ClientWrapper>{children}</ClientWrapper>
         </div>
       </body>
