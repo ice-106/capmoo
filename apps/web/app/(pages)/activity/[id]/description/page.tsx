@@ -8,6 +8,10 @@ import TextBtn from "../../../../_components/textBtn";
 import FooterTemplate from "../../../../_components/footerTemplate";
 import Button from "../../../../_components/Button";
 
+const dummyTitle = [
+  "Wat Phra Kaew", "Siam Amazing Park", "Safari World", "Dream World", "Bang Krachao", "Sea Life Bangkok",
+];
+
 export default function Page() {
   const router = useRouter();
   const params = useParams();
@@ -34,14 +38,14 @@ export default function Page() {
   const mockData = {
     id: activityId,
     images: [
-      { src: "/images/default_profile.png" },
-      { src: "/images/default_profile.png" },
-      { src: "/images/default_profile.png" },
+      { src: `/images/activity/user/activity_${activityId}.jpg` },
+      { src: "/images/placeholder.png" },
+      { src: "/images/placeholder.png" },
     ],
     rating: 4.5,
-    name: "Capmoo Adventure",
-    date: "March 15, 2025",
-    location: "Chulalongkorn University",
+    name: dummyTitle[Number(activityId) - 1] || "Capmoo",
+    date: "April 22, 2025",
+    location: "Bangkok",
     price: "200 THB/person",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. \

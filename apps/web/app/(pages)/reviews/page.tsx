@@ -13,63 +13,62 @@ export default function ReviewPage() {
   const [searchQuery, setSearchQuery] = useState("");
 
   // mock data
-  const defaultImageUrl = "/images/default_profile.png";
   const reviewItems = [
     {
       id: "1",
-      imgUrl: defaultImageUrl,
-      text: "Review Card 1",
+      imgUrl: "/images/activity/user/activity_1.jpg",
+      text: "The Sahur at Wat Phra Kaew 🛕✨",
       onClickUrl: "/reviews/description/1",
     },
     {
-      id: "2",
-      imgUrl: defaultImageUrl,
-      text: "Review Card 2 pingu pinga kwack kwack",
+      id: "6",
+      imgUrl: "/images/activity/user/activity_2.jpg",
+      text: "Siam amazing kod zing kod zaddd 🗣🗣🔊🔊‼",
       onClickUrl: "/reviews/description/2",
     },
     {
       id: "3",
-      imgUrl: defaultImageUrl,
-      text: "Review Card 3",
-      onClickUrl: "/reviews/description/3",
-    },
-    {
-      id: "4",
-      imgUrl: defaultImageUrl,
-      text: "Review Card 4 bing bing bing",
-      onClickUrl: "/reviews/description/4",
-    },
-    {
-      id: "5",
-      imgUrl: defaultImageUrl,
-      text: "Review Card 5 ba ba ba ba na na na",
-      onClickUrl: "/reviews/description/5",
-    },
-    {
-      id: "6",
-      imgUrl: defaultImageUrl,
-      text: "Review Card 6",
+      imgUrl: "/images/activity/user/activity_6.jpg",
+      text: "Sahur pa tour Sea Life Bangkok 🐟🦈🌊",
       onClickUrl: "/reviews/description/6",
     },
     {
+      id: "4",
+      imgUrl: "/images/activity/user/activity_3.jpg",
+      text: "Safari world - POV - HumKungLnw 😎",
+      onClickUrl: "/reviews/description/3",
+    },
+    {
+      id: "5",
+      imgUrl: "/images/activity/user/activity_4.jpg",
+      text: "Birthday at Dream world ✨ !!!",
+      onClickUrl: "/reviews/description/4",
+    },
+    {
+      id: "6",
+      imgUrl: "/images/activity/user/activity_5.jpg",
+      text: "One day trip Bang Krachao cycling 🚴‍♀️",
+      onClickUrl: "/reviews/description/5",
+    },
+    {
       id: "7",
-      imgUrl: defaultImageUrl,
+      imgUrl: "/images/activity/user/activity_6.jpg",
       text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque non.",
-      onClickUrl: "/reviews/description/7",
+      onClickUrl: "/reviews/description/6",
     },
     {
       id: "8",
-      imgUrl: defaultImageUrl,
+      imgUrl: "/images/activity/user/activity_1.jpg",
       text: "Review Card 8",
-      onClickUrl: "/reviews/description/8",
+      onClickUrl: "/reviews/description/1",
     },
   ];
 
   // filter reviews based on search query
   const filteredReviews = searchQuery
     ? reviewItems.filter((item) =>
-        item.text.toLowerCase().includes(searchQuery.toLowerCase())
-      )
+      item.text.toLowerCase().includes(searchQuery.toLowerCase())
+    )
     : reviewItems;
 
   return (

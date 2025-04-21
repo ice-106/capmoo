@@ -18,16 +18,16 @@ export default function ProfilePage() {
     const [userRating, setUserRating] = useState(0);
     const [savedActivites, setSavedActivities] = useState([
         {
-            'imgUrl': "/images/default_profile.png",
-            'text': "Erm akschoully",
-            'onClickUrl': "/",
+            'imgUrl': "/images/activity/user/activity_4.jpg",
+            'text': "Dream World",
+            'onClickUrl': "/activity/4/description",
         }
     ]);
     const [savedReview, setSavedReviews] = useState([
         {
-            'imgUrl': "/images/default_profile.png",
-            'text': "Erm acktaully",
-            'onClickUrl': "/",
+            'imgUrl': "/images/activity/user/activity_3.jpg",
+            'text': "Safari World",
+            'onClickUrl': "/activity/3/description",
         }
     ]);
 

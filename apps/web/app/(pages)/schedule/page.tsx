@@ -7,39 +7,34 @@ import Footer from '../../_components/footer';
 // Schedule Data
 const scheduleDummy = [
     {
-        "activity": "Activity 1",
+        "activity": "Wat Phra Kaew",
         "startTime": "2025-04-14T10:00:00Z",
         "endTime": "2025-04-14T13:00:00Z",
     },
     {
-        "activity": "Activity 2",
+        "activity": "Siam Amazing Park",
         "startTime": "2025-05-02T12:00:00Z",
         "endTime": "2025-05-02T13:00:00Z",
     },
     {
-        "activity": "Activity 3",
+        "activity": "Safari World",
         "startTime": "2025-04-15T12:00:00Z",
         "endTime": "2025-04-15T13:00:00Z",
     },
     {
-        "activity": "Activity 4",
+        "activity": "Dream World",
         "startTime": "2025-04-15T08:00:00Z",
         "endTime": "2025-04-15T14:00:00Z",
     },
     {
-        "activity": "Activity 5",
+        "activity": "Bang Krachao",
         "startTime": "2025-04-18T08:00:00Z",
         "endTime": "2025-04-18T14:00:00Z",
     },
     {
-        "activity": "Activity 6",
+        "activity": "Sea Life Bangkok",
         "startTime": "2025-05-03T03:00:00Z",
         "endTime": "2025-05-03T09:00:00Z",
-    },
-    {
-        "activity": "Activity 7",
-        "startTime": "2025-03-31T16:00:00Z",
-        "endTime": "2025-03-31T17:00:00Z",
     },
 ];
 
@@ -152,27 +147,32 @@ export default function SchedulePage() {
                 <div
                     className="flex flex-col gap-4 w-full"
                 >
-                    {Object.keys(transformedSchedule).map((date) => (
-                        <div
+                    {Object.entries(transformedSchedule).map(([date, activities]) => (
+                        <section
                             key={date}
                             id={date}
-                            className="flex flex-col gap-2"
+                            className="space-y-3"
                         >
-                            <h4>{date}</h4>
-                            {transformedSchedule[date] && Object.entries(transformedSchedule[date]).map(([activity, times]) => (
-                                <div
-                                    key={[activity, times.start, times.end].join('-')}
-                                    className="flex justify-between bg-lightgrey text-darkgrey font-semibold rounded-lg py-2 px-4"
-                                >
-                                    <div>
-                                        {activity}
-                                    </div>
-                                    <div>
-                                        {times.start} - {times.end}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
+                            <h4 className="text-lg font-medium text-gray-800 mb-2">
+                                {formatDate(date)} {/* Add date formatting if needed */}
+                            </h4>
+
+                            <div className="space-y-2">
+                                {activities && Object.entries(activities).map(([activity, { start, end }]) => (
+                                    <article
+                                        key={`${date}-${activity}-${start}-${end}`}
+                                        className="flex justify-between items-center bg-gray-100 hover:bg-gray-200 transition-colors duration-200 rounded-lg py-3 px-4 text-gray-700 font-semibold"
+                                    >
+                                        <span className="truncate max-w-[60%]">
+                                            {activity}
+                                        </span>
+                                        <span className="whitespace-nowrap text-gray-600">
+                                            {start} – {end} {/* Using en dash instead of hyphen */}
+                                        </span>
+                                    </article>
+                                ))}
+                            </div>
+                        </section>
                     ))}
                 </div>
             </div>

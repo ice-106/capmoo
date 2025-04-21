@@ -10,35 +10,58 @@ import VendorFooter from '../../../_components/vendorfooter';
 export default function Page() {
   const router = useRouter();
 
-  const defaultImageUrl = "/images/default_profile.png";
   const imgArrayActive = [
-    { imgUrl: defaultImageUrl, text: "Image Card 1", onClickUrl: "/vendor/active/1" },
+    { 
+      imgUrl: "/images/activity/vendor/activity_1.jpg", 
+      text: "Domain clash - Powered by Capmoo", 
+      onClickUrl: "/vendor/active/1" 
+    },
     {
-      imgUrl: defaultImageUrl,
-      text: "Image Card 2 Long ass name kinda bad help me please there's an earthquake",
+      imgUrl: "/images/activity/vendor/activity_2.jpg",
+      text: "Italian vocab contest 🦈🐊",
       onClickUrl: "/vendor/active/2",
     },
-    { imgUrl: defaultImageUrl, text: "Image Card 3", onClickUrl: "/vendor/active/3" },
+    { 
+      imgUrl: "/images/activity/vendor/activity_3.png", 
+      text: "Sleep workshop 💤😴🛌", 
+      onClickUrl: "/vendor/active/3" 
+    },
   ];
 
   const imgArrayEnded = [
-    { imgUrl: defaultImageUrl, text: "Image Card 1", onClickUrl: "/vendor/ended/1" },
+    { 
+      imgUrl: "/images/activity/vendor/activity_4.jpg", 
+      text: "Pray together 🙏🤲 Enlightenment 101", 
+      onClickUrl: "/vendor/ended/1" 
+    },
     {
-      imgUrl: defaultImageUrl,
-      text: "Image Card 2 Long ass name kinda bad help me please there's an earthquake",
+      imgUrl: "/images/activity/vendor/activity_5.jpg",
+      text: "Grand Prix 2025 - บางบ่อ circuit",
       onClickUrl: "/vendor/ended/2",
     },
-    { imgUrl: defaultImageUrl, text: "Image Card 3", onClickUrl: "/vendor/ended/3" },
+    { 
+      imgUrl: "/images/activity/vendor/activity_6.jpg", 
+      text: "Build anything but boat 🥀🥀💔💔", 
+      onClickUrl: "/vendor/ended/3" 
+    },
   ];
 
   const imgArrayDraft = [
-    { imgUrl: defaultImageUrl, text: "Image Card 1", onClickUrl: "/vendor/draft/1" },
+    { 
+      imgUrl: "/images/activity/vendor/activity_7.jpg", 
+      text: "Super marathon", 
+      onClickUrl: "/vendor/draft/1" 
+    },
     {
-      imgUrl: defaultImageUrl,
-      text: "Image Card 2 Long ass name kinda bad help me please there's an earthquake",
+      imgUrl: "/images/activity/vendor/activity_8.jpg",
+      text: "Protest - block roads",
       onClickUrl: "/vendor/draft/2",
     },
-    { imgUrl: defaultImageUrl, text: "Image Card 3", onClickUrl: "/vendor/draft/3" },
+    { 
+      imgUrl: "/images/activity/vendor/activity_9.jpeg", 
+      text: "Horse riding", 
+      onClickUrl: "/vendor/draft/3" 
+    },
   ];
 
   // Function to convert form values to URL parameters

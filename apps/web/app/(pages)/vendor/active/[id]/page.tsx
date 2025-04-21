@@ -9,6 +9,13 @@ import BackButton from '../../../../_components/BackButton';
 import ReviewCard from '../../../activity/_components/reviewCard';
 import TextBtn from '../../../../_components/textBtn';
 
+const dummyActivity = [
+  "Domain clash - Powered by Capmoo", "Italian vocab contest 🦈🐊", "Sleep workshop 💤😴🛌"
+];
+
+const dummyImg = [
+  "/images/activity/vendor/activity_1.jpg", "/images/activity/vendor/activity_2.jpg", "/images/activity/vendor/activity_3.png"
+];
 
 export default function Page() {
   const router = useRouter();
@@ -41,14 +48,14 @@ export default function Page() {
   const mockData = {
     id: activityId,
     images: [
-      { src: "/images/default_profile.png" },
-      { src: "/images/default_profile.png" },
-      { src: "/images/default_profile.png" },
+      { src: dummyImg[Number(activityId) - 1] || "/images/placeholder.png" },
+      { src: "/images/placeholder.png" },
+      { src: "/images/placeholder.png" },
     ],
     rating: 4.5,
-    name: "Capmoo Adventure",
-    date: "March 15, 2025",
-    location: "Chulalongkorn University",
+    name: dummyActivity[Number(activityId) - 1] || "Capmoo",
+    date: "April 22, 2025",
+    location: "Bangkok",
     price: "200 THB/person",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. \
     Cras ligula augue, rutrum eu nunc vel, aliquam sodales nulla. Suspendisse in mauris ut lorem maximus gravida vel eu ex.\
@@ -145,7 +152,7 @@ export default function Page() {
             rounded="lg"      
             onClick={() => 
               {console.log("Edit")
-                router.push("/vendor/create-activity")
+                router.push("/vendor/activity/create")
               }}
             />
         </div>
