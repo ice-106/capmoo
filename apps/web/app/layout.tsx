@@ -39,7 +39,7 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={`${poppins.variable} ${ibmPlexSansThai.variable} ${ibmPlexSansThaiLooped.variable}
-      bg-gray-100 flex justify-center`}
+      bg-white flex justify-center`}
       >
         {/* Recolor to white when finish dev*/}
         <div className="flex w-[375px] h-screen bg-white px-6 pt-[7.5rem] pb-28 justify-start items-start overflow-y-auto overflow-x-hidden">
