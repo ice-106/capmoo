@@ -1,14 +1,14 @@
-import type { Config } from "tailwindcss";
+import type { Config } from 'tailwindcss'
 
 // We want each package to be responsible for its own content.
-const config: Omit<Config, "content"> = {
+const config: Omit<Config, 'content'> = {
   theme: {
     extend: {
       backgroundImage: {
-        "glow-conic":
-          "conic-gradient(from 180deg at 50% 50%, #2a8af6 0deg, #a853ba 180deg, #e92a67 360deg)",
-        "pumpkin-lemon":
-          "linear-gradient(0deg, rgba(243, 117, 43, 0) 0%, #F3752B 50%), linear-gradient(180deg, rgba(246, 191, 39, 0) 0%, #F6BF27 50%)",
+        'glow-conic':
+          'conic-gradient(from 180deg at 50% 50%, #2a8af6 0deg, #a853ba 180deg, #e92a67 360deg)',
+        'pumpkin-lemon':
+          'linear-gradient(0deg, rgba(243, 117, 43, 0) 0%, #F3752B 50%), linear-gradient(180deg, rgba(246, 191, 39, 0) 0%, #F6BF27 50%)',
       },
       colors: {
         lemon: '#F6BF27',
@@ -19,7 +19,7 @@ const config: Omit<Config, "content"> = {
         grey: '#666666',
         darkgrey: '#333333',
         black: '#000000',
-        red: '#C12022'
+        red: '#C12022',
       },
       fontFamily: {
         poppins: ['var(--font-poppins)'],
@@ -28,8 +28,9 @@ const config: Omit<Config, "content"> = {
       },
     },
   },
-  plugins: [function({addBase}: { addBase: (styles: Record<string, any>) => void })  {
-    addBase({
+  plugins: [
+    function ({ addBase }: { addBase: (styles: Record<string, any>) => void }) {
+      addBase({
         h1: {
           fontWeight: '700',
           fontSize: '36px',
@@ -60,8 +61,8 @@ const config: Omit<Config, "content"> = {
           fontSize: '14px',
           lineHeight: '20px',
         },
-    })
-  },
+      })
+    },
   ],
-};
-export default config;
+}
+export default config

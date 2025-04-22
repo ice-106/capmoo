@@ -1,0 +1,8 @@
+node_modules/**/*
+.turbo/**/*
+.next/**/*
+pnpm-lock.yaml
+.gitignore
+.prettierignore
+.nvmrc
+.npmrc

@@ -1,14 +1,10 @@
-"use client";
-import { SurveyProvider } from './SurveyContext';
+'use client'
+import { SurveyProvider } from './SurveyContext'
 
 export default function SurveyLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode
 }) {
-  return (
-    <SurveyProvider>
-      {children}
-    </SurveyProvider>
-  );
+  return <SurveyProvider>{children}</SurveyProvider>
 }
