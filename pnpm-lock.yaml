@@ -13,7 +13,7 @@ importers:
         version: 0.484.0(react@19.0.0)
     devDependencies:
       prettier:
-        specifier: ^3.5.0
+        specifier: ^3.5.3
         version: 3.5.3
       prettier-plugin-tailwindcss:
         specifier: ^0.6.11

@@ -1,23 +1,23 @@
-import React, { useState, useLayoutEffect, useRef } from 'react';
-import { SearchFormValues } from '../_types/search';
-import { ArrowLeft } from 'lucide-react';
-import SearchBar from './searchbar';
-import Dropdown from './dropdown';
-import TextBox from './textbox';
-import TextBtn from './textBtn';
-import { useSwipeGesture } from '../_hooks/useSwipeGesture';
+import React, { useState, useLayoutEffect, useRef } from 'react'
+import { SearchFormValues } from '../_types/search'
+import { ArrowLeft } from 'lucide-react'
+import SearchBar from './searchbar'
+import Dropdown from './dropdown'
+import TextBox from './textbox'
+import TextBtn from './textBtn'
+import { useSwipeGesture } from '../_hooks/useSwipeGesture'
 
 interface SearchDrawerProps {
-  value: string;
-  onChange?: (value: string) => void;
-  onSubmit: (formValues?: SearchFormValues) => void;
-  onClose: () => void;
-  placeholder?: string;
+  value: string
+  onChange?: (value: string) => void
+  onSubmit: (formValues?: SearchFormValues) => void
+  onClose: () => void
+  placeholder?: string
   // Added new props for initial values
-  initialLocation?: string[];
-  initialMinPrice?: string;
-  initialMaxPrice?: string;
-  initialCategories?: string[];
+  initialLocation?: string[]
+  initialMinPrice?: string
+  initialMaxPrice?: string
+  initialCategories?: string[]
 }
 
 const SearchDrawer: React.FC<SearchDrawerProps> = ({
@@ -30,48 +30,50 @@ const SearchDrawer: React.FC<SearchDrawerProps> = ({
   initialLocation = [],
   initialMinPrice = '',
   initialMaxPrice = '',
-  initialCategories = []
+  initialCategories = [],
 }) => {
   // Initialize state with the passed initial values
-  const [selectedLocation, setSelectedLocation] = useState<string[]>(initialLocation);
-  const [minPrice, setMinPrice] = useState(initialMinPrice);
-  const [maxPrice, setMaxPrice] = useState(initialMaxPrice);
-  const [selectedCategories, setSelectedCategories] = useState<string[]>(initialCategories);
-  
+  const [selectedLocation, setSelectedLocation] =
+    useState<string[]>(initialLocation)
+  const [minPrice, setMinPrice] = useState(initialMinPrice)
+  const [maxPrice, setMaxPrice] = useState(initialMaxPrice)
+  const [selectedCategories, setSelectedCategories] =
+    useState<string[]>(initialCategories)
+
   // Create refs for the TextBox components
-  const minPriceRef = useRef<HTMLInputElement>(null);
-  const maxPriceRef = useRef<HTMLInputElement>(null);
-  
+  const minPriceRef = useRef<HTMLInputElement>(null)
+  const maxPriceRef = useRef<HTMLInputElement>(null)
+
   // Use our custom hook
   const [translateX, swipeHandlers] = useSwipeGesture({
     direction: 'right',
-    onSwipeComplete: onClose
-  });
+    onSwipeComplete: onClose,
+  })
 
   useLayoutEffect(() => {
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden'
     return () => {
-      document.body.style.overflow = '';
-    };
-  }, []);
+      document.body.style.overflow = ''
+    }
+  }, [])
 
-  const clearLocation = () => setSelectedLocation([]);
-  
+  const clearLocation = () => setSelectedLocation([])
+
   const clearPrice = () => {
-    setMinPrice('');
-    setMaxPrice('');
-  };
-  
-  const clearCategories = () => setSelectedCategories([]);
+    setMinPrice('')
+    setMaxPrice('')
+  }
+
+  const clearCategories = () => setSelectedCategories([])
 
   // Handle text input changes
   const handleMinPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setMinPrice(e.target.value);
-  };
+    setMinPrice(e.target.value)
+  }
 
   const handleMaxPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setMaxPrice(e.target.value);
-  };
+    setMaxPrice(e.target.value)
+  }
 
   // Get all form values for submission
   const getFormValues = () => {
@@ -80,37 +82,30 @@ const SearchDrawer: React.FC<SearchDrawerProps> = ({
       location: selectedLocation,
       minPrice: minPrice,
       maxPrice: maxPrice,
-      categories: selectedCategories
-    };
-  };
+      categories: selectedCategories,
+    }
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const formValues = getFormValues();
-    console.log('Form values:', formValues);
-    onSubmit(formValues); // Pass the form values to parent
-  };
+    e.preventDefault()
+    const formValues = getFormValues()
+    console.log('Form values:', formValues)
+    onSubmit(formValues) // Pass the form values to parent
+  }
 
   return (
-    <div className="fixed inset-0 flex justify-center z-30">
-      <div 
-        className="absolute w-[375px] top-[7.5rem] bottom-28 bg-white overflow-y-scroll"
+    <div className='fixed inset-0 z-30 flex justify-center'>
+      <div
+        className='absolute bottom-28 top-[7.5rem] w-[375px] overflow-y-scroll bg-white'
         style={swipeHandlers.style}
         onTouchStart={swipeHandlers.onTouchStart}
         onTouchMove={swipeHandlers.onTouchMove}
         onTouchEnd={swipeHandlers.onTouchEnd}
       >
-        <form 
-          onSubmit={handleSubmit} 
-          className="flex flex-col p-6 gap-y-8"
-        >
+        <form onSubmit={handleSubmit} className='flex flex-col gap-y-8 p-6'>
           {/* Back Button and Search Bar */}
-          <div className="flex flex-col gap-4 mb-4">
-            <button
-              type="button"
-              onClick={onClose}
-              className="p-2 -ml-2"
-            >
+          <div className='mb-4 flex flex-col gap-4'>
+            <button type='button' onClick={onClose} className='-ml-2 p-2'>
               <ArrowLeft size={24} />
             </button>
             <SearchBar
@@ -122,67 +117,67 @@ const SearchDrawer: React.FC<SearchDrawerProps> = ({
             />
           </div>
 
-          <div className="flex flex-col gap-y-6">
+          <div className='flex flex-col gap-y-6'>
             {/* Location Dropdown */}
-            <div className="flex flex-col gap-y-2">
-              <div className="flex justify-between items-center">
+            <div className='flex flex-col gap-y-2'>
+              <div className='flex items-center justify-between'>
                 <h3>Location</h3>
                 {selectedLocation.length > 0 && (
-                  <TextBtn text="clear" onClick={clearLocation} />
+                  <TextBtn text='clear' onClick={clearLocation} />
                 )}
               </div>
               <Dropdown
                 selected={selectedLocation}
                 onSelect={setSelectedLocation}
-                defaultText="Select Area"
+                defaultText='Select Area'
                 options={['Area 1', 'Area 2', 'Area 3']}
               />
             </div>
 
             {/* Price Range Inputs */}
-            <div className="flex flex-col gap-y-2 mt-4">
-              <div className="flex justify-between items-center">
+            <div className='mt-4 flex flex-col gap-y-2'>
+              <div className='flex items-center justify-between'>
                 <h3>Price</h3>
                 {(minPrice || maxPrice) && (
-                  <TextBtn text="clear" onClick={clearPrice} />
+                  <TextBtn text='clear' onClick={clearPrice} />
                 )}
               </div>
-              <div className="flex items-center gap-x-2">
+              <div className='flex items-center gap-x-2'>
                 <TextBox
                   ref={minPriceRef}
-                  placeholder="Min"
+                  placeholder='Min'
                   value={minPrice}
                   onChange={handleMinPriceChange}
-                  width="100%"
-                  textSize="small"
-                  variant="light"
+                  width='100%'
+                  textSize='small'
+                  variant='light'
                 />
-                <span className="flex-shrink-0 text-sm">Baht -</span>
+                <span className='flex-shrink-0 text-sm'>Baht -</span>
                 <TextBox
                   ref={maxPriceRef}
-                  placeholder="Max"
+                  placeholder='Max'
                   value={maxPrice}
                   onChange={handleMaxPriceChange}
-                  width="100%"
-                  textSize="small"
-                  variant="light"
+                  width='100%'
+                  textSize='small'
+                  variant='light'
                 />
-                <span className="flex-shrink-0 text-sm">Baht</span>
+                <span className='flex-shrink-0 text-sm'>Baht</span>
               </div>
             </div>
 
             {/* Category Checkboxes */}
-            <div className="flex flex-col gap-y-2 mt-4">
-              <div className="flex justify-between items-center">
+            <div className='mt-4 flex flex-col gap-y-2'>
+              <div className='flex items-center justify-between'>
                 <h3>Category</h3>
                 {selectedCategories.length > 0 && (
-                  <TextBtn text="clear" onClick={clearCategories} />
+                  <TextBtn text='clear' onClick={clearCategories} />
                 )}
               </div>
               <Dropdown
                 selected={selectedCategories}
                 onSelect={setSelectedCategories}
-                defaultText="Select Categories"
+                defaultText='Select Categories'
                 options={['Option 1', 'Option 2', 'Option 3']}
               />
             </div>
@@ -190,15 +185,15 @@ const SearchDrawer: React.FC<SearchDrawerProps> = ({
 
           {/* Submit Button */}
           <button
-            type="submit"
-            className="w-full bg-orange text-white py-2 rounded-lg hover:bg-orange/90 transition-colors mt-6"
+            type='submit'
+            className='bg-orange hover:bg-orange/90 mt-6 w-full rounded-lg py-2 text-white transition-colors'
           >
             Search
           </button>
         </form>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default SearchDrawer;
+export default SearchDrawer

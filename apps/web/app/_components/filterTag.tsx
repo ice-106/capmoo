@@ -1,24 +1,24 @@
-import React from "react";
+import React from 'react'
 
 interface FilterTagProps {
-  children: React.ReactNode;
-  onClick?: () => void;
-  className?: string;
+  children: React.ReactNode
+  onClick?: () => void
+  className?: string
 }
 
 const FilterTag: React.FC<FilterTagProps> = ({
   children,
   onClick,
-  className = "",
+  className = '',
 }) => {
   return (
     <div
-      className={`px-3 py-1 rounded-full border border-orange text-orange text-sm flex items-center gap-1 cursor-pointer ${className}`}
+      className={`border-orange text-orange flex cursor-pointer items-center gap-1 rounded-full border px-3 py-1 text-sm ${className}`}
       onClick={onClick}
     >
       {children}
     </div>
-  );
-};
+  )
+}
 
-export default FilterTag;
+export default FilterTag
