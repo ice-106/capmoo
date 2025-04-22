@@ -3,7 +3,7 @@ package model
 type Review struct {
 	Model
 
-	Rating  int    `gorm:"not null"`
+	Rating  int    `gorm:"not null;check:rating >= 1 AND rating <= 5"`
 	Comment string `gorm:"not null"`
 
 	UserId     uint     `gorm:"not null"`
