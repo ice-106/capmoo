@@ -47,7 +47,7 @@ export default function ProfilePage() {
 
   const signOutRedirect = () => {
     const clientId = '45pi75s2fqmpp08p51pdupv5jc'
-    const logoutUri = 'http://localhost:3000/'
+    const logoutUri = 'https://capmoo.vercel.app/'
     const cognitoDomain =
       'https://ap-southeast-1kabcq3yw4.auth.ap-southeast-1.amazoncognito.com'
     window.location.href = `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(logoutUri)}`
