@@ -1,29 +1,8 @@
-import './globals.css'
+import '~/_styles/globals.css'
 import type { Metadata } from 'next'
-import {
-  Poppins,
-  IBM_Plex_Sans_Thai,
-  IBM_Plex_Sans_Thai_Looped,
-} from 'next/font/google'
-import ClientWrapper from './client-wrapper'
-
-const poppins = Poppins({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-poppins',
-})
-
-const ibmPlexSansThai = IBM_Plex_Sans_Thai({
-  subsets: ['latin', 'thai'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-ibm-plex-sans-thai',
-})
-
-const ibmPlexSansThaiLooped = IBM_Plex_Sans_Thai_Looped({
-  subsets: ['latin', 'thai'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-ibm-plex-sans-thai-looped',
-})
+import ClientWrapper from '~/_providers/client-wrapper'
+import { cn } from '~/_lib/utils'
+import { ibmPlexSansThai, ibmPlexSansThaiLooped, poppins } from '~/_lib/fonts'
 
 export const metadata: Metadata = {
   title: 'Create Turborepo',
@@ -38,7 +17,12 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body
-        className={`${poppins.variable} ${ibmPlexSansThai.variable} ${ibmPlexSansThaiLooped.variable} flex justify-center bg-white`}
+        className={cn(
+          poppins.variable,
+          ibmPlexSansThai.variable,
+          ibmPlexSansThaiLooped.variable,
+          'flex justify-center bg-white'
+        )}
       >
         {/* Recolor to white when finish dev*/}
         <div className='no-scrollbar flex h-screen w-[375px] items-start justify-start overflow-y-auto overflow-x-hidden bg-white px-6 pb-28 pt-[7.5rem]'>
