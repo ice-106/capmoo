@@ -6,8 +6,8 @@ import FooterTemplate from '~/_components/footer-template'
 import Button from '~/_components/button'
 import BackButton from '~/_components/back-button'
 import TextBtn from '~/_components/text-button'
-import NameSection from '~/(pages)/activity/_components/nameSection'
-import ReviewCard from '~/(pages)/activity/_components/reviewCard'
+import NameSection from '~/(pages)/activity/_components/name-section'
+import ReviewCard from '~/(pages)/activity/_components/review-card'
 
 const dummyActivity = [
   'Domain clash - Powered by Capmoo',
