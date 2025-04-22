@@ -130,7 +130,7 @@ const SearchDrawer: React.FC<SearchDrawerProps> = ({
                 selected={selectedLocation}
                 onSelect={setSelectedLocation}
                 defaultText='Select Area'
-                options={['Area 1', 'Area 2', 'Area 3']}
+                options={['Bangkok', 'Chiang Mai', 'Phuket', 'Nan']}
               />
             </div>
 
@@ -178,7 +178,7 @@ const SearchDrawer: React.FC<SearchDrawerProps> = ({
                 selected={selectedCategories}
                 onSelect={setSelectedCategories}
                 defaultText='Select Categories'
-                options={['Option 1', 'Option 2', 'Option 3']}
+                options={['Sport', 'Shopping', 'Education', 'Nature', 'Eating', 'Adventure', 'Workshop', 'Religious']}
               />
             </div>
           </div>
