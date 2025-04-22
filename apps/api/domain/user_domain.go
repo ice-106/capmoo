@@ -1,8 +1,15 @@
 package domain
 
-import "github.com/capmoo/api/repository"
+import (
+	"context"
+	"fmt"
+
+	"github.com/capmoo/api/model"
+	"github.com/capmoo/api/repository"
+)
 
 type UserDomain interface {
+	GetUsers(ctx context.Context) ([]model.User, error)
 }
 
 type UserDomainImpl struct {
@@ -15,4 +22,12 @@ func NewUserDomain(userDomain repository.UserRepository) *UserDomainImpl {
 	return &UserDomainImpl{
 		userRepository: userDomain,
 	}
+}
+
+func (d *UserDomainImpl) GetUsers(ctx context.Context) ([]model.User, error) {
+	users, err := d.userRepository.GetUsers(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("can't get users from UserDomain: %w", err)
+	}
+	return users, nil
 }
