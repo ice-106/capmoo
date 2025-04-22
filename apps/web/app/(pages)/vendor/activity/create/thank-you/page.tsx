@@ -1,11 +1,11 @@
 'use client'
 import React from 'react'
 import { useRouter } from 'next/navigation'
-import Header from '../../../../../_components/header'
-import FooterTemplate from '../../../../../_components/footerTemplate'
-import SubHeaderPayment from '../../../../activity/[id]/booking/subheader'
-import Button from '../../../../../_components/Button'
+import Header from '~/_components/header'
+import FooterTemplate from '~/_components/footer-template'
+import Button from '~/_components/button'
 import { Handshake, BadgeCheck } from 'lucide-react'
+import SubHeaderPayment from '~/(pages)/activity/[id]/booking/subheader'
 
 const titleData = {
   title: 'Activity Created Successfully',

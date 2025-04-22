@@ -1,10 +1,10 @@
 'use client'
 import React from 'react'
 import { useRouter } from 'next/navigation'
-import Header from '../../../../../_components/header'
-import FooterTemplate from '../../../../../_components/footerTemplate'
+import Header from '~/_components/header'
+import FooterTemplate from '~/_components/footer-template'
 import SubHeaderPayment from '../subheader'
-import Button from '../../../../../_components/Button'
+import Button from '~/_components/button'
 import { Handshake, BadgeCheck } from 'lucide-react'
 
 const titleData = {

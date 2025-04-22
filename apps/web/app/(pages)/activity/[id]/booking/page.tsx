@@ -1,12 +1,12 @@
 'use client'
 import React, { useState, useRef } from 'react'
 import { useRouter, usePathname, useParams } from 'next/navigation'
-import Header from '../../../../_components/header'
+import Header from '~/_components/header'
 import SubHeaderPayment from './subheader'
-import FooterTemplate from '../../../../_components/footerTemplate'
-import Button from '../../../../_components/Button'
-import TextBox from '../../../../_components/textbox'
-import Dropdown from '../../../../_components/dropdown'
+import FooterTemplate from '~/_components/footer-template'
+import Button from '~/_components/button'
+import TextBox from '~/_components/text-box'
+import Dropdown from '~/_components/dropdown'
 import { MapPin } from 'lucide-react'
 
 const dummyTitle = [

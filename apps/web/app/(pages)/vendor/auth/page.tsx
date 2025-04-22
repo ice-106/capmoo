@@ -2,9 +2,9 @@
 import React, { useRef } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import FooterTemplate from '../../../_components/footerTemplate'
-import TextBox from '../../../_components/textbox'
-import Button from '../../../_components/Button'
+import FooterTemplate from '~/_components/footer-template'
+import TextBox from '~/_components/text-box'
+import Button from '~/_components/button'
 
 export default function Page() {
   const router = useRouter()

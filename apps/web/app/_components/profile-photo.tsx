@@ -3,7 +3,7 @@
 import React, { useRef, useState, useEffect } from 'react'
 import { Pencil } from 'lucide-react'
 import Image from 'next/image'
-import useBanner from '../_hooks/useBanner'
+import useBanner from '../_hooks/use-banner'
 import Cropper from './cropper'
 
 interface ProfilePhotoProps {

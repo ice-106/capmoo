@@ -1,14 +1,14 @@
 'use client'
 import React, { useState, useRef } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
-import Header from '../../../../../_components/header'
-import SubHeaderPayment from '../../../../activity/[id]/booking/subheader'
-import FooterTemplate from '../../../../../_components/footerTemplate'
-import Button from '../../../../../_components/Button'
-import TextBox from '../../../../../_components/textbox'
-import Dropdown from '../../../../../_components/dropdown'
+import Header from '~/_components/header'
+import FooterTemplate from '~/_components/footer-template'
+import Button from '~/_components/button'
+import TextBox from '~/_components/text-box'
+import Dropdown from '~/_components/dropdown'
 import { MapPin } from 'lucide-react'
-import ImageUploader from '../../../../reviews/add-reviews/_component/imageupload'
+import ImageUploader from '~/(pages)/reviews/add-reviews/_components/image-upload'
+import SubHeaderPayment from '~/(pages)/activity/[id]/booking/subheader'
 
 const mockData = {
   name: 'Capmoo Adventure',

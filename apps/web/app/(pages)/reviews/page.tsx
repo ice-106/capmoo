@@ -2,8 +2,8 @@
 
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import SearchBar from '../../_components/searchbar'
-import HeaderwithIcon from '../../_components/headerwithIcon'
+import SearchBar from '../../_components/search-bar'
+import HeaderwithIcon from '../../_components/header-with-icon'
 import Footer from '../../_components/footer'
 import { CirclePlus } from 'lucide-react'
 import Masonry from '../../_components/masonry'

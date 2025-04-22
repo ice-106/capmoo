@@ -1,5 +1,5 @@
 import React from 'react'
-import ImageCard from './imagecard'
+import ImageCard from './image-card'
 import { ImageItem } from '../_types/images'
 
 interface MasonryProps {

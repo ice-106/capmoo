@@ -1,13 +1,14 @@
 'use client'
+
 import React from 'react'
 import { useAuth } from 'react-oidc-context'
 import { useRouter } from 'next/navigation'
-import Header from '../../../_components/header'
-import VendorFooter from '../../../_components/vendorfooter'
-import ProfilePhoto from '../../../_components/profilephoto'
-import IconWithLabel from '../../../_components/iconwithlabel'
+import Header from '~/_components/header'
+import VendorFooter from '~/_components/vendor-footer'
+import ProfilePhoto from '~/_components/profile-photo'
+import IconWithLabel from '~/_components/icon-with-label'
 import { PencilLine, Star, BarChart2, Wallet } from 'lucide-react'
-import Button from '../../../_components/Button'
+import Button from '~/_components/button'
 
 export default function ProfilePage() {
   const auth = useAuth()

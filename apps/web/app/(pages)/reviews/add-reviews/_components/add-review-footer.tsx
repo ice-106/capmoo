@@ -1,6 +1,6 @@
 'use client'
 
-import Button from '../../../../_components/Button'
+import Button from '~/_components/button'
 
 const AddReviewFooter: React.FC<{
   isFormValid: boolean

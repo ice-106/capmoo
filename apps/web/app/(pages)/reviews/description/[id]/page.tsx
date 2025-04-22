@@ -1,10 +1,10 @@
 'use client'
 import { useParams } from 'next/navigation'
 import React, { useState } from 'react'
-import BackButton from '../../../../_components/BackButton'
-import Gallery from '../../../../_components/galleryrect'
-import FooterTemplate from '../../../../_components/footerTemplate'
-import FilterTag from '../../../../_components/filterTag'
+import BackButton from '~/_components/back-button'
+import Gallery from '~/_components/gallery-rect'
+import FooterTemplate from '~/_components/footer-template'
+import FilterTag from '~/_components/filter-tag'
 import {
   ChevronDown,
   ChevronUp,
@@ -14,7 +14,7 @@ import {
   Star,
 } from 'lucide-react'
 import Image from 'next/image'
-import Footer from '../../../../_components/footer'
+import Footer from '~/_components/footer'
 
 export default function ReviewDescriptionPage() {
   const params = useParams()

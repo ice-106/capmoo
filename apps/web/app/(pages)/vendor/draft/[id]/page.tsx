@@ -2,10 +2,10 @@
 
 import { useParams, useRouter } from 'next/navigation'
 import { useEffect } from 'react'
-import NameSection from '../../../activity/_components/nameSection'
-import FooterTemplate from '../../../../_components/footerTemplate'
-import Button from '../../../../_components/Button'
-import BackButton from '../../../../_components/BackButton'
+import FooterTemplate from '~/_components/footer-template'
+import Button from '~/_components/button'
+import BackButton from '~/_components/back-button'
+import NameSection from '~/(pages)/activity/_components/nameSection'
 
 const dummyActivity = [
   'Super marathon',

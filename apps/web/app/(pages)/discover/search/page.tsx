@@ -2,16 +2,16 @@
 
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useState, useEffect, useCallback, useMemo, Suspense } from 'react'
-import { SearchFormValues } from '../../../_types/search'
-import Header from '../../../_components/header'
-import Footer from '../../../_components/footer'
-import SearchBar from '../../../_components/searchbar'
-import Masonry from '../../../_components/masonry'
-import { ImageItem } from '../../../_types/images'
-import { useSwipeGesture } from '../../../_hooks/useSwipeGesture'
-import FilterTag from '../../../_components/filterTag'
-import SearchDrawer from '../../../_components/searchDrawer'
-import TextBtn from '../../../_components/textBtn'
+import { SearchFormValues } from '~/_types/search'
+import Header from '~/_components/header'
+import Footer from '~/_components/footer'
+import SearchBar from '~/_components/search-bar'
+import Masonry from '~/_components/masonry'
+import { ImageItem } from '~/_types/images'
+import { useSwipeGesture } from '~/_hooks/use-swipe-gesture'
+import FilterTag from '~/_components/filter-tag'
+import SearchDrawer from '~/_components/search-drawer'
+import TextBtn from '~/_components/text-button'
 
 export function SearchResultsPage() {
   const router = useRouter()

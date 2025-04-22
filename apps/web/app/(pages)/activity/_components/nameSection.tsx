@@ -8,8 +8,8 @@ import {
   MapPin,
   Banknote,
 } from 'lucide-react'
-import BackButton from '../../../_components/BackButton'
-import Gallery from '../../../_components/galleryrect'
+import BackButton from '~/_components/back-button'
+import Gallery from '~/_components/gallery-rect'
 
 interface ImageData {
   src: string

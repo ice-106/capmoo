@@ -4,7 +4,7 @@ import React, { useEffect } from 'react'
 import { useAuth } from 'react-oidc-context'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import FooterTemplate from './_components/footerTemplate'
+import FooterTemplate from './_components/footer-template'
 
 export default function Page() {
   const auth = useAuth()

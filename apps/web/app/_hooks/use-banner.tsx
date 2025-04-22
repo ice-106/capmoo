@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { X } from 'lucide-react'
-import Modal from '../_components/Modal'
+import Modal from '~/_components/modal'
 
 type BannerSize = 'sm' | 'md' | 'lg'
 

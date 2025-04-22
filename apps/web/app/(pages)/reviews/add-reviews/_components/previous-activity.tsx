@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { CalendarClock, MapPin } from 'lucide-react'
-import Dropdown from '../../../../_components/dropdown'
+import Dropdown from '~/_components/dropdown'
 
 interface PreviousActivitySelectorProps {
   selected: string[]

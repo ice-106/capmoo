@@ -1,12 +1,12 @@
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import BackButton from '../../../_components/BackButton'
-import PreviousActivitySelector from './_component/previousactivity'
-import Rating from './_component/rating'
-import ImageUploader from './_component/imageupload'
-import FooterTemplate from '../../../_components/footerTemplate'
-import Button from '../../../_components/Button'
+import BackButton from '~/_components/back-button'
+import PreviousActivitySelector from './_components/previous-activity'
+import Rating from './_components/rating'
+import ImageUploader from './_components/image-upload'
+import FooterTemplate from '~/_components/footer-template'
+import Button from '~/_components/button'
 
 export default function Page() {
   const router = useRouter()

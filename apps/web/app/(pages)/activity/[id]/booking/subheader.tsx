@@ -1,7 +1,7 @@
 'use client'
 import React from 'react'
 import { LucideIcon } from 'lucide-react'
-import Progressbar from '../../../../_components/progressbar'
+import Progressbar from '~/_components/progress-bar'
 
 interface SubHeaderPaymentProps {
   currentStep: number

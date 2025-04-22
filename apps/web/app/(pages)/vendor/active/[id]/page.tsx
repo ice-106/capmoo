@@ -2,12 +2,12 @@
 
 import { useParams, useRouter } from 'next/navigation'
 import { useEffect } from 'react'
-import NameSection from '../../../activity/_components/nameSection'
-import FooterTemplate from '../../../../_components/footerTemplate'
-import Button from '../../../../_components/Button'
-import BackButton from '../../../../_components/BackButton'
-import ReviewCard from '../../../activity/_components/reviewCard'
-import TextBtn from '../../../../_components/textBtn'
+import FooterTemplate from '~/_components/footer-template'
+import Button from '~/_components/button'
+import BackButton from '~/_components/back-button'
+import TextBtn from '~/_components/text-button'
+import NameSection from '~/(pages)/activity/_components/nameSection'
+import ReviewCard from '~/(pages)/activity/_components/reviewCard'
 
 const dummyActivity = [
   'Domain clash - Powered by Capmoo',

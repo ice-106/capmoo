@@ -1,10 +1,10 @@
 'use client'
 import React, { useState, useEffect, useRef } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import Header from '../../../../../_components/header'
+import Header from '~/_components/header'
 import SubHeaderPayment from '../subheader'
-import FooterTemplate from '../../../../../_components/footerTemplate'
-import Button from '../../../../../_components/Button'
+import FooterTemplate from '~/_components/footer-template'
+import Button from '~/_components/button'
 import { Banknote, QrCode } from 'lucide-react'
 
 const mockData = {

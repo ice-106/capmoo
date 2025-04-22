@@ -1,8 +1,8 @@
 'use client'
 
 import React, { useEffect } from 'react'
-import Header from '../../../_components/header'
-import VendorFooter from '../../../_components/vendorfooter'
+import Header from '~/_components/header'
+import VendorFooter from '~/_components/vendor-footer'
 import { useRouter } from 'next/navigation'
 // Schedule Data
 const scheduleDummy = [
