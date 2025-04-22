@@ -62,7 +62,7 @@ func InitDI(ctx context.Context, cfg *config.Config) (r *route.V1Handler, err er
 	userDomain := domain.UserDomain(userRepository)
 
 	// handler
-	userHandler := handler.NewUserHandler(&userDomain)
+	userHandler := handler.NewUserHandler(userDomain)
 
 	v1Handler := route.V1NewHandler(userHandler)
 
