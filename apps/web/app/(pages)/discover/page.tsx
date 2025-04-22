@@ -12,6 +12,11 @@ export default function Page() {
 
   const imgArrayPopular = [
     {
+      "imgUrl": "/images/activity/user/activity_9.jpg",
+      "text": "Kayaking Along Nan River",
+      "onClickUrl": "/activity/9/description"
+    },
+    {
       imgUrl: '/images/activity/user/activity_1.jpg',
       text: 'Wat Phra Kaew',
       onClickUrl: '/activity/1/description',
@@ -43,6 +48,16 @@ export default function Page() {
       imgUrl: '/images/activity/user/activity_6.jpg',
       text: 'Sea Life Bangkok',
       onClickUrl: '/activity/6/description',
+    },
+    {
+      "imgUrl": "/images/activity/user/activity_7.jpg",
+      "text": "Playing and Taking Pictures with Horse",
+      "onClickUrl": "/activity/7/description"
+    },
+    {
+      "imgUrl": "/images/activity/user/activity_8.jpg",
+      "text": "River Seaweed Harvesting Adventure",
+      "onClickUrl": "/activity/8/description"
     },
   ]
 

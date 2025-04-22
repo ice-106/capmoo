@@ -24,7 +24,7 @@ const ReviewCard = ({
 
   const handleReviewClick = () => {
     console.log('Review clicked')
-    router.push(`/reviews/${reviewUrl}`)
+    router.push(`/reviews/description/${reviewUrl}`)
   }
 
   return (

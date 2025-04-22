@@ -48,49 +48,26 @@ export function SearchResultsPage() {
 
   // Load mock search results - only depends on primitive values
   useEffect(() => {
-    const defaultImageUrl = '/images/default_profile.png'
 
     // Mock results based on search parameters
     const mockResults = [
-      {
-        imgUrl: defaultImageUrl,
-        text: 'Result 1' + (queryParams.q ? ` for "${queryParams.q}"` : ''),
-        onClickUrl: '/',
-      },
-      {
-        imgUrl: defaultImageUrl,
-        text:
-          'Result 2' +
-          (queryParams.locations.length
-            ? ` in ${queryParams.locations.join(', ')}`
-            : ''),
-        onClickUrl: '/',
-      },
-      {
-        imgUrl: defaultImageUrl,
-        text:
-          'Result 3' +
-          (queryParams.minPrice ? ` min price ${queryParams.minPrice}` : ''),
-        onClickUrl: '/',
-      },
-      {
-        imgUrl: defaultImageUrl,
-        text:
-          'Result 4' +
-          (queryParams.maxPrice ? ` max price ${queryParams.maxPrice}` : ''),
-        onClickUrl: '/',
-      },
-      {
-        imgUrl: defaultImageUrl,
-        text:
-          'Result 5' +
-          (queryParams.categories.length
-            ? ` (${queryParams.categories.join(', ')})`
-            : ''),
-        onClickUrl: '/',
-      },
-      { imgUrl: defaultImageUrl, text: 'Result 6', onClickUrl: '/' },
-    ]
+        {
+          "imgUrl": "/images/activity/user/activity_7.jpg",
+          "text": "Playing and Taking Pictures with Horse",
+          "onClickUrl": "/activity/7/description"
+        },
+        {
+          "imgUrl": "/images/activity/user/activity_8.jpg",
+          "text": "River Seaweed Harvesting Adventure",
+          "onClickUrl": "/activity/8/description"
+        },
+        {
+          "imgUrl": "/images/activity/user/activity_9.jpg",
+          "text": "Kayaking Along Nan River",
+          "onClickUrl": "/activity/9/description"
+        }
+      ]
+      
 
     setResults(mockResults)
   }, [
