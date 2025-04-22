@@ -15,7 +15,7 @@ interface ImageData {
   src: string
 }
 
-interface nameSectionProps {
+interface NameSectionProps {
   images: ImageData[]
   rating: number
   name: string
@@ -24,7 +24,7 @@ interface nameSectionProps {
   price: string
 }
 
-const NameSection: React.FC<nameSectionProps> = ({ ...props }) => {
+const NameSection: React.FC<NameSectionProps> = ({ ...props }) => {
   const [isSticky, setIsSticky] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
 

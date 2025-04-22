@@ -5,7 +5,7 @@ import { useEffect } from 'react'
 import FooterTemplate from '~/_components/footer-template'
 import Button from '~/_components/button'
 import BackButton from '~/_components/back-button'
-import NameSection from '~/(pages)/activity/_components/nameSection'
+import NameSection from '~/(pages)/activity/_components/name-section'
 
 const dummyActivity = [
   'Super marathon',
