@@ -1,6 +1,13 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "globalDependencies": ["**/.env.*local"],
+  "globalEnv": [
+    "API_ENV",
+    "API_PORT",
+    "API_DATABASE_URL",
+    "API_ALLOWED_ORIGINS",
+    "API_ALLOWED_HEADERS"
+  ],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],

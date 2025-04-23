@@ -6,6 +6,12 @@ Install dependencies
 pnpm install
 ```
 
+Create .env
+
+```sh
+cp .env.example .env
+```
+
 ### Web
 
 Start the Web development server
@@ -29,14 +35,6 @@ Install Go modules
 cd ./apps/api
 go mod download
 ```
-
-Create .env
-
-```sh
-cp .env.example .env
-```
-
-Change directory back to root
 
 Start the local database.
 
