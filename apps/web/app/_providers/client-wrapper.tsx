@@ -12,7 +12,7 @@ if (!BASE_URL || !COGNITO_POOL_ID || !COGNITO_CLIENT_ID) {
 
 const oidcConfig = {
   authority: `https://cognito-idp.ap-southeast-1.amazonaws.com/${COGNITO_POOL_ID}`,
-  client_id: COGNITO_POOL_ID,
+  client_id: COGNITO_CLIENT_ID,
   redirect_uri: `${BASE_URL}/callback`,
   response_type: 'code',
   scope: 'openid email phone profile',
