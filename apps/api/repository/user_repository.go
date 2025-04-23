@@ -13,6 +13,7 @@ type UserRepository interface {
 	GetUsers(ctx context.Context) ([]model.User, error)
 	UpdateUserById(ctx context.Context, id string, user *model.User) error
 	DeleteUserById(ctx context.Context, id string) error
+	ArchiveActivity(ctx context.Context, userId uint, activityId uint) error
 }
 
 type UserRepositoryImpl struct {
@@ -62,4 +63,11 @@ func (r *UserRepositoryImpl) DeleteUserById(ctx context.Context, id string) erro
 		return err
 	}
 	return nil
+}
+
+func (r *UserRepositoryImpl) ArchiveActivity(ctx context.Context, userId uint, activityId uint) error {
+	return r.db.WithContext(ctx).Create(&model.UserActivity{
+		UserId:     userId,
+		ActivityId: activityId,
+	}).Error
 }

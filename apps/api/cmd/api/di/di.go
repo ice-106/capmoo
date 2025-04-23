@@ -53,7 +53,7 @@ func InitDI(ctx context.Context, cfg *config.Config) (r *route.V1Handler, err er
 		return nil, fmt.Errorf("failed to create enum type: %w", err)
 	}
 
-	gormDB.AutoMigrate(model.Activity{}, model.Booking{}, model.Concern{}, model.Host{}, model.Location{}, model.Preference{}, model.Review{}, model.TravelType{}, model.User{})
+	gormDB.AutoMigrate(model.Activity{}, model.Booking{}, model.Concern{}, model.Host{}, model.Location{}, model.Preference{}, model.Review{}, model.TravelType{}, model.User{}, model.UserActivity{})
 
 	// repository
 	userRepository := repository.NewUserRepository(gormDB)

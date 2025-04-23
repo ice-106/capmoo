@@ -10,6 +10,7 @@ import (
 
 type UserDomain interface {
 	GetUsers(ctx context.Context) ([]model.User, error)
+	ArchiveActivity(ctx context.Context, userId uint, activityId uint) error
 }
 
 type UserDomainImpl struct {
@@ -30,4 +31,8 @@ func (d *UserDomainImpl) GetUsers(ctx context.Context) ([]model.User, error) {
 		return nil, fmt.Errorf("can't get users from UserDomain: %w", err)
 	}
 	return users, nil
+}
+
+func (d *UserDomainImpl) ArchiveActivity(ctx context.Context, userId uint, activityId uint) error {
+	return d.userRepository.ArchiveActivity(ctx, userId, activityId)
 }

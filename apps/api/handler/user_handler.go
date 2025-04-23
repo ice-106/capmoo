@@ -3,6 +3,8 @@ package handler
 import (
 	"log/slog"
 
+	"strconv"
+
 	"github.com/capmoo/api/api"
 	"github.com/capmoo/api/domain"
 	"github.com/capmoo/api/dto"
@@ -39,4 +41,19 @@ func (h *UserHandler) GetUsers(c *fiber.Ctx) error {
 	}
 
 	return api.Ok(c, response)
+}
+
+func (h *UserHandler) ArchiveActivity(c *fiber.Ctx) error {
+	userId, err := strconv.Atoi(c.Params("id"))
+	activityId, err2 := strconv.Atoi(c.Params("activityId"))
+	if err != nil || err2 != nil {
+		return api.BadInput(c)
+	}
+
+	err = h.userDomain.ArchiveActivity(c.Context(), uint(userId), uint(activityId))
+	if err != nil {
+		return api.InternalServerError(c)
+	}
+
+	return api.OkNoContent(c)
 }
