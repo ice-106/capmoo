@@ -5,7 +5,8 @@ import Footer from '../../_components/footer'
 import TextBubble from './_components/textBubble'
 import TextInput from './_components/textInput'
 import { useState, useRef, useEffect } from 'react'
-import { useAuth } from 'react-oidc-context' 
+import { useAuth } from 'react-oidc-context'
+import { sendMessage } from '~/_server/ai'
 
 const WEBHOOK_URL = process.env.NEXT_PUBLIC_MAKE_WEBHOOK_URL
 
@@ -43,45 +44,24 @@ export default function Page() {
 
     try {
       // Get user information from auth context
-      const userName = auth.user?.profile?.['cognito:username'] as string || 'anonymous user'
+      const username =
+        (auth.user?.profile?.['cognito:username'] as string) || 'anonymous user'
       const userId = auth.user?.profile?.sub || 'anonymous'
 
-      // Add user info to the request payload
-      const payload = {
+      const aiResponse = await sendMessage({
         message: message,
-        name: userName,
+        username: username,
         id: userId,
-      }
-
-      const response = await fetch(WEBHOOK_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
       })
 
-      if (!response.ok) {
-        throw new Error(`API error: ${response.status}`)
+      if (aiResponse.error) {
+        throw new Error(aiResponse.error)
       }
 
-      // Process the response
-      const responseText = await response.text()
-      let aiResponse = responseText
-
-      // Try to extract response from JSON if applicable
-      try {
-        const data = JSON.parse(responseText)
-        aiResponse = data.response || data.message || responseText
-      } catch {
-        // Keep the text response as is if not JSON
-      }
-
-      // Add AI response to chat
       setMessages((prev) => [
         ...prev,
         {
-          text: aiResponse,
+          text: aiResponse.data,
           sender: 'ai',
         },
       ])
