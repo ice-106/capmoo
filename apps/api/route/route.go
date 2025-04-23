@@ -28,4 +28,6 @@ func (v1 *V1Handler) RegisterUserRouter(r fiber.Router) {
 	userRouter := r.Group("/user")
 
 	userRouter.Get("/", v1.userHandler.GetUsers)
+	userRouter.Post("/:id/activity/:activityId/archive", v1.userHandler.ArchiveActivity)
+
 }
