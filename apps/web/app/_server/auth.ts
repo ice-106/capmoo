@@ -2,16 +2,21 @@
 
 import { redirect } from 'next/navigation'
 
-export const signOutRedirect = async () => {
-  const clientId = process.env.WEB_AWS_COGNITO_CLIENT_ID
-  const logoutUri = process.env.WEB_BASE_URL
-  const cognitoDomain = process.env.WEB_AWS_COGNITO_URL
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL
+const COGNITO_POOL_ID = process.env.NEXT_PUBLIC_COGNITO_POOL_ID
+const COGNITO_CLIENT_ID = process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID
 
-  if (!clientId || !logoutUri || !cognitoDomain) {
-    throw new Error('Missing environment variables for Cognito sign out')
+export const signOutRedirect = async () => {
+  if (
+    !BASE_URL ||
+    !COGNITO_POOL_ID ||
+    !COGNITO_CLIENT_ID ||
+    !process.env.NEXT_PUBLIC_COGNITO_REGION
+  ) {
+    throw new Error('Missing environment variables for AWS Cognito')
   }
 
   redirect(
-    `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(logoutUri)}`
+    `https://${COGNITO_POOL_ID}.auth.ap-southeast-1.amazoncognito.com/logout?client_id=${COGNITO_CLIENT_ID}&logout_uri=${encodeURIComponent(BASE_URL)}`
   )
 }

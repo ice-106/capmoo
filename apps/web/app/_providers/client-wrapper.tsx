@@ -2,11 +2,18 @@
 
 import { AuthProvider } from 'react-oidc-context'
 
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL
+const COGNITO_POOL_ID = process.env.NEXT_PUBLIC_COGNITO_POOL_ID
+const COGNITO_CLIENT_ID = process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID
+
+if (!BASE_URL || !COGNITO_POOL_ID || !COGNITO_CLIENT_ID) {
+  throw new Error('Missing environment variables for AWS Cognito')
+}
+
 const oidcConfig = {
-  authority:
-    'https://cognito-idp.ap-southeast-1.amazonaws.com/ap-southeast-1_kABCq3Yw4',
-  client_id: '45pi75s2fqmpp08p51pdupv5jc',
-  redirect_uri: 'https://capmoo.vercel.app/callback',
+  authority: `https://cognito-idp.ap-southeast-1.amazonaws.com/${COGNITO_POOL_ID}`,
+  client_id: COGNITO_POOL_ID,
+  redirect_uri: `${BASE_URL}/callback`,
   response_type: 'code',
   scope: 'openid email phone profile',
 }
