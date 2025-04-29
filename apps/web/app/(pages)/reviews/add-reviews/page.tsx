@@ -10,6 +10,7 @@ import Button from '~/_components/button'
 
 export default function Page() {
   const router = useRouter()
+  const [comment, setComment] = useState('')
 
   // Previous Activity Search Drawer
   const [selectedActivity, setSelectedActivity] = useState<string[]>([])
@@ -74,14 +75,35 @@ export default function Page() {
 
   const [rating, setRating] = useState(0)
   const isFormValid = selectedActivity.length > 0 && rating > 0
-  const handlePost = () => {
-    console.log(
-      'Keeping activity selections:',
-      selectedActivity[selectedActivity.length - 1],
-      rating
-    )
-    router.push('/reviews')
+  const handlePost = async () => {
+    const selected = dataDummy.find((a) => a.name === selectedActivity[0])
+    if (!selected) return
+  
+    try {
+      const response = await fetch('http://localhost:4000/v1/review', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          rating: rating,
+          comment: comment,
+          userId: 1, // ใส่ user id จริงจาก auth
+          activityId: selected.id,
+        }),
+      })
+  
+      if (!response.ok) {
+        throw new Error('Failed to post review')
+      }
+  
+      router.push('/reviews')
+    } catch (error) {
+      console.error('Post error:', error)
+      alert('Error posting review')
+    }
   }
+  
 
   return (
     <main className='font-poppins w-full'>
@@ -109,7 +131,7 @@ export default function Page() {
           activityDate={activityDate}
           activityLocation={activityLocation}
         />
-        <Rating rating={rating} setRating={setRating} />
+        <Rating rating={rating} setRating={setRating} comment={comment} setComment={setComment}/>
       </div>
     </main>
   )
