@@ -7,12 +7,7 @@ const COGNITO_POOL_ID = process.env.NEXT_PUBLIC_COGNITO_POOL_ID
 const COGNITO_CLIENT_ID = process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID
 
 export const signOutRedirect = async () => {
-  if (
-    !BASE_URL ||
-    !COGNITO_POOL_ID ||
-    !COGNITO_CLIENT_ID ||
-    !process.env.NEXT_PUBLIC_COGNITO_REGION
-  ) {
+  if (!BASE_URL || !COGNITO_POOL_ID || !COGNITO_CLIENT_ID) {
     throw new Error('Missing environment variables for AWS Cognito')
   }
 

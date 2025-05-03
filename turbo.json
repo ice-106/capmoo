@@ -6,7 +6,8 @@
     "API_PORT",
     "API_DATABASE_URL",
     "API_ALLOWED_ORIGINS",
-    "API_ALLOWED_HEADERS"
+    "API_ALLOWED_HEADERS",
+    "API_COGNITO_POOL_ID"
   ],
   "tasks": {
     "build": {

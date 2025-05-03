@@ -1,0 +1,71 @@
+package domain
+
+import (
+	"encoding/json"
+	"fmt"
+	"io"
+	"net/http"
+
+	"github.com/capmoo/api/config"
+)
+
+type AuthDomain struct {
+	config *config.Config
+}
+
+func NewAuthDomain(config *config.Config) *AuthDomain {
+	return &AuthDomain{
+		config: config,
+	}
+}
+
+type UserInfo struct {
+	Sub           string `json:"sub"`
+	Email         string `json:"email"`
+	EmailVerified string `json:"email_verified"`
+	Name          string `json:"name"`
+	Username      string `json:"username"`
+	Identities    string `json:"identities"`
+}
+
+type ErrorResponse struct {
+	Error            string `json:"error"`
+	ErrorDescription string `json:"error_description"`
+}
+
+func (a *AuthDomain) ValidateAccessToken(accessToken string) (*UserInfo, error) {
+	req, err := http.NewRequest("GET", fmt.Sprintf("https://%s.auth.ap-southeast-1.amazoncognito.com/oauth2/userInfo", a.config.CognitoPoolId), nil)
+	if err != nil {
+		return nil, fmt.Errorf("can't validate access token when creating request: %w", err)
+	}
+
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", accessToken))
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("can't validate access token when sending request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, fmt.Errorf("can't validate access token when reading response body: %w", err)
+	}
+
+	if resp.StatusCode == 200 {
+		var userInfo UserInfo
+		if err := json.Unmarshal(body, &userInfo); err != nil {
+			return nil, fmt.Errorf("can't validate access token when unmarshalling response body: %w", err)
+		}
+
+		return &userInfo, nil
+	} else {
+		var errResp ErrorResponse
+		if err := json.Unmarshal(body, &errResp); err != nil {
+			return nil, fmt.Errorf("can't validate access token when unmarshalling error response body: %w", err)
+		}
+
+		return nil, fmt.Errorf("can't validate access token: %s", errResp.ErrorDescription)
+	}
+}
