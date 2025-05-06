@@ -61,13 +61,13 @@ func InitDI(ctx context.Context, cfg *config.Config) (r *route.V1Handler, err er
 
 	// domain
 	authDomain := domain.NewAuthDomain(cfg)
-	userDomain := domain.UserDomain(userRepository)
+	userDomain := domain.NewUserDomain(userRepository)
 
 	// handler
 	userHandler := handler.NewUserHandler(userDomain)
 
 	// middleware
-	authMiddleware := middleware.NewAuthMiddleware(authDomain)
+	authMiddleware := middleware.NewAuthMiddleware(authDomain, userDomain)
 
 	// route
 	v1Handler := route.V1NewHandler(authMiddleware, userHandler)

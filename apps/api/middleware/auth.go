@@ -1,21 +1,24 @@
 package middleware
 
 import (
-	"log"
 	"strings"
 
 	"github.com/capmoo/api/api"
 	"github.com/capmoo/api/domain"
+	"github.com/capmoo/api/model"
 	"github.com/gofiber/fiber/v2"
+	"github.com/google/uuid"
 )
 
 type AuthMiddleware struct {
-	authDomain *domain.AuthDomain
+	authDomain domain.AuthDomain
+	userDomain domain.UserDomain
 }
 
-func NewAuthMiddleware(authDomain *domain.AuthDomain) *AuthMiddleware {
+func NewAuthMiddleware(authDomain domain.AuthDomain, userDomain domain.UserDomain) *AuthMiddleware {
 	return &AuthMiddleware{
 		authDomain: authDomain,
+		userDomain: userDomain,
 	}
 }
 
@@ -45,11 +48,27 @@ func (a *AuthMiddleware) Handler(c *fiber.Ctx) error {
 		})
 	}
 
-	userOidcId := userInfo.Sub
+	userOidcIdUuid, err := uuid.Parse(userInfo.Sub)
+	if err != nil {
+		return api.SendError(c, fiber.StatusUnauthorized, api.Error{
+			Code:    "INTERNAL_SERVER_ERROR",
+			Message: "Can't parse user OIDC ID",
+		})
+	}
 
-	log.Println("userOidcId", userOidcId)
+	createdUser, err := a.userDomain.CreateUserIfNotExists(c.Context(), &model.User{
+		Name:   userInfo.Name,
+		Email:  userInfo.Email,
+		OidcId: userOidcIdUuid,
+	})
+	if err != nil {
+		return api.SendError(c, fiber.StatusInternalServerError, api.Error{
+			Code:    "INTERNAL_SERVER_ERROR",
+			Message: "Can't create user",
+		})
+	}
 
-	// TODO: set user ID in context
+	api.SetUserIDInContext(c, int(createdUser.Id))
 
 	return c.Next()
 }

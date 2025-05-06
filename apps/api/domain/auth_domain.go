@@ -9,12 +9,18 @@ import (
 	"github.com/capmoo/api/config"
 )
 
-type AuthDomain struct {
+type AuthDomain interface {
+	ValidateAccessToken(accessToken string) (*UserInfo, error)
+}
+
+type AuthDomainImpl struct {
 	config *config.Config
 }
 
-func NewAuthDomain(config *config.Config) *AuthDomain {
-	return &AuthDomain{
+var _ AuthDomain = &AuthDomainImpl{}
+
+func NewAuthDomain(config *config.Config) *AuthDomainImpl {
+	return &AuthDomainImpl{
 		config: config,
 	}
 }
@@ -33,7 +39,7 @@ type ErrorResponse struct {
 	ErrorDescription string `json:"error_description"`
 }
 
-func (a *AuthDomain) ValidateAccessToken(accessToken string) (*UserInfo, error) {
+func (a *AuthDomainImpl) ValidateAccessToken(accessToken string) (*UserInfo, error) {
 	req, err := http.NewRequest("GET", fmt.Sprintf("https://%s.auth.ap-southeast-1.amazoncognito.com/oauth2/userInfo", a.config.CognitoPoolId), nil)
 	if err != nil {
 		return nil, fmt.Errorf("can't validate access token when creating request: %w", err)
