@@ -9,6 +9,7 @@ import (
 
 type UserRepository interface {
 	CreateUser(ctx context.Context, user *model.User) error
+	CreateIfNotExists(ctx context.Context, user *model.User) (*model.User, error)
 	GetUserById(ctx context.Context, id string) (*model.User, error)
 	GetUsers(ctx context.Context) ([]model.User, error)
 	UpdateUserById(ctx context.Context, id string, user *model.User) error
@@ -32,6 +33,13 @@ func (r *UserRepositoryImpl) CreateUser(ctx context.Context, user *model.User) e
 		return err
 	}
 	return nil
+}
+
+func (r *UserRepositoryImpl) CreateIfNotExists(ctx context.Context, user *model.User) (*model.User, error) {
+	if err := r.db.WithContext(ctx).Where("oidc_id = ?", user.OidcId).FirstOrCreate(user).Error; err != nil {
+		return nil, err
+	}
+	return user, nil
 }
 
 func (r *UserRepositoryImpl) GetUserById(ctx context.Context, id string) (*model.User, error) {
