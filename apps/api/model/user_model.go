@@ -7,7 +7,6 @@ type User struct {
 
 	Name   string    `gorm:"size:100;not null"`
 	Email  string    `gorm:"size:100;uniqueIndex;not null"`
-	Phone  string    `gorm:"size:15;uniqueIndex;not null"`
 	OidcId uuid.UUID `gorm:"size:36;uniqueIndex"`
 
 	TravelTypes []TravelType `gorm:"many2many:user_travel_types"`

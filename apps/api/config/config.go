@@ -16,6 +16,7 @@ type Config struct {
 	DatabaseUrl    string `mapstructure:"API_DATABASE_URL"`
 	AllowedOrigins string `mapstructure:"API_ALLOWED_ORIGINS"`
 	AllowedHeaders string `mapstructure:"API_ALLOWED_HEADERS"`
+	CognitoPoolId  string `mapstructure:"API_COGNITO_POOL_ID"`
 }
 
 func (c *Config) IsProduction() bool {

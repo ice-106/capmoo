@@ -9,6 +9,7 @@ import (
 	"github.com/capmoo/api/database"
 	"github.com/capmoo/api/domain"
 	"github.com/capmoo/api/handler"
+	"github.com/capmoo/api/middleware"
 	"github.com/capmoo/api/model"
 	"github.com/capmoo/api/repository"
 	"github.com/capmoo/api/route"
@@ -59,12 +60,17 @@ func InitDI(ctx context.Context, cfg *config.Config) (r *route.V1Handler, err er
 	userRepository := repository.NewUserRepository(gormDB)
 
 	// domain
-	userDomain := domain.UserDomain(userRepository)
+	authDomain := domain.NewAuthDomain(cfg)
+	userDomain := domain.NewUserDomain(userRepository)
 
 	// handler
 	userHandler := handler.NewUserHandler(userDomain)
 
-	v1Handler := route.V1NewHandler(userHandler)
+	// middleware
+	authMiddleware := middleware.NewAuthMiddleware(authDomain, userDomain)
+
+	// route
+	v1Handler := route.V1NewHandler(authMiddleware, userHandler)
 
 	return v1Handler, nil
 }
