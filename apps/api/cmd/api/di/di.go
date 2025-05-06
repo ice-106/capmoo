@@ -57,14 +57,17 @@ func InitDI(ctx context.Context, cfg *config.Config) (r *route.V1Handler, err er
 
 	// repository
 	userRepository := repository.NewUserRepository(gormDB)
+	activityRepository := repository.NewActivityRepository(gormDB)
 
 	// domain
 	userDomain := domain.UserDomain(userRepository)
+	activityDomain := domain.ActivityDomain(activityRepository)
 
 	// handler
 	userHandler := handler.NewUserHandler(userDomain)
+	activityHandler := handler.NewActivityHandler(activityDomain)
 
-	v1Handler := route.V1NewHandler(userHandler)
+	v1Handler := route.V1NewHandler(userHandler, activityHandler)
 
 	return v1Handler, nil
 }

@@ -8,14 +8,17 @@ import (
 
 func V1NewHandler(
 	userHandler *handler.UserHandler,
+	activityHandler *handler.ActivityHandler,
 ) *V1Handler {
 	return &V1Handler{
-		userHandler: userHandler,
+		userHandler:     userHandler,
+		activityHandler: activityHandler,
 	}
 }
 
 type V1Handler struct {
-	userHandler *handler.UserHandler
+	userHandler     *handler.UserHandler
+	activityHandler *handler.ActivityHandler
 }
 
 func (v1 *V1Handler) RegisterV1Router(r fiber.Router) {
@@ -28,4 +31,10 @@ func (v1 *V1Handler) RegisterUserRouter(r fiber.Router) {
 	userRouter := r.Group("/user")
 
 	userRouter.Get("/", v1.userHandler.GetUsers)
+}
+
+func (v1 *V1Handler) RegisterActivityRouter(r fiber.Router) {
+	activityRouter := r.Group("/activities")
+
+	activityRouter.Get("/", v1.activityHandler.GetFilteredActivities)
 }
