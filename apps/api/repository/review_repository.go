@@ -10,10 +10,9 @@ import (
 type ReviewRepository interface {
 	CreateReview(ctx context.Context, review *model.Review) error
 	GetReviewById(ctx context.Context, id uint) (*model.Review, error)
-	GetReviews(ctx context.Context) ([]model.Review, error)
 	GetReviewsByUserId(ctx context.Context, userId uint) ([]model.Review, error)
 	GetReviewsByActivityId(ctx context.Context, activityId uint) ([]model.Review, error)
-	GetAverageRatingByActivityId(ctx context.Context, activityId uint) (float64, error)
+	GetReviewStatisticsByActivityId(ctx context.Context, activityId uint) (*model.ReviewStatistics, error)
 	EditReviewById(ctx context.Context, id uint, review *model.Review) error
 	DeleteReviewById(ctx context.Context, id uint) error
 }
@@ -45,14 +44,6 @@ func (r *ReviewRepositoryImpl) GetReviewById(ctx context.Context, id uint) (*mod
 	return &review, nil
 }
 
-func (r *ReviewRepositoryImpl) GetReviews(ctx context.Context) ([]model.Review, error) {
-	var reviews []model.Review
-	if err := r.db.WithContext(ctx).Find(&reviews).Error; err != nil {
-		return nil, err
-	}
-	return reviews, nil
-}
-
 func (r *ReviewRepositoryImpl) GetReviewsByUserId(ctx context.Context, userId uint) ([]model.Review, error) {
 	var reviews []model.Review
 	if err := r.db.WithContext(ctx).Where("user_id = ?", userId).Find(&reviews).Error; err != nil {
@@ -69,15 +60,26 @@ func (r *ReviewRepositoryImpl) GetReviewsByActivityId(ctx context.Context, activ
 	return reviews, nil
 }
 
-func (r *ReviewRepositoryImpl) GetAverageRatingByActivityId(ctx context.Context, activityId uint) (float64, error) {
-	var averageRating float64
+func (r *ReviewRepositoryImpl) GetReviewStatisticsByActivityId(ctx context.Context, activityId uint) (*model.ReviewStatistics, error) {
+	var statistics model.ReviewStatistics
 	if err := r.db.WithContext(ctx).Model(&model.Review{}).
-		Select("AVG(rating)").
+		Select("AVG(rating) AS average_rating, COUNT(*) AS total_reviews, SUM(rating) AS rating_sum").
 		Where("activity_id = ?", activityId).
-		Scan(&averageRating).Error; err != nil {
-		return 0, err
+		Group("activity_id").
+		Scan(&statistics).Error; err != nil {
+		return nil, err
 	}
-	return averageRating, nil
+
+	if err := r.db.WithContext(ctx).Model(&model.Review{}).
+		Select("COUNT(*) AS rating_count").
+		Where("activity_id = ?", activityId).
+		Group("rating").
+		Order("rating").
+		Scan(&statistics.RatingCount).Error; err != nil {
+		return nil, err
+	}
+
+	return &statistics, nil
 }
 
 func (r *ReviewRepositoryImpl) EditReviewById(ctx context.Context, id uint, review *model.Review) error {
