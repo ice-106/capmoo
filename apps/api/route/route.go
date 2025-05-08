@@ -42,7 +42,6 @@ func (v1 *V1Handler) RegisterUserRouter(r fiber.Router) {
 	userRouter.Get("/me", v1.userHandler.Me)
 	userRouter.Patch("/me", v1.userHandler.UpdateUserById)
 
-	userRouter.Post("/reviews", v1.userHandler.CreateUserReview) // TODO: move to activity, create review from activity router
 	userRouter.Get("/reviews", v1.userHandler.GetUserReviews)
 }
 
@@ -63,5 +62,11 @@ func (v1 *V1Handler) RegisterActivityRouter(r fiber.Router) {
 	activityRouter.Get("/search", v1.activityHandler.GetFilteredActivities)
 	activityRouter.Get("/locations", v1.activityHandler.GetLocations)
 	activityRouter.Get("/categories", v1.activityHandler.GetCategories)
-	activityRouter.Get("/:id", v1.activityHandler.GetActivityDetail)
+	activityRouter.Get("/:activityId", v1.activityHandler.GetActivityDetail)
+	activityRouter.Post("/:activityId/reviews", v1.activityHandler.CreateUserReview)
+	activityRouter.Get("/:activityId/reviews", v1.activityHandler.GetReviews)
+	activityRouter.Get("/:activityId/reviews/:reviewId", v1.activityHandler.GetReviewById)
+	activityRouter.Get("/:activityId/reviews/:reviewId/stats", v1.activityHandler.GetReviewStatisticsById)
+	activityRouter.Patch("/:activityId/reviews/:reviewId", v1.activityHandler.UpdateUserReviewById)
+	activityRouter.Delete("/:activityId/reviews/:reviewId", v1.activityHandler.DeleteUserReviewById)
 }
