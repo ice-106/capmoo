@@ -14,7 +14,7 @@ type ReviewDomain interface {
 	GetReviewsByUserId(ctx context.Context, userId uint) ([]model.Review, error)
 	GetReviewsByActivityId(ctx context.Context, activityId uint) ([]model.Review, error)
 	GetReviewStatisticsByActivityId(ctx context.Context, activityId uint) (*model.ReviewStatistics, error)
-	EditReviewById(ctx context.Context, id uint, review *model.Review) error
+	UpdateReviewById(ctx context.Context, id uint, review *model.Review) error
 	DeleteReviewById(ctx context.Context, id uint) error
 }
 
@@ -69,8 +69,8 @@ func (d *ReviewDomainImpl) GetReviewStatisticsByActivityId(ctx context.Context, 
 	return reviewStatistics, nil
 }
 
-func (d *ReviewDomainImpl) EditReviewById(ctx context.Context, id uint, review *model.Review) error {
-	if err := d.reviewRepository.EditReviewById(ctx, id, review); err != nil {
+func (d *ReviewDomainImpl) UpdateReviewById(ctx context.Context, id uint, review *model.Review) error {
+	if err := d.reviewRepository.UpdateReviewById(ctx, id, review); err != nil {
 		return fmt.Errorf("can't edit review from ReviewDomain: %w", err)
 	}
 	return nil

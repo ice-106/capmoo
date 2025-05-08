@@ -12,6 +12,8 @@ type UserDomain interface {
 	CreateUserIfNotExists(ctx context.Context, user *model.User) (*model.User, error)
 	GetUserById(ctx context.Context, id uint) (*model.User, error)
 	GetUsers(ctx context.Context) ([]model.User, error)
+	UpdateUserById(ctx context.Context, id uint, user *model.User) error
+	DeleteUserById(ctx context.Context, id uint) error
 }
 
 type UserDomainImpl struct {
@@ -48,4 +50,18 @@ func (d *UserDomainImpl) GetUsers(ctx context.Context) ([]model.User, error) {
 		return nil, fmt.Errorf("can't get users from UserDomain: %w", err)
 	}
 	return users, nil
+}
+
+func (d *UserDomainImpl) UpdateUserById(ctx context.Context, id uint, user *model.User) error {
+	if err := d.userRepository.UpdateUserById(ctx, id, user); err != nil {
+		return fmt.Errorf("can't update user from UserDomain: %w", err)
+	}
+	return nil
+}
+
+func (d *UserDomainImpl) DeleteUserById(ctx context.Context, id uint) error {
+	if err := d.userRepository.DeleteUserById(ctx, id); err != nil {
+		return fmt.Errorf("can't delete user from UserDomain: %w", err)
+	}
+	return nil
 }

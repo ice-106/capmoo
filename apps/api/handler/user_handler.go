@@ -120,3 +120,44 @@ func (h *UserHandler) GetUserReviews(c *fiber.Ctx) error {
 
 	return api.Ok(c, response)
 }
+
+func (h *UserHandler) UpdateUserById(c *fiber.Ctx) error {
+	ctx := c.Context()
+	userId := api.MustGetUserIDFromContext(c)
+
+	body := new(dto.UpdateUserByIdRequest)
+	if err := c.BodyParser(body); err != nil {
+		slog.InfoContext(ctx, "Failed to parse body from UpdateUserById", "error", err)
+		return api.BadInput(c)
+	}
+
+	if err := h.validator.Struct(body); err != nil {
+		slog.WarnContext(ctx, "Failed to parse body from UpdateUserById", "error", err)
+		return api.BadInput(c)
+	}
+
+	if err := h.userDomain.UpdateUserById(ctx, userId, &model.User{
+		Name:  body.Name,
+		Email: body.Email,
+	}); err != nil {
+		slog.InfoContext(ctx, "Unexpected error from UpdateUserById", "error", err)
+		return api.InternalServerError(c)
+	}
+
+	updatedUser, err := h.userDomain.GetUserById(ctx, userId)
+	if err != nil {
+		slog.InfoContext(ctx, "Unexpected error from UpdateUserById", "error", err)
+		return api.InternalServerError(c)
+	}
+
+	response := dto.UpdateUserByIdResponse{
+		Id:        updatedUser.Id,
+		CreatedAt: updatedUser.CreatedAt,
+		UpdatedAt: updatedUser.UpdatedAt,
+		Name:      updatedUser.Name,
+		Email:     updatedUser.Email,
+		OidcId:    updatedUser.OidcId.String(),
+	}
+
+	return api.Ok(c, response)
+}
