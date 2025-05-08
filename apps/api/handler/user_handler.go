@@ -103,18 +103,18 @@ func (h *UserHandler) GetUserReviews(c *fiber.Ctx) error {
 				OidcId:    review.User.OidcId.String(),
 			},
 			ActivityId: review.ActivityId,
-			// Activity: dto.GetActivityResponse{
-			// 	Id:               review.Activity.Id,
-			// 	CreatedAt:        review.Activity.CreatedAt,
-			// 	UpdatedAt:        review.Activity.UpdatedAt,
-			// 	Name:             review.Activity.Name,
-			// 	Description:      review.Activity.Description,
-			// 	StartDateTime:    review.Activity.StartDateTime,
-			// 	EndDateTime:      review.Activity.EndDateTime,
-			// 	Price:            review.Activity.Price,
-			// 	RemainSlot:       review.Activity.RemainSlot,
-			// 	MaxParticipation: review.Activity.MaxParticipation,
-			// }, // TODO: add activity response struct
+			Activity: dto.GetActivityResponse{
+				Id:               review.Activity.Id,
+				CreatedAt:        review.Activity.CreatedAt,
+				UpdatedAt:        review.Activity.UpdatedAt,
+				Name:             review.Activity.Name,
+				Description:      review.Activity.Description,
+				StartDateTime:    review.Activity.StartDateTime,
+				EndDateTime:      review.Activity.EndDateTime,
+				Price:            review.Activity.Price,
+				RemainSlot:       review.Activity.RemainSlot,
+				MaxParticipation: review.Activity.MaxParticipation,
+			},
 		})
 	}
 

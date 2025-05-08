@@ -63,5 +63,10 @@ func (v1 *V1Handler) RegisterActivityRouter(r fiber.Router) {
 	activityRouter.Get("/search", v1.activityHandler.GetFilteredActivities)
 	activityRouter.Get("/locations", v1.activityHandler.GetLocations)
 	activityRouter.Get("/categories", v1.activityHandler.GetCategories)
-	activityRouter.Get("/:id", v1.activityHandler.GetActivityDetail)
+	activityRouter.Get("/:activityId", v1.activityHandler.GetActivityDetail)
+	activityRouter.Post("/:activityId/reviews", v1.activityHandler.CreateReview)
+	activityRouter.Get("/:activityId/reviews", v1.activityHandler.GetReviews)
+	activityRouter.Get("/:activityId/reviews/:reviewId/stats", v1.activityHandler.GetReviewStatistics)
+	activityRouter.Patch("/:activityId/reviews/:reviewId", v1.activityHandler.UpdateReview)
+	activityRouter.Delete("/:activityId/reviews/:reviewId", v1.activityHandler.DeleteReview)
 }

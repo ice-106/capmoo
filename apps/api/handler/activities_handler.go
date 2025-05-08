@@ -9,16 +9,23 @@ import (
 	"github.com/capmoo/api/api"
 	"github.com/capmoo/api/domain"
 	"github.com/capmoo/api/dto"
+	"github.com/capmoo/api/model"
+	"github.com/capmoo/api/qid"
+	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 )
 
 type ActivityHandler struct {
 	activityDomain domain.ActivityDomain
+	validator      *validator.Validate
+	reviewDomain   domain.ReviewDomain
 }
 
-func NewActivityHandler(activityDomain domain.ActivityDomain) *ActivityHandler {
+func NewActivityHandler(activityDomain domain.ActivityDomain, validator *validator.Validate, reviewDomain domain.ReviewDomain) *ActivityHandler {
 	return &ActivityHandler{
 		activityDomain: activityDomain,
+		validator:      validator,
+		reviewDomain:   reviewDomain,
 	}
 }
 
@@ -71,7 +78,7 @@ func (h *ActivityHandler) GetLocations(c *fiber.Ctx) error {
 func (h *ActivityHandler) GetActivityDetail(c *fiber.Ctx) error {
 	fmt.Println("GetActivityDetail handler called")
 	ctx := c.Context()
-	idStr := c.Params("id")
+	idStr := c.Params("activityId")
 	id, err := strconv.ParseUint(idStr, 10, 32)
 	if err != nil {
 		slog.InfoContext(ctx, "Invalid activity ID", "error", err)
@@ -174,4 +181,230 @@ func (h *ActivityHandler) GetFilteredActivities(c *fiber.Ctx) error {
 	}
 
 	return api.Ok(c, response)
+}
+
+func (h *ActivityHandler) CreateReview(c *fiber.Ctx) error {
+	ctx := c.Context()
+	userId := api.MustGetUserIDFromContext(c)
+
+	body := new(dto.CreateUserReviewRequest)
+	if err := c.BodyParser(body); err != nil {
+		slog.InfoContext(ctx, "Failed to parse body from CreateUserReview", "error", err)
+		return api.BadInput(c)
+	}
+
+	if err := h.validator.Struct(body); err != nil {
+		slog.WarnContext(ctx, "Failed to parse body from CreateUserReview", "error", err)
+		return api.BadInput(c)
+	}
+
+	if err := h.reviewDomain.CreateReview(ctx, &model.Review{
+		UserId:     userId,
+		ActivityId: body.ActivityId,
+		Rating:     body.Rating,
+		Comment:    body.Comment,
+	}); err != nil {
+		slog.InfoContext(ctx, "Unexpected error from CreateUserReview", "error", err)
+		return api.InternalServerError(c)
+	}
+
+	return api.OkNoContent(c)
+}
+
+func (h *ActivityHandler) GetReviews(c *fiber.Ctx) error {
+	ctx := c.Context()
+
+	var params struct {
+		ActivityId qid.QID `params:"id"`
+	}
+
+	if err := c.ParamsParser(&params); err != nil {
+		slog.InfoContext(ctx, "Failed to parse params from GetReviews", "error", err)
+		return api.BadInput(c)
+	}
+
+	reviews, err := h.reviewDomain.GetReviewsByActivityId(ctx, params.ActivityId.Uint())
+	if err != nil {
+		slog.InfoContext(ctx, "Unexpected error from GetReviews", "error", err)
+		return api.InternalServerError(c)
+	}
+
+	response := make([]dto.GetUserReviewsResponse, 0, len(reviews))
+	for _, review := range reviews {
+		response = append(response, dto.GetUserReviewsResponse{
+			Id:        review.Id,
+			CreatedAt: review.CreatedAt,
+			UpdatedAt: review.UpdatedAt,
+			Rating:    review.Rating,
+			Comment:   review.Comment,
+			UserId:    review.UserId,
+			User: dto.GetUserResponse{
+				Id:        review.User.Id,
+				CreatedAt: review.User.CreatedAt,
+				UpdatedAt: review.User.UpdatedAt,
+				Name:      review.User.Name,
+				Email:     review.User.Email,
+				OidcId:    review.User.OidcId.String(),
+			},
+			ActivityId: review.ActivityId,
+			Activity: dto.GetActivityResponse{
+				Id:               review.Activity.Id,
+				CreatedAt:        review.Activity.CreatedAt,
+				UpdatedAt:        review.Activity.UpdatedAt,
+				Name:             review.Activity.Name,
+				Description:      review.Activity.Description,
+				StartDateTime:    review.Activity.StartDateTime,
+				EndDateTime:      review.Activity.EndDateTime,
+				Price:            review.Activity.Price,
+				RemainSlot:       review.Activity.RemainSlot,
+				MaxParticipation: review.Activity.MaxParticipation,
+			},
+		})
+	}
+
+	return api.Ok(c, response)
+}
+
+func (h *ActivityHandler) GetReviewStatistics(c *fiber.Ctx) error {
+	ctx := c.Context()
+
+	var params struct {
+		ActivityId qid.QID `params:"id"`
+	}
+
+	if err := c.ParamsParser(&params); err != nil {
+		slog.InfoContext(ctx, "Failed to parse params from GetReviewStatistics", "error", err)
+		return api.BadInput(c)
+	}
+
+	reviewStats, err := h.reviewDomain.GetReviewStatisticsByActivityId(ctx, params.ActivityId.Uint())
+	if err != nil {
+		slog.InfoContext(ctx, "Unexpected error from GetReviewStatistics", "error", err)
+		return api.InternalServerError(c)
+	}
+
+	response := dto.GetReviewStatisticsResponse{
+		AverageRating: reviewStats.AverageRating,
+		TotalReviews:  reviewStats.TotalReviews,
+		RatingCount:   reviewStats.RatingCount,
+		RatingSum:     reviewStats.RatingSum,
+	}
+
+	return api.Ok(c, response)
+}
+
+func (h *ActivityHandler) UpdateReview(c *fiber.Ctx) error {
+	ctx := c.Context()
+	userId := api.MustGetUserIDFromContext(c)
+
+	var params struct {
+		ActivityId qid.QID `params:"id"`
+		ReviewId   qid.QID `params:"reviewId"`
+	}
+
+	if err := c.ParamsParser(&params); err != nil {
+		slog.InfoContext(ctx, "Failed to parse params from UpdateReview", "error", err)
+		return api.BadInput(c)
+	}
+
+	body := new(dto.UpdateUserReviewRequest)
+	if err := c.BodyParser(body); err != nil {
+		slog.InfoContext(ctx, "Failed to parse body from UpdateReview", "error", err)
+		return api.BadInput(c)
+	}
+
+	if err := h.validator.Struct(body); err != nil {
+		slog.WarnContext(ctx, "Failed to parse body from UpdateReview", "error", err)
+		return api.BadInput(c)
+	}
+
+	review, err := h.reviewDomain.GetReviewById(ctx, params.ReviewId.Uint())
+	if err != nil {
+		slog.InfoContext(ctx, "Unexpected error from GetReviewById", "error", err)
+		return api.InternalServerError(c)
+	}
+	if review.UserId != userId {
+		slog.InfoContext(ctx, "UserId is not same as review.UserId", "userId", userId, "review.UserId", review.UserId)
+		return api.ForbiddenWithMessage(c, "This review is not yours")
+	}
+
+	if err := h.reviewDomain.UpdateReviewById(ctx, params.ReviewId.Uint(), &model.Review{
+		UserId:     userId,
+		ActivityId: params.ActivityId.Uint(),
+		Rating:     body.Rating,
+		Comment:    body.Comment,
+	}); err != nil {
+		slog.InfoContext(ctx, "Unexpected error from UpdateReview", "error", err)
+		return api.InternalServerError(c)
+	}
+
+	updatedReview, err := h.reviewDomain.GetReviewById(ctx, params.ReviewId.Uint())
+	if err != nil {
+		slog.InfoContext(ctx, "Unexpected error from GetReviewById", "error", err)
+		return api.InternalServerError(c)
+	}
+
+	response := dto.UpdateUserReviewResponse{
+		Id:        updatedReview.Id,
+		CreatedAt: updatedReview.CreatedAt,
+		UpdatedAt: updatedReview.UpdatedAt,
+		Rating:    updatedReview.Rating,
+		Comment:   updatedReview.Comment,
+		UserId:    review.UserId,
+		User: dto.GetUserResponse{
+			Id:        review.User.Id,
+			CreatedAt: review.User.CreatedAt,
+			UpdatedAt: review.User.UpdatedAt,
+			Name:      review.User.Name,
+			Email:     review.User.Email,
+			OidcId:    review.User.OidcId.String(),
+		},
+		ActivityId: review.ActivityId,
+		Activity: dto.GetActivityResponse{
+			Id:               review.Activity.Id,
+			CreatedAt:        review.Activity.CreatedAt,
+			UpdatedAt:        review.Activity.UpdatedAt,
+			Name:             review.Activity.Name,
+			Description:      review.Activity.Description,
+			StartDateTime:    review.Activity.StartDateTime,
+			EndDateTime:      review.Activity.EndDateTime,
+			Price:            review.Activity.Price,
+			RemainSlot:       review.Activity.RemainSlot,
+			MaxParticipation: review.Activity.MaxParticipation,
+		},
+	}
+
+	return api.Ok(c, response)
+}
+
+func (h *ActivityHandler) DeleteReview(c *fiber.Ctx) error {
+	ctx := c.Context()
+	userId := api.MustGetUserIDFromContext(c)
+
+	var params struct {
+		ActivityId qid.QID `params:"id"`
+		ReviewId   qid.QID `params:"reviewId"`
+	}
+
+	if err := c.ParamsParser(&params); err != nil {
+		slog.InfoContext(ctx, "Failed to parse params from DeleteReview", "error", err)
+		return api.BadInput(c)
+	}
+
+	review, err := h.reviewDomain.GetReviewById(ctx, params.ReviewId.Uint())
+	if err != nil {
+		slog.InfoContext(ctx, "Unexpected error from GetReviewById", "error", err)
+		return api.InternalServerError(c)
+	}
+	if review.UserId != userId {
+		slog.InfoContext(ctx, "UserId is not same as review.UserId", "userId", userId, "review.UserId", review.UserId)
+		return api.ForbiddenWithMessage(c, "This review is not yours")
+	}
+
+	if err := h.reviewDomain.DeleteReviewById(ctx, params.ReviewId.Uint()); err != nil {
+		slog.InfoContext(ctx, "Unexpected error from DeleteReview", "error", err)
+		return api.InternalServerError(c)
+	}
+
+	return api.OkNoContent(c)
 }

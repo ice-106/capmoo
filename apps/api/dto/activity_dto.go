@@ -27,3 +27,16 @@ type GetActivityDetailResponse struct {
 	StartDateTime time.Time `json:"startDateTime"`
 	Location      string    `json:"location"`
 }
+
+type GetActivityResponse struct {
+	Id               uint       `json:"id"`
+	CreatedAt        time.Time  `json:"created_at"`
+	UpdatedAt        *time.Time `json:"updated_at"`
+	Name             string     `json:"name"`
+	Description      string     `json:"description"`
+	StartDateTime    time.Time  `json:"start_date_time"`
+	EndDateTime      time.Time  `json:"end_date_time"`
+	Price            float64    `json:"price"`
+	RemainSlot       int        `json:"remain_slot"`
+	MaxParticipation int        `json:"max_participation"`
+}
