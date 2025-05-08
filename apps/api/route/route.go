@@ -27,8 +27,9 @@ func V1NewHandler(
 func (v1 *V1Handler) RegisterV1Router(r fiber.Router) {
 	v1Router := r.Group("/v1")
 
-	guardRouter := v1Router.Use(v1.authMiddleware.Handler)
-	v1.RegisterUserRouter(guardRouter)
+	// guardRouter := v1Router.Use(v1.authMiddleware.Handler)
+	v1.RegisterUserRouter(v1Router)
+	v1.RegisterActivityRouter(v1Router)
 }
 
 func (v1 *V1Handler) RegisterUserRouter(r fiber.Router) {
@@ -40,5 +41,8 @@ func (v1 *V1Handler) RegisterUserRouter(r fiber.Router) {
 func (v1 *V1Handler) RegisterActivityRouter(r fiber.Router) {
 	activityRouter := r.Group("/activities")
 
-	activityRouter.Get("/", v1.activityHandler.GetFilteredActivities)
+	activityRouter.Get("/search", v1.activityHandler.GetFilteredActivities)
+	activityRouter.Get("/locations", v1.activityHandler.GetLocations)
+	activityRouter.Get("/categories", v1.activityHandler.GetCategories)
+	activityRouter.Get("/:id", v1.activityHandler.GetActivityDetail)
 }

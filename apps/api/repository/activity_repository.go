@@ -8,6 +8,9 @@ import (
 )
 
 type ActivityRepository interface {
+	GetCategories(ctx context.Context) ([]model.Category, error)
+	GetLocations(ctx context.Context) ([]model.Location, error)
+	GetActivityDetail(ctx context.Context, id uint) ([]model.Activity, error)
 	GetActivitiesByFilters(ctx context.Context, searchTerm string, locations []uint, minPrice *float64, maxPrice *float64, categories []uint) ([]model.Activity, error)
 }
 
@@ -22,6 +25,30 @@ func NewActivityRepository(db *gorm.DB) *ActivityRepositoryImpl {
 }
 
 var _ ActivityRepository = &ActivityRepositoryImpl{}
+
+func (r *ActivityRepositoryImpl) GetCategories(ctx context.Context) ([]model.Category, error) {
+	var categories []model.Category
+	if err := r.db.WithContext(ctx).Find(&categories).Error; err != nil {
+		return nil, err
+	}
+	return categories, nil
+}
+
+func (r *ActivityRepositoryImpl) GetLocations(ctx context.Context) ([]model.Location, error) {
+	var locations []model.Location
+	if err := r.db.WithContext(ctx).Find(&locations).Error; err != nil {
+		return nil, err
+	}
+	return locations, nil
+}
+
+func (r *ActivityRepositoryImpl) GetActivityDetail(ctx context.Context, id uint) ([]model.Activity, error) {
+	var activities []model.Activity
+	if err := r.db.WithContext(ctx).Preload("Location").Where("id = ?", id).Find(&activities).Error; err != nil {
+		return nil, err
+	}
+	return activities, nil
+}
 
 func (r *ActivityRepositoryImpl) GetActivitiesByFilters(ctx context.Context, searchTerm string, locations []uint, minPrice, maxPrice *float64, categories []uint) ([]model.Activity, error) {
 	var activities []model.Activity
