@@ -68,7 +68,7 @@ func (a *AuthMiddleware) Handler(c *fiber.Ctx) error {
 		})
 	}
 
-	api.SetUserIDInContext(c, int(createdUser.Id))
+	api.SetUserIDInContext(c, createdUser.Id)
 
 	return c.Next()
 }

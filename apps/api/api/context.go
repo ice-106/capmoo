@@ -15,7 +15,7 @@ const (
 	IsBypassAuthKey
 )
 
-func SetUserIDInContext(c *fiber.Ctx, userID int) {
+func SetUserIDInContext(c *fiber.Ctx, userID uint) {
 	ctx := c.UserContext()
 
 	ctx = context.WithValue(ctx, UserIDKey, userID)
@@ -23,10 +23,10 @@ func SetUserIDInContext(c *fiber.Ctx, userID int) {
 	c.SetUserContext(ctx)
 }
 
-func GetUserIDFromContext(c *fiber.Ctx) (int, error) {
+func GetUserIDFromContext(c *fiber.Ctx) (uint, error) {
 	ctx := c.UserContext()
 
-	userID, ok := ctx.Value(UserIDKey).(int)
+	userID, ok := ctx.Value(UserIDKey).(uint)
 	if !ok {
 		slog.Warn("user ID not found in context but passed the middleware")
 		return 0, errors.New("user ID not found in context")
@@ -35,10 +35,10 @@ func GetUserIDFromContext(c *fiber.Ctx) (int, error) {
 	return userID, nil
 }
 
-func MustGetUserIDFromContext(c *fiber.Ctx) int {
+func MustGetUserIDFromContext(c *fiber.Ctx) uint {
 	ctx := c.UserContext()
 
-	userID, ok := ctx.Value(UserIDKey).(int)
+	userID, ok := ctx.Value(UserIDKey).(uint)
 	if !ok {
 		slog.ErrorContext(ctx, "UserID not found in context, this endpoint might not be protected by auth middleware",
 			"path", c.Path(),
