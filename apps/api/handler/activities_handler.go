@@ -235,16 +235,13 @@ func (h *ActivityHandler) UnarchiveUserActivityById(c *fiber.Ctx) error {
 	ctx := c.Context()
 	userId := api.MustGetUserIDFromContext(c)
 
-	var params struct {
-		ActivityId qid.QID `params:"activityId"`
-	}
-
-	if err := c.ParamsParser(&params); err != nil {
-		slog.InfoContext(ctx, "Failed to parse params from UnarchiveUserActivity", "error", err)
+	activityId, err := strconv.ParseUint(c.Params("activityId"), 10, 64)
+	if err != nil {
+		slog.InfoContext(ctx, "Failed to parse activityId from UpdateReview", "error", err)
 		return api.BadInput(c)
 	}
 
-	if err := h.userDomain.UnarchiveUserActivity(ctx, userId, params.ActivityId.Uint()); err != nil {
+	if err := h.userDomain.UnarchiveUserActivity(ctx, userId, uint(activityId)); err != nil {
 		slog.InfoContext(ctx, "Unexpected error from UnarchiveUserActivity", "error", err)
 		return api.InternalServerError(c)
 	}
@@ -256,16 +253,13 @@ func (h *ActivityHandler) SaveUserActivityScheduleById(c *fiber.Ctx) error {
 	ctx := c.Context()
 	userId := api.MustGetUserIDFromContext(c)
 
-	var params struct {
-		ActivityId qid.QID `params:"activityId"`
-	}
-
-	if err := c.ParamsParser(&params); err != nil {
-		slog.InfoContext(ctx, "Failed to parse params from SaveUserActivitySchedule", "error", err)
+	activityId, err := strconv.ParseUint(c.Params("activityId"), 10, 64)
+	if err != nil {
+		slog.InfoContext(ctx, "Failed to parse activityId from UpdateReview", "error", err)
 		return api.BadInput(c)
 	}
 
-	if err := h.userDomain.SaveUserActivitySchedule(ctx, userId, params.ActivityId.Uint()); err != nil {
+	if err := h.userDomain.SaveUserActivitySchedule(ctx, userId, uint(activityId)); err != nil {
 		slog.InfoContext(ctx, "Unexpected error from SaveUserActivitySchedule", "error", err)
 		return api.InternalServerError(c)
 	}
@@ -283,13 +277,19 @@ func (h *ActivityHandler) GetUserActivitySchedule(c *fiber.Ctx) error {
 		return api.InternalServerError(c)
 	}
 
-	response := make([]dto.GetActivitiesResponse, 0, len(activities))
+	response := make([]dto.GetActivityResponse, 0, len(activities))
 	for _, activity := range activities {
-		response = append(response, dto.GetActivitiesResponse{
-			Id:         activity.Id,
-			Name:       activity.Name,
-			CategoryId: activity.CategoryId,
-			LocationId: activity.LocationId,
+		response = append(response, dto.GetActivityResponse{
+			Id:               activity.Id,
+			CreatedAt:        activity.CreatedAt,
+			UpdatedAt:        activity.UpdatedAt,
+			Name:             activity.Name,
+			Description:      activity.Description,
+			StartDateTime:    activity.StartDateTime,
+			EndDateTime:      activity.EndDateTime,
+			Price:            activity.Price,
+			RemainSlot:       activity.RemainSlot,
+			MaxParticipation: activity.MaxParticipation,
 		})
 	}
 
@@ -300,16 +300,13 @@ func (h *ActivityHandler) DeleteUserActivityScheduleById(c *fiber.Ctx) error {
 	ctx := c.Context()
 	userId := api.MustGetUserIDFromContext(c)
 
-	var params struct {
-		ActivityId qid.QID `params:"activityId"`
-	}
-
-	if err := c.ParamsParser(&params); err != nil {
-		slog.InfoContext(ctx, "Failed to parse params from DeleteUserActivitySchedule", "error", err)
+	activityId, err := strconv.ParseUint(c.Params("activityId"), 10, 64)
+	if err != nil {
+		slog.InfoContext(ctx, "Failed to parse activityId from UpdateReview", "error", err)
 		return api.BadInput(c)
 	}
 
-	if err := h.userDomain.DeleteUserActivitySchedule(ctx, userId, params.ActivityId.Uint()); err != nil {
+	if err := h.userDomain.DeleteUserActivitySchedule(ctx, userId, uint(activityId)); err != nil {
 		slog.InfoContext(ctx, "Unexpected error from DeleteUserActivitySchedule", "error", err)
 		return api.InternalServerError(c)
 	}
