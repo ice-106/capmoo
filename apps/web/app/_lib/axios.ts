@@ -5,7 +5,7 @@ export const useAxios = (): AxiosInstance => {
   const auth = useAuth()
 
   const instance = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_BASE_URL,
+    baseURL: process.env.NEXT_PUBLIC_API_URL,
   })
 
   instance.interceptors.request.use(
