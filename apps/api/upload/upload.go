@@ -45,7 +45,12 @@ func (u *UploadService) UploadFile(ctx context.Context, fileData io.Reader, file
 		return "", fmt.Errorf("failed to upload file to S3: %w", err)
 	}
 
-	return uniqueFileName, nil
+	presignedURL, err := u.s3Client.GetPresignedURL(ctx, u.s3Config.Bucket, escapedPath, 60*time.Minute)
+	if err != nil {
+		return "", fmt.Errorf("failed to generate presigned URL: %w", err)
+	}
+
+	return presignedURL, nil
 }
 
 func (u *UploadService) appendTimestampToFileName(fileName string) string {

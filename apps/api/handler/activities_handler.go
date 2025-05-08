@@ -192,7 +192,7 @@ func (h *ActivityHandler) ArchiveUserActivityById(c *fiber.Ctx) error {
 	userId := api.MustGetUserIDFromContext(c)
 
 	var params struct {
-		ActivityId qid.QID `params:"id"`
+		ActivityId qid.QID `params:"activityId"`
 	}
 
 	if err := c.ParamsParser(&params); err != nil {
@@ -236,7 +236,7 @@ func (h *ActivityHandler) UnarchiveUserActivityById(c *fiber.Ctx) error {
 	userId := api.MustGetUserIDFromContext(c)
 
 	var params struct {
-		ActivityId qid.QID `params:"id"`
+		ActivityId qid.QID `params:"activityId"`
 	}
 
 	if err := c.ParamsParser(&params); err != nil {
@@ -257,7 +257,7 @@ func (h *ActivityHandler) SaveUserActivityScheduleById(c *fiber.Ctx) error {
 	userId := api.MustGetUserIDFromContext(c)
 
 	var params struct {
-		ActivityId qid.QID `params:"id"`
+		ActivityId qid.QID `params:"activityId"`
 	}
 
 	if err := c.ParamsParser(&params); err != nil {
@@ -301,7 +301,7 @@ func (h *ActivityHandler) DeleteUserActivityScheduleById(c *fiber.Ctx) error {
 	userId := api.MustGetUserIDFromContext(c)
 
 	var params struct {
-		ActivityId qid.QID `params:"id"`
+		ActivityId qid.QID `params:"activityId"`
 	}
 
 	if err := c.ParamsParser(&params); err != nil {

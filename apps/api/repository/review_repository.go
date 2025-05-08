@@ -10,6 +10,8 @@ import (
 type ReviewRepository interface {
 	CreateReview(ctx context.Context, review *model.Review) error
 	GetReviewById(ctx context.Context, id uint) (*model.Review, error)
+	GetReviewByUserIdAndActivityId(ctx context.Context, userId, activityId uint) (*model.Review, error)
+	GetReviews(ctx context.Context) ([]model.Review, error)
 	GetReviewsByUserId(ctx context.Context, userId uint) ([]model.Review, error)
 	GetReviewsByActivityId(ctx context.Context, activityId uint) ([]model.Review, error)
 	GetReviewStatisticsByActivityId(ctx context.Context, activityId uint) (*model.ReviewStatistics, error)
@@ -56,6 +58,25 @@ func (r *ReviewRepositoryImpl) GetReviewById(ctx context.Context, id uint) (*mod
 		return nil, err
 	}
 	return &review, nil
+}
+
+func (r *ReviewRepositoryImpl) GetReviewByUserIdAndActivityId(ctx context.Context, userId, activityId uint) (*model.Review, error) {
+	var review model.Review
+	if err := r.db.WithContext(ctx).Where("user_id = ? AND activity_id = ?", userId, activityId).First(&review).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return &review, nil
+}
+
+func (r *ReviewRepositoryImpl) GetReviews(ctx context.Context) ([]model.Review, error) {
+	var reviews []model.Review
+	if err := r.db.WithContext(ctx).Find(&reviews).Error; err != nil {
+		return nil, err
+	}
+	return reviews, nil
 }
 
 func (r *ReviewRepositoryImpl) GetReviewsByUserId(ctx context.Context, userId uint) ([]model.Review, error) {

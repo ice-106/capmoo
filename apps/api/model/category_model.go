@@ -3,7 +3,7 @@ package model
 type Category struct {
 	Model
 
-	Name string `gorm:"not null"`
+	Name string `gorm:"uniqueIndex;size:100;not null"`
 
 	Activities []Activity `gorm:"foreignKey:CategoryId"`
 }

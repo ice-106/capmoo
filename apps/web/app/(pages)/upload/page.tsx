@@ -1,0 +1,117 @@
+'use client'
+
+import React, { useState, ChangeEvent, FormEvent } from 'react'
+import { useAxios } from '~/_lib/axios'
+
+const UploadPage: React.FC = () => {
+  const axios = useAxios()
+  const [file, setFile] = useState<File | null>(null)
+  const [message, setMessage] = useState<string>('')
+  const [fileUrl, setFileUrl] = useState<string>('')
+  const [imagePreview, setImagePreview] = useState<string>('')
+
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0] || null
+    setFile(selectedFile)
+  }
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+
+    if (!file) {
+      alert('Please select a file to upload')
+      return
+    }
+
+    const formData = new FormData()
+    formData.append('file', file)
+
+    try {
+      const response = await axios.post('/v1/reviews/test-upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+
+      const result = response.data
+
+      if (result.success) {
+        setMessage('File uploaded successfully!')
+        setFileUrl(result.url)
+        setImagePreview(result.url)
+      } else {
+        setMessage(`Error: ${result.message}`)
+        setFileUrl('')
+        setImagePreview('')
+      }
+    } catch (error: any) {
+      setMessage(`Error: ${error.message}`)
+      setFileUrl('')
+      setImagePreview('')
+    }
+  }
+
+  return (
+    <div style={{ padding: '2rem', maxWidth: 600, margin: '0 auto' }}>
+      <h1>S3 File Upload</h1>
+      <form
+        onSubmit={handleSubmit}
+        style={{ border: '1px solid #ddd', padding: 20, borderRadius: 5 }}
+      >
+        <div style={{ marginBottom: 15 }}>
+          <label htmlFor='file'>Select image to upload:</label>
+          <input
+            type='file'
+            id='file'
+            name='file'
+            accept='image/*'
+            onChange={handleFileChange}
+          />
+        </div>
+        <button
+          type='submit'
+          style={{
+            backgroundColor: '#4CAF50',
+            color: 'white',
+            padding: '10px 15px',
+            border: 'none',
+            borderRadius: 4,
+          }}
+        >
+          Upload
+        </button>
+      </form>
+
+      {message && (
+        <div
+          style={{
+            marginTop: 20,
+            padding: 15,
+            border: '1px solid #ddd',
+            borderRadius: 5,
+          }}
+        >
+          <h3>Upload Result</h3>
+          <p>{message}</p>
+          {fileUrl && (
+            <>
+              <div>
+                <strong>File URL:</strong>{' '}
+                <a href={fileUrl} target='_blank' rel='noopener noreferrer'>
+                  {fileUrl}
+                </a>
+              </div>
+              <img
+                src={imagePreview}
+                alt='Uploaded preview'
+                style={{ maxWidth: '100%', marginTop: 10 }}
+              />
+            </>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
+
+export default UploadPage

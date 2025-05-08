@@ -1,11 +1,13 @@
 package model
 
+import "github.com/lib/pq"
+
 type Review struct {
 	Model
 
-	Rating  int      `gorm:"not null;check:rating >= 1 AND rating <= 5"`
-	Comment string   `gorm:"not null"`
-	Images  []string `gorm:"type:text[];not null"`
+	Rating  int            `gorm:"not null;check:rating >= 1 AND rating <= 5"`
+	Comment string         `gorm:"not null"`
+	Images  pq.StringArray `gorm:"type:text[];not null"`
 
 	UserId     uint     `gorm:"not null"`
 	User       User     `gorm:"foreignKey:UserId"`
