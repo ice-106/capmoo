@@ -17,7 +17,8 @@ const Button: React.FC<ButtonProps> = ({
   className = '',
   disabled = false,
 }) => {
-  const baseClasses = 'w-full font-semibold py-2 px-4 border cursor-pointer'
+  const baseClasses =
+    'w-full font-semibold py-2 px-4 border cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-300 ease-in-out hover:disabled:bg-white hover:disabled:text-grey hover:disabled:border-grey'
 
   const variantClasses = {
     default:

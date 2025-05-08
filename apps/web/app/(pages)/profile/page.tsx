@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useAuth } from 'react-oidc-context'
 import { useRouter } from 'next/navigation'
 import Header from '../../_components/header'
@@ -10,27 +10,38 @@ import Carousel from '../../_components/carousel'
 import { Star, PencilLine } from 'lucide-react'
 import Button from '../../_components/button'
 import { signOutRedirect } from '~/_server/auth'
+import { useAxios } from '~/_lib/axios'
 
 const username = 'anonymous user'
 
 export default function ProfilePage() {
+  const axios = useAxios()
   const auth = useAuth()
   const router = useRouter()
   const [userRating, setUserRating] = useState(0)
-  const [savedActivites, setSavedActivities] = useState([
-    {
-      imgUrl: '/images/activity/user/activity_4.jpg',
-      text: 'Dream World',
-      onClickUrl: '/activity/4/description',
-    },
-  ])
-  const [savedReview, setSavedReviews] = useState([
-    {
-      imgUrl: '/images/activity/user/activity_3.jpg',
-      text: 'Safari World',
-      onClickUrl: '/activity/3/description',
-    },
-  ])
+  const [savedActivites, setSavedActivities] = useState([])
+
+  useEffect(() => {
+    const fetchSavedActivities = async () => {
+      try {
+        const response = await axios.get('/v1/activities/archive')
+        if (response.data.data.length > 0) {
+          const activities = response.data.data.map((activity: any) => ({
+            imgUrl: '/images/activity/user/activity_3.jpg', // TODO: replace with activity.images after image upload is implemented
+            text: activity.name,
+            onClickUrl: `/activity/${activity.id}/description`,
+          }))
+          setSavedActivities(activities)
+        }
+      } catch (error) {
+        console.error('Error fetching saved activities:', error)
+      }
+    }
+
+    fetchSavedActivities()
+  }, [])
+
+  console.log(savedActivites)
 
   const handleSignOut = async () => {
     auth.removeUser()
@@ -68,7 +79,7 @@ export default function ProfilePage() {
           />
         </div>
         <Carousel header='Saved Activities' images={savedActivites} />
-        <Carousel header='Saved Reviews' images={savedReview} />
+        {/* <Carousel header='Saved Reviews' images={savedReview} /> */}
       </div>
       <div className='flex justify-center'>
         <Button label='Sign out' variant='default' onClick={handleSignOut} />

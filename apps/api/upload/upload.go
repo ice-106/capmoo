@@ -7,6 +7,7 @@ import (
 	"mime/multipart"
 	"net/url"
 	"regexp"
+	"strings"
 	"time"
 
 	"github.com/capmoo/api/awss3"
@@ -138,12 +139,16 @@ func (u *UploadService) ListFiles(ctx context.Context, directory string) ([]stri
 }
 
 func (u *UploadService) GetPresignedURL(ctx context.Context, filePath string, expiry time.Duration) (string, error) {
-	escapedPath := url.PathEscape(u.SafeFileName(filePath))
+	// escapedPath := url.PathEscape(u.SafeFileName(filePath))
 
-	url, err := u.s3Client.GetPresignedURL(ctx, u.s3Config.Bucket, escapedPath, expiry)
-	if err != nil {
-		return "", fmt.Errorf("failed to generate presigned URL: %w", err)
-	}
+	// url, err := u.s3Client.GetPresignedURL(ctx, u.s3Config.Bucket, escapedPath, expiry)
+	// if err != nil {
+	// 	return "", fmt.Errorf("failed to generate presigned URL: %w", err)
+	// }
 
-	return url, nil
+	// return url, nil
+
+	escapedPath := strings.Replace(filePath, "/", "%252F", -1)
+
+	return fmt.Sprintf("https://%s.s3.%s.amazonaws.com/%s", u.s3Config.Bucket, u.s3Config.Region, escapedPath), nil
 }

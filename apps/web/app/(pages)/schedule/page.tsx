@@ -1,8 +1,9 @@
 'use client'
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from '../../_components/header'
 import Footer from '../../_components/footer'
+import { useAxios } from '~/_lib/axios'
 
 // Schedule Data
 const scheduleDummy = [
@@ -76,13 +77,42 @@ type TransformedSchedule = {
 }
 
 export default function SchedulePage() {
-  const transformedSchedule = transformSchedule(scheduleDummy)
-  const { weeks, previousMonthEndIndex, nextMonthStartIndex, currentMonth } =
-    getCurrentMonthCalendar(scheduleDummy)
+  const axios = useAxios()
+
+  const [schedules, setSchedules] = useState<
+    | {
+        activity: string
+        startTime: string
+        endTime: string
+      }[]
+    | null
+  >(null)
 
   useEffect(() => {
-    // probably fetch data using timeframe from getCurrentMonthCalendar
+    const fetchSchedule = async () => {
+      try {
+        const response = await axios.get('/v1/activities/schedule')
+        if (response.data.data.length > 0) {
+          const schedules = response.data.data.map((item: any) => {
+            return {
+              activity: item.name,
+              startTime: item.start_date_time,
+              endTime: item.end_date_time,
+            }
+          })
+          setSchedules(schedules)
+        }
+      } catch (error) {
+        console.error('Error fetching schedule:', error)
+      }
+    }
+
+    fetchSchedule()
   }, [])
+
+  const transformedSchedule = transformSchedule(schedules || [])
+  const { weeks, previousMonthEndIndex, nextMonthStartIndex, currentMonth } =
+    getCurrentMonthCalendar(schedules || [])
 
   const handleFindSchedule = (date: string) => {
     const targetElement = document.getElementById(date)

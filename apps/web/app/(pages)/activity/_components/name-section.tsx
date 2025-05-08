@@ -22,6 +22,7 @@ interface NameSectionProps {
   date: string
   location: string
   price: string
+  onSaveArchive?: () => void
 }
 
 const formatDateTime = (dateString: string): string => {
@@ -84,6 +85,9 @@ const NameSection: React.FC<NameSectionProps> = ({ ...props }) => {
 
   const handleSaveClick = () => {
     console.log('Save clicked')
+    if (props.onSaveArchive) {
+      props.onSaveArchive()
+    }
   }
 
   const handleShareClick = () => {
