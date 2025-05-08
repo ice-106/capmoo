@@ -22,11 +22,11 @@ func NewSurveyHandler(surveyDomain domain.SurveyDomain, validator *validator.Val
 	}
 }
 
-func (h *SurveyHandler) CreateUserPreference(c *fiber.Ctx) error {
+func (h *SurveyHandler) CreateUserPreferences(c *fiber.Ctx) error {
 	ctx := c.Context()
 	userId := api.MustGetUserIDFromContext(c)
 
-	body := new(dto.CreateUserPreferenceRequest)
+	body := new(dto.CreateUserPreferencesRequest)
 	if err := c.BodyParser(body); err != nil {
 		slog.InfoContext(ctx, "Failed to parse body from CreateUserPreference", "error", err)
 		return api.BadInput(c)
@@ -45,7 +45,7 @@ func (h *SurveyHandler) CreateUserPreference(c *fiber.Ctx) error {
 	return api.OkNoContent(c)
 }
 
-func (h *SurveyHandler) GetUserPreference(c *fiber.Ctx) error {
+func (h *SurveyHandler) GetUserPreferences(c *fiber.Ctx) error {
 	ctx := c.Context()
 	userId := api.MustGetUserIDFromContext(c)
 
@@ -55,8 +55,88 @@ func (h *SurveyHandler) GetUserPreference(c *fiber.Ctx) error {
 		return api.InternalServerError(c)
 	}
 
-	response := dto.GetUserPreferenceResponse{
+	response := dto.GetUserPreferencesResponse{
 		Preferences: preferences,
+	}
+
+	return api.Ok(c, response)
+}
+
+func (h *SurveyHandler) CreateUserConcerns(c *fiber.Ctx) error {
+	ctx := c.Context()
+	userId := api.MustGetUserIDFromContext(c)
+
+	body := new(dto.CreateUserConcernsRequest)
+	if err := c.BodyParser(body); err != nil {
+		slog.InfoContext(ctx, "Failed to parse body from CreateUserConcerns", "error", err)
+		return api.BadInput(c)
+	}
+
+	if err := h.validator.Struct(body); err != nil {
+		slog.WarnContext(ctx, "Failed to parse body from CreateUserConcerns", "error", err)
+		return api.BadInput(c)
+	}
+
+	if err := h.surveyDomain.CreateUserConcerns(ctx, userId, body.Concerns); err != nil {
+		slog.InfoContext(ctx, "Unexpected error from CreateUserConcerns", "error", err)
+		return api.InternalServerError(c)
+	}
+
+	return api.OkNoContent(c)
+}
+
+func (h *SurveyHandler) GetUserConcerns(c *fiber.Ctx) error {
+	ctx := c.Context()
+	userId := api.MustGetUserIDFromContext(c)
+
+	concerns, err := h.surveyDomain.GetUserConcerns(ctx, userId)
+	if err != nil {
+		slog.InfoContext(ctx, "Unexpected error from GetUserConcerns", "error", err)
+		return api.InternalServerError(c)
+	}
+
+	response := dto.GetUserConcernsResponse{
+		Concerns: concerns,
+	}
+
+	return api.Ok(c, response)
+}
+
+func (h *SurveyHandler) CreateUserTravelTypes(c *fiber.Ctx) error {
+	ctx := c.Context()
+	userId := api.MustGetUserIDFromContext(c)
+
+	body := new(dto.CreateUserTravelTypesRequest)
+	if err := c.BodyParser(body); err != nil {
+		slog.InfoContext(ctx, "Failed to parse body from CreateUserTravelTypes", "error", err)
+		return api.BadInput(c)
+	}
+
+	if err := h.validator.Struct(body); err != nil {
+		slog.WarnContext(ctx, "Failed to parse body from CreateUserTravelTypes", "error", err)
+		return api.BadInput(c)
+	}
+
+	if err := h.surveyDomain.CreateUserTravelTypes(ctx, userId, body.TravelTypes); err != nil {
+		slog.InfoContext(ctx, "Unexpected error from CreateUserTravelTypes", "error", err)
+		return api.InternalServerError(c)
+	}
+
+	return api.OkNoContent(c)
+}
+
+func (h *SurveyHandler) GetUserTravelTypes(c *fiber.Ctx) error {
+	ctx := c.Context()
+	userId := api.MustGetUserIDFromContext(c)
+
+	travelTypes, err := h.surveyDomain.GetUserTravelTypes(ctx, userId)
+	if err != nil {
+		slog.InfoContext(ctx, "Unexpected error from GetUserTravelTypes", "error", err)
+		return api.InternalServerError(c)
+	}
+
+	response := dto.GetUserTravelTypesResponse{
+		TravelTypes: travelTypes,
 	}
 
 	return api.Ok(c, response)

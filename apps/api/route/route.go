@@ -41,6 +41,10 @@ func (v1 *V1Handler) RegisterUserRouter(r fiber.Router) {
 func (v1 *V1Handler) RegisterSurveyRouter(r fiber.Router) {
 	surveyRouter := r.Group("/survey")
 
-	surveyRouter.Post("/preference", v1.surveyHandler.CreateUserPreference)
-	surveyRouter.Get("/preference", v1.surveyHandler.GetUserPreference)
+	surveyRouter.Post("/preferences", v1.surveyHandler.CreateUserPreferences)
+	surveyRouter.Get("/preferences", v1.surveyHandler.GetUserPreferences)
+	surveyRouter.Post("/concerns", v1.surveyHandler.CreateUserConcerns)
+	surveyRouter.Get("/concerns", v1.surveyHandler.GetUserConcerns)
+	surveyRouter.Post("/travel-types", v1.surveyHandler.CreateUserTravelTypes)
+	surveyRouter.Get("/travel-types", v1.surveyHandler.GetUserTravelTypes)
 }
