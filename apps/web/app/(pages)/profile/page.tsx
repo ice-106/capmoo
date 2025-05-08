@@ -45,7 +45,7 @@ export default function ProfilePage() {
 
   const handleSignOut = async () => {
     auth.removeUser()
-    await signOutRedirect()
+    router.push('/')
   }
 
   return (

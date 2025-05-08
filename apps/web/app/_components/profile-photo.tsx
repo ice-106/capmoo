@@ -110,14 +110,14 @@ export default function ProfilePhoto({
             className='h-full w-full object-cover'
           />
         </div>
-        {allowEdit && (
+        {/* {allowEdit && (
           <div
             className='bg-orange absolute bottom-0 right-0 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full p-2'
             onClick={handleClickUpload}
           >
             <Pencil color='white' />
           </div>
-        )}
+        )} */}
       </div>
 
       {/* Crop banner */}
