@@ -10,7 +10,6 @@ import (
 	"github.com/capmoo/api/domain"
 	"github.com/capmoo/api/handler"
 	"github.com/capmoo/api/middleware"
-	"github.com/capmoo/api/model"
 	"github.com/capmoo/api/repository"
 	"github.com/capmoo/api/route"
 )
@@ -39,22 +38,8 @@ func InitDI(ctx context.Context, cfg *config.Config) (r *route.V1Handler, err er
 
 	gormDB := must(database.New(cfg))
 
-	if err := gormDB.Exec(`
-		DO $$ 
-		BEGIN
-			IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'booking_status') THEN
-				CREATE TYPE booking_status AS ENUM ('UNKNOWN', 'CANCELLED', 'FAILED', 'PENDING', 'SUCCESS');
-			END IF;
-
-			IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'payment_status') THEN
-				CREATE TYPE payment_status AS ENUM ('UNKNOWN', 'CANCELLED', 'FAILED', 'PENDING', 'SUCCESS');
-			END IF;
-		END $$;
-	`).Error; err != nil {
-		return nil, fmt.Errorf("failed to create enum type: %w", err)
-	}
-
-	gormDB.AutoMigrate(model.Activity{}, model.Booking{}, model.Concern{}, model.Host{}, model.Location{}, model.Preference{}, model.Review{}, model.TravelType{}, model.User{})
+	database.Migrate(gormDB)
+	database.Seed(gormDB)
 
 	// repository
 	userRepository := repository.NewUserRepository(gormDB)
