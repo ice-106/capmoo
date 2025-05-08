@@ -66,12 +66,19 @@ func InitDI(ctx context.Context, cfg *config.Config) (r *route.V1Handler, err er
 	userHandler := handler.NewUserHandler(userDomain, validator, reviewDomain)
 	activityHandler := handler.NewActivityHandler(activityDomain, uploadService, validator, userDomain, reviewDomain)
 	surveyHandler := handler.NewSurveyHandler(surveyDomain, validator)
+	reviewHandler := handler.NewReviewHandler(reviewDomain, uploadService, validator)
 
 	// middleware
 	authMiddleware := middleware.NewAuthMiddleware(authDomain, userDomain)
 
 	// route
-	v1Handler := route.V1NewHandler(authMiddleware, userHandler, surveyHandler, activityHandler)
+	v1Handler := route.V1NewHandler(
+		authMiddleware,
+		userHandler,
+		surveyHandler,
+		activityHandler,
+		reviewHandler,
+	)
 
 	return v1Handler, nil
 }

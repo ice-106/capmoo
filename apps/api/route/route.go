@@ -11,6 +11,7 @@ type V1Handler struct {
 	userHandler     *handler.UserHandler
 	surveyHandler   *handler.SurveyHandler
 	activityHandler *handler.ActivityHandler
+	reviewHandler   *handler.ReviewHandler
 }
 
 func V1NewHandler(
@@ -18,12 +19,14 @@ func V1NewHandler(
 	userHandler *handler.UserHandler,
 	surveyHandler *handler.SurveyHandler,
 	activityHandler *handler.ActivityHandler,
+	reviewHandler *handler.ReviewHandler,
 ) *V1Handler {
 	return &V1Handler{
 		authMiddleware:  authMiddleware,
 		userHandler:     userHandler,
 		surveyHandler:   surveyHandler,
 		activityHandler: activityHandler,
+		reviewHandler:   reviewHandler,
 	}
 }
 
@@ -72,10 +75,10 @@ func (v1 *V1Handler) RegisterActivityRouter(r fiber.Router) {
 	activityRouter.Delete("/schedule/:activityId", v1.activityHandler.DeleteUserActivityScheduleById)
 
 	activityRouter.Get("/:activityId", v1.activityHandler.GetActivityDetail)
-	activityRouter.Post("/:activityId/reviews", v1.activityHandler.CreateUserReview)
-	activityRouter.Get("/:activityId/reviews", v1.activityHandler.GetReviewsByActivityId)
-	activityRouter.Get("/:activityId/reviews/:reviewId", v1.activityHandler.GetReviewById)
-	activityRouter.Get("/:activityId/reviews/:reviewId/stats", v1.activityHandler.GetReviewStatisticsById)
-	activityRouter.Patch("/:activityId/reviews/:reviewId", v1.activityHandler.UpdateUserReviewById)
-	activityRouter.Delete("/:activityId/reviews/:reviewId", v1.activityHandler.DeleteUserReviewById)
+	activityRouter.Post("/:activityId/reviews", v1.reviewHandler.CreateUserReview)
+	activityRouter.Get("/:activityId/reviews", v1.reviewHandler.GetReviewsByActivityId)
+	activityRouter.Get("/:activityId/reviews/:reviewId", v1.reviewHandler.GetReviewById)
+	activityRouter.Get("/:activityId/reviews/:reviewId/stats", v1.reviewHandler.GetReviewStatisticsById)
+	activityRouter.Patch("/:activityId/reviews/:reviewId", v1.reviewHandler.UpdateUserReviewById)
+	activityRouter.Delete("/:activityId/reviews/:reviewId", v1.reviewHandler.DeleteUserReviewById)
 }
