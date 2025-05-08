@@ -70,7 +70,7 @@ export function SearchResultsPage() {
 
         // Map the response to the expected format for your frontend
         const formattedResults = response.data.data.map((activity: any) => ({
-          imgUrl: activity.imgUrl, // Replace with the actual image URL field from the backend
+          imgUrl: activity.imgUrl || '/images/activity/user/activity_9.jpg', // Replace with the actual image URL field from the backend
           text: activity.name, // Replace with the actual name field from the backend
           onClickUrl: `/activity/${activity.id}/description`, // Replace with the actual activity ID
         }))

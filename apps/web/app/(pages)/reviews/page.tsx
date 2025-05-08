@@ -1,82 +1,109 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useState, useEffect, act } from 'react'
 import SearchBar from '../../_components/search-bar'
 import HeaderwithIcon from '../../_components/header-with-icon'
 import Footer from '../../_components/footer'
 import { CirclePlus } from 'lucide-react'
 import Masonry from '../../_components/masonry'
+import { useAxios } from '~/_lib/axios'
+import { useAuth } from 'react-oidc-context'
+
+// This interface matches the review DTO from your backend
+interface Review {
+  id: number;
+  created_at: string;
+  updated_at: string | null;
+  rating: number;
+  comment: string;
+  images: string[];
+  activity_id: number;
+  activity: {
+    id: number;
+    name: string;
+    image_url?: string; // Optional since it might not be present in all responses
+  };
+}
 
 export default function ReviewPage() {
   const router = useRouter()
-  const [searchQuery, setSearchQuery] = useState('')
+  const axios = useAxios()
+  const auth = useAuth()
+  const searchParams = useSearchParams()
 
-  // mock data
-  const reviewItems = [
+  const activityId = searchParams.get('q') || null
+
+  const [searchQuery, setSearchQuery] = useState('')
+  const [reviews, setReviews] = useState<Review[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  // Fetch reviews from API
+  // Modify the useEffect dependency array to avoid too many rerenders
+ // This is for a component that needs reviews for a specific activity
+useEffect(() => {
+  const fetchActivityReviews = async () => {
+    if (!auth.isAuthenticated) {
+      return;
+    }
+
+    console.log()
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      // Use the correct endpoint with the activityId parameter
+
+      const urlPath = activityId === null ? '/v1/reviews' : `/v1/activities/${activityId}/reviews`;
+
+      const response = await axios.get(urlPath);
+      
+      if (!response.data || !response.data.data) {
+        throw new Error('Invalid response format');
+      }
+      
+      setReviews(response.data.data);
+    } catch (err: any) {
+      console.error(`Error fetching reviews for activity ${activityId}:`, err);
+      setError(err.message || 'Failed to load reviews');
+      
+      setReviews([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  fetchActivityReviews();
+}, [activityId, auth.isAuthenticated]);
+
+  // Convert reviews to the format expected by the Masonry component
+  const reviewItems = reviews.map(review => ({
+    id: review.id.toString(),
+    imgUrl: review.images?.[0] || '/images/review-placeholder.jpg',
+    text: review.activity?.name || 'Unknown Activity',
+    onClickUrl: `/reviews/description/${review.id}?q=${review.activity_id}`,
+  }));
+
+  // Fallback to mock data if no reviews from API
+  const mockItems = [
     {
       "id": "1",
       "imgUrl": "/images/activity/user/activity_1.jpg",
       "text": "The Sahur at Wat Phra Kaew 🛕✨",
       "onClickUrl": "/reviews/description/1"
     },
-    {
-      "id": "2",
-      "imgUrl": "/images/activity/user/activity_2.jpg",
-      "text": "Siam Amazing Park",
-      "onClickUrl": "/reviews/description/2"
-    },
-    {
-      "id": "3",
-      "imgUrl": "/images/activity/user/activity_6.jpg",
-      "text": "Sahur pa tour Sea Life Bangkok 🐟🦈🌊",
-      "onClickUrl": "/reviews/description/6"
-    },
-    {
-      "id": "4",
-      "imgUrl": "/images/activity/user/activity_3.jpg",
-      "text": "Safari world - POV - HumKungLnw 😎",
-      "onClickUrl": "/reviews/description/3"
-    },
-    {
-      "id": "5",
-      "imgUrl": "/images/activity/user/activity_4.jpg",
-      "text": "Birthday at Dream World ✨ !!!",
-      "onClickUrl": "/reviews/description/4"
-    },
-    {
-      "id": "6",
-      "imgUrl": "/images/activity/user/activity_5.jpg",
-      "text": "One day trip Bang Krachao cycling 🚴‍♀️",
-      "onClickUrl": "/reviews/description/5"
-    },
-    {
-      "id": "7",
-      "imgUrl": "/images/activity/user/activity_7.jpg",
-      "text": "Playing and Taking Pictures with Horse",
-      "onClickUrl": "/reviews/description/7"
-    },
-    {
-      "id": "8",
-      "imgUrl": "/images/activity/user/activity_8.jpg",
-      "text": "River Seaweed Harvesting Adventure",
-      "onClickUrl": "/reviews/description/8"
-    },
-    {
-      "id": "9",
-      "imgUrl": "/images/activity/user/activity_9.jpg",
-      "text": "Kayaking Along Nan River",
-      "onClickUrl": "/reviews/description/9"
-    }
-  ]
-  
+  ];
+
+  // Use actual data if available, otherwise fall back to mock data
+  const displayItems = reviews.length > 0 ? reviewItems : mockItems;
 
   // filter reviews based on search query
   const filteredReviews = searchQuery
-    ? reviewItems.filter((item) =>
+    ? displayItems.filter((item) =>
         item.text.toLowerCase().includes(searchQuery.toLowerCase())
       )
-    : reviewItems
+    : displayItems;
 
   return (
     <main className='font-poppins w-full'>
@@ -115,16 +142,36 @@ export default function ReviewPage() {
           </div>
         )}
 
+        {/* Loading state */}
+        {isLoading && (
+          <div className='py-12 text-center'>
+            <p className='text-grey'>Loading reviews...</p>
+          </div>
+        )}
+
+        {/* Error state */}
+        {!isLoading && error && (
+          <div className='py-12 text-center'>
+            <p className='text-red-500'>{error}</p>
+            <button 
+              className='text-orange mt-2 text-sm underline'
+              onClick={() => router.refresh()}
+            >
+              Try again
+            </button>
+          </div>
+        )}
+
         {/* Masonry layout for reviews */}
-        {filteredReviews.length > 0 ? (
+        {!isLoading && !error && filteredReviews.length > 0 ? (
           <div className='mt-4'>
             <Masonry images={filteredReviews} />
           </div>
-        ) : (
+        ) : !isLoading && !error ? (
           <div className='py-12 text-center'>
             <h3 className='text-grey'>No reviews found</h3>
           </div>
-        )}
+        ) : null}
       </div>
       <Footer />
     </main>

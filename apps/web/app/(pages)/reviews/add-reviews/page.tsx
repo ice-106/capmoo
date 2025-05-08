@@ -1,6 +1,8 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { useAxios } from '~/_lib/axios'
+import { useAuth } from 'react-oidc-context'
 import BackButton from '~/_components/back-button'
 import PreviousActivitySelector from './_components/previous-activity'
 import Rating from './_components/rating'
@@ -10,6 +12,8 @@ import Button from '~/_components/button'
 
 export default function Page() {
   const router = useRouter()
+  const axios = useAxios()
+  const auth = useAuth()
 
   // Previous Activity Search Drawer
   const [selectedActivity, setSelectedActivity] = useState<string[]>([])
@@ -26,17 +30,29 @@ export default function Page() {
       setSelectedActivity([])
     }
   }
-  // TODO : Fetch actual data from database
+
+  // Added: State for storing API fetched activities
+  const [activities, setActivities] = useState<Activity[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [comment, setComment] = useState('')
+  const [images, setImages] = useState<File[]>([])
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [uploadedImageUrls, setUploadedImageUrls] = useState<string[]>([])
+
+
   type Activity = {
     id: number
-    images: { src: string }[]
+    images?: { src: string }[]
     name: string
-    date: string
-    location: string
-    price: string
-    description: string
+    date?: string
+    start_date_time?: string
+    location?: string
+    price?: string
+    description?: string
   }
 
+  // Fallback to dummy data if API fetch fails
   const dataDummy: Activity[] = [
     {
       id: 1,
@@ -66,23 +82,136 @@ export default function Page() {
     },
   ]
 
-  // TODO: Extract Data from JSON
-  const optionsDummy = dataDummy.map((activity) => activity.name)
-  const selectedInfo = dataDummy.find((a) => a.name === selectedActivity[0])
-  const activityDate = selectedInfo?.date ?? '-'
-  const activityLocation = selectedInfo?.location ?? '-'
+  // Use API data or fallback to dummy data
+  const activeActivities = activities.length > 0 ? activities : dataDummy;
+  const optionsDummy = activeActivities.map((activity) => activity.name)
+  const selectedInfo = activeActivities.find((a) => a.name === selectedActivity[0])
+  const activityDate = selectedInfo?.date || (selectedInfo?.start_date_time ? new Date(selectedInfo.start_date_time).toLocaleDateString() : '-')
+  const activityLocation = selectedInfo?.location || '-'
 
   const [rating, setRating] = useState(0)
   const isFormValid = selectedActivity.length > 0 && rating > 0
-  const handlePost = () => {
-    console.log(
-      'Keeping activity selections:',
-      selectedActivity[selectedActivity.length - 1],
-      rating
-    )
-    router.push('/reviews')
-  }
 
+  const handleImageChange = (files: File[]) => {
+    setImages(files);
+  }
+  
+  const handlePost = async () => {
+    if (!isFormValid || !selectedInfo) {
+      setError("Please select an activity and provide a rating");
+      return;
+    }
+    
+    if (!images || images.length === 0) {
+      setError("Please add at least one image");
+      return;
+    }
+    
+    setIsSubmitting(true);
+    setError(null);
+    
+    try {
+      // Step 1: Upload images first
+      const imageUrls = await uploadImages(images);
+      console.log('Received image URLs:', imageUrls);
+      
+      // Step 2: Create the review with the image URLs
+      const reviewData = {
+        rating: rating,
+        comment: comment || '',
+        activity_id: selectedInfo.id,
+        // Only include Images field if we actually have URLs
+        ...(imageUrls.length > 0 && { images: imageUrls })
+      };
+      
+      // Log what we're sending
+      console.log('Sending review data:', reviewData);
+      
+      // Send the review data
+      await axios.post(`/v1/activities/${selectedInfo.id}/reviews`, reviewData);
+      
+      console.log('Review posted successfully for:', 
+        selectedActivity[selectedActivity.length - 1],
+        'with rating:', rating
+      );
+      
+      // Redirect to reviews page on success
+      router.push('/reviews');
+    } catch (err: any) {
+      console.error('Failed to post review:', err);
+      
+      const errorMessage = err.response?.data?.message || 
+                          err.response?.data?.error ||
+                          'Failed to post review. Please try again.';
+      setError(errorMessage);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Update this helper function to handle the actual API response format
+  const uploadImages = async (imageFiles: File[]): Promise<string[]> => {
+    if (!selectedInfo) {
+      throw new Error('No activity selected');
+    }
+    
+    // Create a FormData object for the image upload
+    const formData = new FormData();
+    
+    // Append all images to the form data
+    imageFiles.forEach(image => {
+      formData.append('images', image);
+    });
+    
+    // Upload the images to your image upload endpoint
+    const response = await axios.post(`/v1/activities/${selectedInfo.id}/reviews/upload`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+    
+    // Log the entire response to see its structure
+    console.log('Image upload response:', response.data);
+    
+    // Check different possible response formats
+    if (response.data) {
+      // Format 1: Direct array of URLs
+      if (Array.isArray(response.data)) {
+        return response.data;
+      }
+      
+      // Format 2: {images: [...]}
+      if (response.data.images) {
+        return Array.isArray(response.data.images) 
+          ? response.data.images 
+          : [response.data.images];
+      }
+      
+      // Format 3: {data: [...]} or {data: {images: [...]}}
+      if (response.data.data) {
+        if (Array.isArray(response.data.data)) {
+          return response.data.data;
+        } else if (response.data.data.images) {
+          return Array.isArray(response.data.data.images)
+            ? response.data.data.images
+            : [response.data.data.images];
+        }
+      }
+      
+      // Format 4: {image_urls: [...]}
+      if (response.data.image_urls) {
+        return Array.isArray(response.data.image_urls)
+          ? response.data.image_urls
+          : [response.data.image_urls];
+      }
+      
+      // If we have some data but not in expected format, just log and return empty array
+      console.warn('Unexpected response format, using empty array:', response.data);
+      return [];
+    }
+    
+    throw new Error('Failed to upload images: Empty response from server');
+  };
   return (
     <main className='font-poppins w-full'>
       <div className='fixed left-0 right-0 top-0 z-10 flex h-24 w-full items-end justify-center bg-white p-4'>
@@ -92,24 +221,33 @@ export default function Page() {
       </div>
       <FooterTemplate>
         <Button
-          label='Post'
+          label={isSubmitting ? 'Posting...' : 'Post'}
           variant='orange'
           onClick={handlePost}
-          disabled={!isFormValid}
+          disabled={!isFormValid || isSubmitting}
         />
       </FooterTemplate>
       <div className='flex flex-col gap-y-8'>
-        <ImageUploader />
-        <div className='text-lg font-semibold'>Activity</div>
+        <ImageUploader onChange={handleImageChange} />        <div className='text-lg font-semibold'>Activity</div>
         <PreviousActivitySelector
           selected={selectedActivity}
           onSelect={handleSelectActivity}
           options={optionsDummy}
-          defaultText='Select previous activity'
+          defaultText={isLoading ? 'Loading activities...' : 'Select previous activity'}
           activityDate={activityDate}
           activityLocation={activityLocation}
         />
         <Rating rating={rating} setRating={setRating} />
+        <div className='flex flex-col gap-y-2'>
+        <div className='text-lg font-semibold'>Comment</div>
+        <textarea
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
+          placeholder='Add your comment...'
+          maxLength={256}
+          className='bg-lightgrey h-32 rounded-lg px-4 py-2 text-left align-text-top placeholder:italic'
+        />
+      </div>
       </div>
     </main>
   )
