@@ -8,6 +8,7 @@ import TextBtn from '~/_components/text-button'
 import FooterTemplate from '~/_components/footer-template'
 import Button from '~/_components/button'
 import { useAxios } from '~/_lib/axios'
+import { useAuth } from 'react-oidc-context'
 
 interface ActivityData {
   id: number
@@ -22,6 +23,7 @@ export default function Page() {
   const axios = useAxios()
   const router = useRouter()
   const params = useParams()
+  const auth = useAuth()
   const activityId = parseInt(params.id as string, 10)
   const [activityData, setActivityData] = useState<ActivityData | null>(null)
   const [isSavedToSchedule, setIsSavedToSchedule] = useState(false)
@@ -36,13 +38,29 @@ export default function Page() {
     | []
   >([])
 
-  // Log the ID from the route
+  // Check if user has scheduled or archived this activity
   useEffect(() => {
-    const fetchActivityData = async (id: number) => {
+    if (!auth.isAuthenticated) return;
+    
+    const checkUserStatus = async () => {
       try {
-        const response = await axios.get(`/v1/activities/${id}`)
-        const data = response.data.data[0]
-        setActivityData(data)
+        // Check scheduled activities
+        const scheduledResponse = await axios.get('/v1/activities/schedule');
+        if (scheduledResponse.data?.data) {
+          const isInSchedule = scheduledResponse.data.data.some(
+            (activity: any) => activity.id === activityId
+          );
+          setIsScheduled(isInSchedule);
+        }
+        
+        // Check archived activities
+        const archivedResponse = await axios.get('/v1/activities/archive');
+        if (archivedResponse.data?.data) {
+          const isInArchive = archivedResponse.data.data.some(
+            (activity: any) => activity.id === activityId
+          );
+          setIsArchived(isInArchive);
+        }
       } catch (error) {
         console.error('Error fetching activity data:', error)
       }
@@ -153,14 +171,14 @@ export default function Page() {
       <div className='mb-8 flex w-full flex-col gap-y-8'>
         <section className='border-lightgrey w-full rounded-lg border p-2'>
           <b>Description</b> <br />
-          {activityData?.description}
+          {activityData.description}
         </section>
         <section className='flex w-full flex-col gap-y-2'>
           <span className='flex w-full justify-between'>
-            <h3>Read Reviews</h3>
+            <h3>Read Reviews ({reviews.length})</h3>
             <TextBtn
               text='Read all reviews'
-              onClick={() => router.push(`/reviews?q=${activityData?.name}`)}
+              onClick={() => router.push(`/reviews?q=${activityId}`)}
             />
           </span>
           {reviews.map((review, index) => (
@@ -173,10 +191,14 @@ export default function Page() {
             />
           ))}
         </section>
-        <span className='text-lightgrey text-center text-xs'>
-          That&apos;s all for now {':)'}
-        </span>
+        
+        {previewReviews.length > 0 && (
+          <span className='text-lightgrey text-center text-xs'>
+            That&apos;s all for now {':)'}
+          </span>
+        )}
       </div>
+      
       <FooterTemplate>
         <div className='flex gap-x-4'>
           <Button
@@ -201,6 +223,16 @@ export default function Page() {
             variant='orange'
             rounded='lg'
             onClick={handleBooking}
+            disabled={isSaving}
+          />
+        </div>
+        
+        {/* Archive button shown below the main buttons */}
+        <div className='mt-2 w-full text-center'>
+          <TextBtn
+            text={isArchived ? 'Unarchive Activity' : 'Archive Activity'}
+            onClick={handleArchive}
+            className='text-sm text-gray-500'
           />
         </div>
       </FooterTemplate>
