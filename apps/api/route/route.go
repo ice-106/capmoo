@@ -74,4 +74,8 @@ func (v1 *V1Handler) RegisterActivityRouter(r fiber.Router) {
 	activityRouter.Post("/archive/:activityId", v1.activityHandler.ArchiveUserActivityById)
 	activityRouter.Get("/archive", v1.activityHandler.GetArchivedUserActivities)
 	activityRouter.Delete("/archive/:activityId", v1.activityHandler.UnarchiveUserActivityById)
+
+	activityRouter.Post("/schedule/:activityId", v1.activityHandler.SaveUserActivityScheduleById)
+	activityRouter.Get("/schedule", v1.activityHandler.GetUserActivitySchedule)
+	activityRouter.Delete("/schedule/:activityId", v1.activityHandler.DeleteUserActivityScheduleById)
 }

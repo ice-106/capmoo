@@ -17,6 +17,9 @@ type UserDomain interface {
 	ArchiveUserActivity(ctx context.Context, userId uint, activityId uint) error
 	GetArchivedUserActivities(ctx context.Context, userId uint) ([]model.Activity, error)
 	UnarchiveUserActivity(ctx context.Context, userId uint, activityId uint) error
+	SaveUserActivitySchedule(ctx context.Context, userId uint, activityId uint) error
+	GetUserActivitySchedule(ctx context.Context, userId uint) ([]model.Activity, error)
+	DeleteUserActivitySchedule(ctx context.Context, userId uint, activityId uint) error
 }
 
 type UserDomainImpl struct {
@@ -87,6 +90,28 @@ func (d *UserDomainImpl) GetArchivedUserActivities(ctx context.Context, userId u
 func (d *UserDomainImpl) UnarchiveUserActivity(ctx context.Context, userId uint, activityId uint) error {
 	if err := d.userRepository.UnarchiveUserActivity(ctx, userId, activityId); err != nil {
 		return fmt.Errorf("can't unarchive user activity from UserDomain: %w", err)
+	}
+	return nil
+}
+
+func (d *UserDomainImpl) SaveUserActivitySchedule(ctx context.Context, userId uint, activityId uint) error {
+	if err := d.userRepository.SaveUserActivitySchedule(ctx, userId, activityId); err != nil {
+		return fmt.Errorf("can't save user activity schedule from UserDomain: %w", err)
+	}
+	return nil
+}
+
+func (d *UserDomainImpl) GetUserActivitySchedule(ctx context.Context, userId uint) ([]model.Activity, error) {
+	activities, err := d.userRepository.GetUserActivitySchedule(ctx, userId)
+	if err != nil {
+		return nil, fmt.Errorf("can't get user activity schedule from UserDomain: %w", err)
+	}
+	return activities, nil
+}
+
+func (d *UserDomainImpl) DeleteUserActivitySchedule(ctx context.Context, userId uint, activityId uint) error {
+	if err := d.userRepository.DeleteUserActivitySchedule(ctx, userId, activityId); err != nil {
+		return fmt.Errorf("can't delete user activity schedule from UserDomain: %w", err)
 	}
 	return nil
 }

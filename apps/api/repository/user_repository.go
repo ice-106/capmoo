@@ -17,6 +17,9 @@ type UserRepository interface {
 	ArchiveUserActivity(ctx context.Context, userId uint, activityId uint) error
 	GetArchivedUserActivities(ctx context.Context, userId uint) ([]model.Activity, error)
 	UnarchiveUserActivity(ctx context.Context, userId uint, activityId uint) error
+	SaveUserActivitySchedule(ctx context.Context, userId uint, activityId uint) error
+	GetUserActivitySchedule(ctx context.Context, userId uint) ([]model.Activity, error)
+	DeleteUserActivitySchedule(ctx context.Context, userId uint, activityId uint) error
 }
 
 type UserRepositoryImpl struct {
@@ -114,6 +117,51 @@ func (r *UserRepositoryImpl) UnarchiveUserActivity(ctx context.Context, userId u
 	}
 
 	if err := r.db.WithContext(ctx).Model(&user).Association("ActivitiesArchives").Delete(&activity); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *UserRepositoryImpl) SaveUserActivitySchedule(ctx context.Context, userId uint, activityId uint) error {
+	var user model.User
+	if err := r.db.WithContext(ctx).First(&user, userId).Error; err != nil {
+		return err
+	}
+
+	var activity model.Activity
+	if err := r.db.WithContext(ctx).First(&activity, activityId).Error; err != nil {
+		return err
+	}
+
+	if err := r.db.WithContext(ctx).Model(&user).Association("ActivitiesSchedules").Append(&activity); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *UserRepositoryImpl) GetUserActivitySchedule(ctx context.Context, userId uint) ([]model.Activity, error) {
+	var user model.User
+	if err := r.db.WithContext(ctx).Preload("ActivitiesSchedules").First(&user, userId).Error; err != nil {
+		return nil, err
+	}
+
+	return user.ActivitiesSchedules, nil
+}
+
+func (r *UserRepositoryImpl) DeleteUserActivitySchedule(ctx context.Context, userId uint, activityId uint) error {
+	var user model.User
+	if err := r.db.WithContext(ctx).First(&user, userId).Error; err != nil {
+		return err
+	}
+
+	var activity model.Activity
+	if err := r.db.WithContext(ctx).First(&activity, activityId).Error; err != nil {
+		return err
+	}
+
+	if err := r.db.WithContext(ctx).Model(&user).Association("ActivitiesSchedules").Delete(&activity); err != nil {
 		return err
 	}
 

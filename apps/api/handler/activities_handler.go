@@ -527,3 +527,68 @@ func (h *ActivityHandler) UnarchiveUserActivityById(c *fiber.Ctx) error {
 
 	return api.OkNoContent(c)
 }
+
+func (h *ActivityHandler) SaveUserActivityScheduleById(c *fiber.Ctx) error {
+	ctx := c.Context()
+	userId := api.MustGetUserIDFromContext(c)
+
+	var params struct {
+		ActivityId qid.QID `params:"id"`
+	}
+
+	if err := c.ParamsParser(&params); err != nil {
+		slog.InfoContext(ctx, "Failed to parse params from SaveUserActivitySchedule", "error", err)
+		return api.BadInput(c)
+	}
+
+	if err := h.userDomain.SaveUserActivitySchedule(ctx, userId, params.ActivityId.Uint()); err != nil {
+		slog.InfoContext(ctx, "Unexpected error from SaveUserActivitySchedule", "error", err)
+		return api.InternalServerError(c)
+	}
+
+	return api.OkNoContent(c)
+}
+
+func (h *ActivityHandler) GetUserActivitySchedule(c *fiber.Ctx) error {
+	ctx := c.Context()
+	userId := api.MustGetUserIDFromContext(c)
+
+	activities, err := h.userDomain.GetUserActivitySchedule(ctx, userId)
+	if err != nil {
+		slog.InfoContext(ctx, "Unexpected error from GetUserActivitySchedule", "error", err)
+		return api.InternalServerError(c)
+	}
+
+	response := make([]dto.GetActivitiesResponse, 0, len(activities))
+	for _, activity := range activities {
+		response = append(response, dto.GetActivitiesResponse{
+			Id:         activity.Id,
+			Name:       activity.Name,
+			CategoryId: activity.CategoryId,
+			LocationId: activity.LocationId,
+		})
+	}
+
+	return api.Ok(c, response)
+}
+
+func (h *ActivityHandler) DeleteUserActivityScheduleById(c *fiber.Ctx) error {
+	ctx := c.Context()
+	userId := api.MustGetUserIDFromContext(c)
+
+	var params struct {
+		ActivityId qid.QID `params:"id"`
+	}
+
+	if err := c.ParamsParser(&params); err != nil {
+		slog.InfoContext(ctx, "Failed to parse params from DeleteUserActivitySchedule", "error", err)
+		return api.BadInput(c)
+	}
+
+	if err := h.userDomain.DeleteUserActivitySchedule(ctx, userId, params.ActivityId.Uint()); err != nil {
+		slog.InfoContext(ctx, "Unexpected error from DeleteUserActivitySchedule", "error", err)
+		return api.InternalServerError(c)
+	}
+
+	return api.OkNoContent(c)
+}
