@@ -105,17 +105,17 @@ export default function ProfileEditPage() {
 
       {/* Main profile edit section */}
       <div className='flex flex-col items-center gap-4'>
-        <ProfilePhoto allowEdit={true} />
+        <ProfilePhoto allowEdit={false} />
         <div className='flex gap-2 pl-[26px]'>
           <div ref={username}>
             {(auth.user?.profile?.['cognito:username'] as string) ||
               defaultUsername}
           </div>
-          {/* <PencilLine
+          <PencilLine
             color='orange'
             onClick={() => setIsOpenEdit(true)}
             className='cursor-pointer'
-          /> */}
+          />
         </div>
         <h3 className='w-full'>Contact Information</h3>
         <div className='grid w-full grid-cols-[1fr,3fr] items-center justify-center gap-4'>
