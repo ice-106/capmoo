@@ -12,8 +12,10 @@ import { useSwipeGesture } from '~/_hooks/use-swipe-gesture'
 import FilterTag from '~/_components/filter-tag'
 import SearchDrawer from '~/_components/search-drawer'
 import TextBtn from '~/_components/text-button'
+import { useAxios } from '~/_lib/axios'
 
 export function SearchResultsPage() {
+  const axios = useAxios()
   const router = useRouter()
   const searchParams = useSearchParams()
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
@@ -48,34 +50,45 @@ export function SearchResultsPage() {
 
   // Load mock search results - only depends on primitive values
   useEffect(() => {
+    const fetchActivities = async () => {
+      try {
+        // Build the query string from queryParams
+        const params = new URLSearchParams({
+          q: queryParams.q,
+          minPrice: queryParams.minPrice || '',
+          maxPrice: queryParams.maxPrice || '',
+        })
 
-    // Mock results based on search parameters
-    const mockResults = [
-        {
-          "imgUrl": "/images/activity/user/activity_7.jpg",
-          "text": "Playing and Taking Pictures with Horse",
-          "onClickUrl": "/activity/7/description"
-        },
-        {
-          "imgUrl": "/images/activity/user/activity_8.jpg",
-          "text": "River Seaweed Harvesting Adventure",
-          "onClickUrl": "/activity/8/description"
-        },
-        {
-          "imgUrl": "/images/activity/user/activity_9.jpg",
-          "text": "Kayaking Along Nan River",
-          "onClickUrl": "/activity/9/description"
-        }
-      ]
-      
+        // Append locations and categories as arrays
+        queryParams.locations.forEach((loc) => params.append('location', loc))
+        queryParams.categories.forEach((cat) => params.append('category', cat))
 
-    setResults(mockResults)
+        // Use Axios to fetch data
+        const response = await axios.get(`/v1/activities/search`, {
+          params: params,
+        })
+
+        // Map the response to the expected format for your frontend
+        const formattedResults = response.data.data.map((activity: any) => ({
+          imgUrl: activity.imgUrl, // Replace with the actual image URL field from the backend
+          text: activity.name, // Replace with the actual name field from the backend
+          onClickUrl: `/activity/${activity.id}/description`, // Replace with the actual activity ID
+        }))
+
+        setResults(formattedResults)
+      } catch (error) {
+        console.error('Error fetching activities:', error)
+        setResults([]) // Clear results on error
+      }
+    }
+
+    fetchActivities()
   }, [
     queryParams.q,
-    queryParams.locations, // ESLint will now recognize this dependency
+    queryParams.locations,
     queryParams.minPrice,
     queryParams.maxPrice,
-    queryParams.categories, // ESLint will now recognize this dependency
+    queryParams.categories,
   ])
 
   // Function to convert form values to URL parameters
@@ -85,7 +98,7 @@ export function SearchResultsPage() {
     if (formValues.searchTerm) params.append('q', formValues.searchTerm)
 
     if ((formValues.location ?? []).length > 0) {
-      ;(formValues.location ?? []).forEach((loc: string) => {
+      ; (formValues.location ?? []).forEach((loc: string) => {
         params.append('location', loc)
       })
     }
@@ -94,7 +107,7 @@ export function SearchResultsPage() {
     if (formValues.maxPrice) params.append('maxPrice', formValues.maxPrice)
 
     if ((formValues.categories ?? []).length > 0) {
-      ;(formValues.categories ?? []).forEach((cat: string) => {
+      ; (formValues.categories ?? []).forEach((cat: string) => {
         params.append('category', cat)
       })
     }
@@ -179,7 +192,7 @@ export function SearchResultsPage() {
       {isDrawerOpen && (
         <SearchDrawer
           value={queryParams.q}
-          onChange={() => {}}
+          onChange={() => { }}
           onSubmit={(formValues) => {
             handleSearch(formValues)
             closeSearchDrawer()
