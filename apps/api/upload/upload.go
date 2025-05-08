@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"mime/multipart"
 	"net/url"
 	"regexp"
 	"time"
@@ -44,13 +45,7 @@ func (u *UploadService) UploadFile(ctx context.Context, fileData io.Reader, file
 		return "", fmt.Errorf("failed to upload file to S3: %w", err)
 	}
 
-	// Generate a presigned URL (valid for 15 minutes)
-	presignedURL, err := u.s3Client.GetPresignedURL(ctx, u.s3Config.Bucket, escapedPath, 15*time.Minute)
-	if err != nil {
-		return "", fmt.Errorf("failed to generate presigned URL: %w", err)
-	}
-
-	return presignedURL, nil
+	return uniqueFileName, nil
 }
 
 func (u *UploadService) appendTimestampToFileName(fileName string) string {
@@ -65,6 +60,33 @@ func (u *UploadService) appendTimestampToFileName(fileName string) string {
 	}
 
 	return fmt.Sprintf("%s_%s%s", base, timestamp, ext)
+}
+
+func (u *UploadService) UploadMultipleFiles(ctx context.Context, files []*multipart.FileHeader, folder string) ([]string, error) {
+	var filePaths []string
+
+	for _, file := range files {
+		src, err := file.Open()
+		if err != nil {
+			return nil, fmt.Errorf("failed to open file %s: %w", file.Filename, err)
+		}
+		defer src.Close()
+
+		safeFileName := u.SafeFileName(file.Filename)
+		uniqueFileName := u.appendTimestampToFileName(safeFileName)
+		filePath := fmt.Sprintf("%s/%s", folder, uniqueFileName)
+		escapedPath := url.PathEscape(filePath)
+
+		contentType := file.Header.Get("Content-Type")
+		err = u.s3Client.Upload(ctx, u.s3Config.Bucket, escapedPath, src, contentType)
+		if err != nil {
+			return nil, fmt.Errorf("upload failed for %s: %w", file.Filename, err)
+		}
+
+		filePaths = append(filePaths, filePath)
+	}
+
+	return filePaths, nil
 }
 
 func (u *UploadService) SafeFileName(fileName string) string {

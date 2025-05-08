@@ -14,6 +14,7 @@ type GetUserReviewsResponse struct {
 	UpdatedAt  *time.Time          `json:"updated_at"`
 	Rating     int                 `json:"rating"`
 	Comment    string              `json:"comment"`
+	Images     []string            `json:"images"`
 	UserId     uint                `json:"user_id"`
 	User       GetUserResponse     `json:"user"`
 	ActivityId uint                `json:"activity_id"`
@@ -28,8 +29,9 @@ type GetReviewStatisticsResponse struct {
 }
 
 type UpdateUserReviewRequest struct {
-	Rating  int    `json:"rating" example:"4"`
-	Comment string `json:"comment" example:"Great experience!"`
+	Rating  int      `json:"rating" example:"4"`
+	Comment string   `json:"comment" example:"Great experience!"`
+	Images  []string `json:"images" example:"https://example.com/image1.jpg,https://example.com/image2.jpg"`
 }
 
 type UpdateUserReviewResponse struct {
@@ -38,6 +40,7 @@ type UpdateUserReviewResponse struct {
 	UpdatedAt  *time.Time          `json:"updated_at"`
 	Rating     int                 `json:"rating"`
 	Comment    string              `json:"comment"`
+	Images     []string            `json:"images"`
 	UserId     uint                `json:"user_id"`
 	User       GetUserResponse     `json:"user"`
 	ActivityId uint                `json:"activity_id"`
