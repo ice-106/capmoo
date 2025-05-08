@@ -18,13 +18,15 @@ import (
 type ActivityHandler struct {
 	activityDomain domain.ActivityDomain
 	validator      *validator.Validate
+	userDomain     domain.UserDomain
 	reviewDomain   domain.ReviewDomain
 }
 
-func NewActivityHandler(activityDomain domain.ActivityDomain, validator *validator.Validate, reviewDomain domain.ReviewDomain) *ActivityHandler {
+func NewActivityHandler(activityDomain domain.ActivityDomain, validator *validator.Validate, userDomain domain.UserDomain, reviewDomain domain.ReviewDomain) *ActivityHandler {
 	return &ActivityHandler{
 		activityDomain: activityDomain,
 		validator:      validator,
+		userDomain:     userDomain,
 		reviewDomain:   reviewDomain,
 	}
 }
@@ -211,7 +213,7 @@ func (h *ActivityHandler) CreateUserReview(c *fiber.Ctx) error {
 	return api.OkNoContent(c)
 }
 
-func (h *ActivityHandler) GetReviews(c *fiber.Ctx) error {
+func (h *ActivityHandler) GetReviewsByActivityId(c *fiber.Ctx) error {
 	ctx := c.Context()
 
 	var params struct {
@@ -455,6 +457,136 @@ func (h *ActivityHandler) DeleteUserReviewById(c *fiber.Ctx) error {
 
 	if err := h.reviewDomain.DeleteReviewById(ctx, params.ReviewId.Uint()); err != nil {
 		slog.InfoContext(ctx, "Unexpected error from DeleteReview", "error", err)
+		return api.InternalServerError(c)
+	}
+
+	return api.OkNoContent(c)
+}
+
+func (h *ActivityHandler) ArchiveUserActivityById(c *fiber.Ctx) error {
+	ctx := c.Context()
+	userId := api.MustGetUserIDFromContext(c)
+
+	var params struct {
+		ActivityId qid.QID `params:"id"`
+	}
+
+	if err := c.ParamsParser(&params); err != nil {
+		slog.InfoContext(ctx, "Failed to parse params from ArchiveUserActivity", "error", err)
+		return api.BadInput(c)
+	}
+
+	if err := h.userDomain.ArchiveUserActivity(ctx, userId, params.ActivityId.Uint()); err != nil {
+		slog.InfoContext(ctx, "Unexpected error from ArchiveUserActivity", "error", err)
+		return api.InternalServerError(c)
+	}
+
+	return api.OkNoContent(c)
+}
+
+func (h *ActivityHandler) GetArchivedUserActivities(c *fiber.Ctx) error {
+	ctx := c.Context()
+	userId := api.MustGetUserIDFromContext(c)
+
+	activities, err := h.userDomain.GetArchivedUserActivities(ctx, userId)
+	if err != nil {
+		slog.InfoContext(ctx, "Unexpected error from GetArchivedUserActivities", "error", err)
+		return api.InternalServerError(c)
+	}
+
+	response := make([]dto.GetActivitiesResponse, 0, len(activities))
+	for _, activity := range activities {
+		response = append(response, dto.GetActivitiesResponse{
+			Id:         activity.Id,
+			Name:       activity.Name,
+			CategoryId: activity.CategoryId,
+			LocationId: activity.LocationId,
+		})
+	}
+
+	return api.Ok(c, response)
+}
+
+func (h *ActivityHandler) UnarchiveUserActivityById(c *fiber.Ctx) error {
+	ctx := c.Context()
+	userId := api.MustGetUserIDFromContext(c)
+
+	var params struct {
+		ActivityId qid.QID `params:"id"`
+	}
+
+	if err := c.ParamsParser(&params); err != nil {
+		slog.InfoContext(ctx, "Failed to parse params from UnarchiveUserActivity", "error", err)
+		return api.BadInput(c)
+	}
+
+	if err := h.userDomain.UnarchiveUserActivity(ctx, userId, params.ActivityId.Uint()); err != nil {
+		slog.InfoContext(ctx, "Unexpected error from UnarchiveUserActivity", "error", err)
+		return api.InternalServerError(c)
+	}
+
+	return api.OkNoContent(c)
+}
+
+func (h *ActivityHandler) SaveUserActivityScheduleById(c *fiber.Ctx) error {
+	ctx := c.Context()
+	userId := api.MustGetUserIDFromContext(c)
+
+	var params struct {
+		ActivityId qid.QID `params:"id"`
+	}
+
+	if err := c.ParamsParser(&params); err != nil {
+		slog.InfoContext(ctx, "Failed to parse params from SaveUserActivitySchedule", "error", err)
+		return api.BadInput(c)
+	}
+
+	if err := h.userDomain.SaveUserActivitySchedule(ctx, userId, params.ActivityId.Uint()); err != nil {
+		slog.InfoContext(ctx, "Unexpected error from SaveUserActivitySchedule", "error", err)
+		return api.InternalServerError(c)
+	}
+
+	return api.OkNoContent(c)
+}
+
+func (h *ActivityHandler) GetUserActivitySchedule(c *fiber.Ctx) error {
+	ctx := c.Context()
+	userId := api.MustGetUserIDFromContext(c)
+
+	activities, err := h.userDomain.GetUserActivitySchedule(ctx, userId)
+	if err != nil {
+		slog.InfoContext(ctx, "Unexpected error from GetUserActivitySchedule", "error", err)
+		return api.InternalServerError(c)
+	}
+
+	response := make([]dto.GetActivitiesResponse, 0, len(activities))
+	for _, activity := range activities {
+		response = append(response, dto.GetActivitiesResponse{
+			Id:         activity.Id,
+			Name:       activity.Name,
+			CategoryId: activity.CategoryId,
+			LocationId: activity.LocationId,
+		})
+	}
+
+	return api.Ok(c, response)
+}
+
+func (h *ActivityHandler) DeleteUserActivityScheduleById(c *fiber.Ctx) error {
+	ctx := c.Context()
+	userId := api.MustGetUserIDFromContext(c)
+
+	var params struct {
+		ActivityId qid.QID `params:"id"`
+	}
+
+	if err := c.ParamsParser(&params); err != nil {
+		slog.InfoContext(ctx, "Failed to parse params from DeleteUserActivitySchedule", "error", err)
+		return api.BadInput(c)
+	}
+
+	if err := h.userDomain.DeleteUserActivitySchedule(ctx, userId, params.ActivityId.Uint()); err != nil {
+		slog.InfoContext(ctx, "Unexpected error from DeleteUserActivitySchedule", "error", err)
 		return api.InternalServerError(c)
 	}
 
