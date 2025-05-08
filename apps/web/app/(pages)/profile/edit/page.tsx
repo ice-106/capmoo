@@ -111,11 +111,11 @@ export default function ProfileEditPage() {
             {(auth.user?.profile?.['cognito:username'] as string) ||
               defaultUsername}
           </div>
-          <PencilLine
+          {/* <PencilLine
             color='orange'
             onClick={() => setIsOpenEdit(true)}
             className='cursor-pointer'
-          />
+          /> */}
         </div>
         <h3 className='w-full'>Contact Information</h3>
         <div className='grid w-full grid-cols-[1fr,3fr] items-center justify-center gap-4'>
@@ -126,8 +126,8 @@ export default function ProfileEditPage() {
             ref={name}
             errorMessage={error.name ? "Name can't be empty" : ''}
           />
-          Tel no.
-          <TextBox placeholder='0XX-XXX-XXXX' variant='light' ref={tel} />
+          {/* Tel no.
+          <TextBox placeholder='0XX-XXX-XXXX' variant='light' ref={tel} /> */}
           Email
           <TextBox
             placeholder='Enter email'
@@ -135,8 +135,8 @@ export default function ProfileEditPage() {
             ref={email}
             errorMessage={error.email ? "Email can't be empty" : ''}
           />
-          Address
-          <TextBox placeholder='Enter address' variant='light' ref={address} />
+          {/* Address
+          <TextBox placeholder='Enter address' variant='light' ref={address} /> */}
         </div>
       </div>
       <FooterTemplate>

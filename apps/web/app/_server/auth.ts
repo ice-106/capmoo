@@ -12,6 +12,6 @@ export const signOutRedirect = async () => {
   }
 
   redirect(
-    `https://${COGNITO_POOL_ID}.auth.ap-southeast-1.amazoncognito.com/logout?client_id=${COGNITO_CLIENT_ID}&logout_uri=${encodeURIComponent(BASE_URL)}`
+    `https://${COGNITO_POOL_ID.replace('_', '')}.auth.ap-southeast-1.amazoncognito.com/logout?client_id=${COGNITO_CLIENT_ID}&logout_uri=${encodeURIComponent(BASE_URL)}`
   )
 }
