@@ -40,3 +40,7 @@ type GetActivityResponse struct {
 	RemainSlot       int        `json:"remain_slot"`
 	MaxParticipation int        `json:"max_participation"`
 }
+
+type UploadActivityImageResponse struct {
+	FileUrl string `json:"file_url"`
+}

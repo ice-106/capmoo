@@ -11,12 +11,19 @@ import (
 )
 
 type Config struct {
-	Env            string `mapstructure:"API_ENV"`
-	Port           int    `mapstructure:"API_PORT"`
-	DatabaseUrl    string `mapstructure:"API_DATABASE_URL"`
-	AllowedOrigins string `mapstructure:"API_ALLOWED_ORIGINS"`
-	AllowedHeaders string `mapstructure:"API_ALLOWED_HEADERS"`
-	CognitoPoolId  string `mapstructure:"API_COGNITO_POOL_ID"`
+	Env               string `mapstructure:"API_ENV"`
+	Port              int    `mapstructure:"API_PORT"`
+	DatabaseUrl       string `mapstructure:"API_DATABASE_URL"`
+	AllowedOrigins    string `mapstructure:"API_ALLOWED_ORIGINS"`
+	AllowedHeaders    string `mapstructure:"API_ALLOWED_HEADERS"`
+	CognitoPoolId     string `mapstructure:"API_COGNITO_POOL_ID"`
+	RedisUrl          string `mapstructure:"API_REDIS_URL"`
+	RedisPassword     string `mapstructure:"API_REDIS_PASSWORD"`
+	RedisDB           int    `mapstructure:"API_REDIS_DB"`
+	S3Region          string `mapstructure:"API_S3_REGION"`
+	S3AccessKeyId     string `mapstructure:"API_S3_ACCESS_KEY_ID"`
+	S3SecretAccessKey string `mapstructure:"API_S3_SECRET_ACCESS_KEY"`
+	S3BucketName      string `mapstructure:"API_S3_BUCKET_NAME"`
 }
 
 func (c *Config) IsProduction() bool {
