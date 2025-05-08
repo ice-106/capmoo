@@ -10,9 +10,9 @@ import (
 	"github.com/capmoo/api/domain"
 	"github.com/capmoo/api/handler"
 	"github.com/capmoo/api/middleware"
-	"github.com/capmoo/api/model"
 	"github.com/capmoo/api/repository"
 	"github.com/capmoo/api/route"
+	"github.com/go-playground/validator/v10"
 )
 
 // must used to panic if error is not nil.
@@ -39,38 +39,30 @@ func InitDI(ctx context.Context, cfg *config.Config) (r *route.V1Handler, err er
 
 	gormDB := must(database.New(cfg))
 
-	if err := gormDB.Exec(`
-		DO $$ 
-		BEGIN
-			IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'booking_status') THEN
-				CREATE TYPE booking_status AS ENUM ('UNKNOWN', 'CANCELLED', 'FAILED', 'PENDING', 'SUCCESS');
-			END IF;
+	database.Migrate(gormDB)
+	database.Seed(gormDB)
 
-			IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'payment_status') THEN
-				CREATE TYPE payment_status AS ENUM ('UNKNOWN', 'CANCELLED', 'FAILED', 'PENDING', 'SUCCESS');
-			END IF;
-		END $$;
-	`).Error; err != nil {
-		return nil, fmt.Errorf("failed to create enum type: %w", err)
-	}
-
-	gormDB.AutoMigrate(model.Activity{}, model.Booking{}, model.Concern{}, model.Host{}, model.Location{}, model.Preference{}, model.Review{}, model.TravelType{}, model.User{})
+	// validator
+	validator := validator.New(validator.WithRequiredStructEnabled())
 
 	// repository
 	userRepository := repository.NewUserRepository(gormDB)
+	surveryRepository := repository.NewSurveyRepository(gormDB)
 
 	// domain
 	authDomain := domain.NewAuthDomain(cfg)
 	userDomain := domain.NewUserDomain(userRepository)
+	surveyDomain := domain.NewSurveyDomain(surveryRepository)
 
 	// handler
 	userHandler := handler.NewUserHandler(userDomain)
+	surveyHandler := handler.NewSurveyHandler(surveyDomain, validator)
 
 	// middleware
 	authMiddleware := middleware.NewAuthMiddleware(authDomain, userDomain)
 
 	// route
-	v1Handler := route.V1NewHandler(authMiddleware, userHandler)
+	v1Handler := route.V1NewHandler(authMiddleware, userHandler, surveyHandler)
 
 	return v1Handler, nil
 }
