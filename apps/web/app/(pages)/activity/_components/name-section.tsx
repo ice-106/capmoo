@@ -24,6 +24,26 @@ interface NameSectionProps {
   price: string
 }
 
+const formatDateTime = (dateString: string): string => {
+  if (!dateString) {
+    return ''
+  }
+
+  const date = new Date(dateString)
+  if (isNaN(date.getTime())) {
+    return ''
+  }
+
+  return new Intl.DateTimeFormat('en-GB', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  }).format(date)
+}
+
 const NameSection: React.FC<NameSectionProps> = ({ ...props }) => {
   const [isSticky, setIsSticky] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -135,7 +155,7 @@ const NameSection: React.FC<NameSectionProps> = ({ ...props }) => {
           <h3>{props.name}</h3>
           <span className='flex gap-x-2'>
             <CalendarClock className='text-darkgrey h-6 w-6' />
-            {props.date}
+            {formatDateTime(props.date)}
           </span>
           <span className='flex gap-x-2'>
             <MapPin className='text-darkgrey h-6 w-6' />
