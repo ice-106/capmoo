@@ -10,10 +10,10 @@ import (
 type UserRepository interface {
 	CreateUser(ctx context.Context, user *model.User) error
 	CreateIfNotExists(ctx context.Context, user *model.User) (*model.User, error)
-	GetUserById(ctx context.Context, id string) (*model.User, error)
+	GetUserById(ctx context.Context, id uint) (*model.User, error)
 	GetUsers(ctx context.Context) ([]model.User, error)
-	UpdateUserById(ctx context.Context, id string, user *model.User) error
-	DeleteUserById(ctx context.Context, id string) error
+	UpdateUserById(ctx context.Context, id uint, user *model.User) error
+	DeleteUserById(ctx context.Context, id uint) error
 }
 
 type UserRepositoryImpl struct {
@@ -42,7 +42,7 @@ func (r *UserRepositoryImpl) CreateIfNotExists(ctx context.Context, user *model.
 	return user, nil
 }
 
-func (r *UserRepositoryImpl) GetUserById(ctx context.Context, id string) (*model.User, error) {
+func (r *UserRepositoryImpl) GetUserById(ctx context.Context, id uint) (*model.User, error) {
 	var user model.User
 	if err := r.db.WithContext(ctx).Where("id = ?", id).First(&user).Error; err != nil {
 		return nil, err
@@ -58,14 +58,14 @@ func (r *UserRepositoryImpl) GetUsers(ctx context.Context) ([]model.User, error)
 	return users, nil
 }
 
-func (r *UserRepositoryImpl) UpdateUserById(ctx context.Context, id string, user *model.User) error {
+func (r *UserRepositoryImpl) UpdateUserById(ctx context.Context, id uint, user *model.User) error {
 	if err := r.db.WithContext(ctx).Model(&model.User{}).Where("id = ?", id).Updates(user).Error; err != nil {
 		return err
 	}
 	return nil
 }
 
-func (r *UserRepositoryImpl) DeleteUserById(ctx context.Context, id string) error {
+func (r *UserRepositoryImpl) DeleteUserById(ctx context.Context, id uint) error {
 	if err := r.db.WithContext(ctx).Where("id = ?", id).Delete(&model.User{}).Error; err != nil {
 		return err
 	}

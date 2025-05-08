@@ -35,7 +35,9 @@ func (v1 *V1Handler) RegisterV1Router(r fiber.Router) {
 func (v1 *V1Handler) RegisterUserRouter(r fiber.Router) {
 	userRouter := r.Group("/user")
 
-	userRouter.Get("/", v1.userHandler.GetUsers)
+	userRouter.Get("/me", v1.userHandler.Me)
+	userRouter.Post("/reviews", v1.userHandler.CreateUserReview) // TODO: move to activity, create review from activity router
+	userRouter.Get("/reviews", v1.userHandler.GetUserReviews)
 }
 
 func (v1 *V1Handler) RegisterSurveyRouter(r fiber.Router) {
