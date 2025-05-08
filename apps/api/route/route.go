@@ -89,5 +89,4 @@ func (v1 *V1Handler) RegisterReviewRouter(r fiber.Router) {
 	reviewRouter := r.Group("/reviews")
 
 	reviewRouter.Get("/", v1.reviewHandler.GetReviews)
-	reviewRouter.Post("/test-upload", v1.reviewHandler.TestUpload)
 }

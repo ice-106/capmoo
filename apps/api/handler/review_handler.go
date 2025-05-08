@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"log/slog"
 	"strconv"
 	"time"
@@ -31,52 +30,6 @@ func NewReviewHandler(
 		uploadService: uploadService,
 		validator:     validator,
 	}
-}
-
-func (h *ReviewHandler) TestUpload(c *fiber.Ctx) error {
-	ctx := c.Context()
-
-	file, err := c.FormFile("file")
-	if err != nil {
-		slog.InfoContext(ctx, "Failed to parse file from TestUpload", "error", err)
-		return api.BadInput(c)
-	}
-
-	contentType := file.Header.Get("Content-Type")
-	if !isAllowedFileType(contentType) {
-		slog.InfoContext(ctx, "File type not allowed", "fileType", contentType)
-		return api.BadInput(c)
-	}
-
-	fileContent, err := file.Open()
-	if err != nil {
-		slog.InfoContext(ctx, "Failed to open file from TestUpload", "error", err)
-		return api.InternalServerError(c)
-	}
-	defer fileContent.Close()
-
-	timestamp := time.Now().Unix()
-	filePath := fmt.Sprintf("uploads/%d-%s", timestamp, h.uploadService.SafeFileName(file.Filename))
-
-	fileURL, err := h.uploadService.UploadFile(ctx, fileContent, filePath, contentType)
-	if err != nil {
-		slog.InfoContext(ctx, "Failed to upload file from TestUpload", "error", err)
-		return api.InternalServerError(c)
-	}
-
-	return api.Ok(c, dto.UploadActivityImageResponse{
-		FileUrl: fileURL,
-	})
-}
-
-func isAllowedFileType(contentType string) bool {
-	allowedTypes := map[string]bool{
-		"image/jpeg": true,
-		"image/png":  true,
-		"image/gif":  true,
-		"image/webp": true,
-	}
-	return allowedTypes[contentType]
 }
 
 func (h *ReviewHandler) CreateUserReview(c *fiber.Ctx) error {
