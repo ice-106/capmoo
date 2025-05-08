@@ -5,7 +5,7 @@ import Progressbar from '~/_components/progress-bar'
 import SelectionCard from '../_components/selection-card'
 import { useSurvey } from '../SurveyContext'
 import Button from '~/_components/button'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import {
   Volleyball as SportIcon,
@@ -25,7 +25,11 @@ export default function Page() {
     activityCategories,
     toggleActivityCategory,
     clearActivityCategories,
+    saveActivityPreferences,
+    isSaving
   } = useSurvey()
+
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     if (activityCategories.length > 0) {
@@ -48,9 +52,22 @@ export default function Page() {
     { id: 'religious', label: 'Religious', icon: <ReligiousIcon size={24} /> },
   ]
 
-  const handleNext = () => {
-    console.log('Keeping activity selections:', activityCategories)
-    router.push('/survey/2')
+  const handleNext = async () => {
+    setIsLoading(true)
+    
+    try {
+      console.log('Saving activity selections:', activityCategories)
+      
+      if (activityCategories.length > 0) {
+        const success = await saveActivityPreferences()
+        console.log('Save result:', success ? 'successful' : 'failed')
+      }
+      
+      router.push('/survey/2')
+    } catch (error) {
+      console.error('Error saving preferences:', error)
+      router.push('/survey/2')
+    }
   }
 
   const handleSkip = () => {
@@ -87,10 +104,11 @@ export default function Page() {
 
         <div className='mt-12 px-4'>
           <Button
-            label='Next'
+            label={(isLoading || isSaving) ? 'Processing...' : 'Next'}
             variant='orange'
             rounded='full'
             onClick={handleNext}
+            disabled={isLoading || isSaving}
           />
 
           <div className='mt-3 text-center'>

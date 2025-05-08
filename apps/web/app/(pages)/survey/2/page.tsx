@@ -1,11 +1,11 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react'
 import Progressbar from '~/_components/progress-bar'
 import SelectionCard from '../_components/selection-card'
 import { useSurvey } from '../SurveyContext'
 import Button from '~/_components/button'
-import { useEffect } from 'react'
 
 import {
   DollarSign as PriceIcon,
@@ -19,14 +19,21 @@ import TextBtn from '~/_components/text-button'
 
 export default function Page() {
   const router = useRouter()
-  const { travelConcerns, toggleTravelConcern, clearTravelConcerns } =
-    useSurvey()
+  const {
+    concerns,
+    toggleConcern,
+    clearConcerns,
+    saveConcerns,
+    isSaving
+  } = useSurvey()
+
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
-    if (travelConcerns.length > 0) {
-      console.log('Current travel concern selections:', travelConcerns)
+    if (concerns.length > 0) {
+      console.log('Current travel concern selections:', concerns)
     }
-  }, [travelConcerns])
+  }, [concerns])
 
   const categoryOptions = [
     { id: 'price', label: 'Price', icon: <PriceIcon size={24} /> },
@@ -45,16 +52,33 @@ export default function Page() {
     { id: 'location', label: 'Location', icon: <LocationIcon size={24} /> },
   ]
 
-  const handleNext = () => {
-    console.log('Keeping travel concern selections:', travelConcerns)
-    router.push('/survey/3')
+  const handleNext = async () => {
+    setIsLoading(true)
+    
+    try {
+      console.log('Saving travel concern selections:', concerns)
+      
+      if (concerns.length > 0) {
+        const success = await saveConcerns()
+        console.log('Save result:', success ? 'successful' : 'failed')
+      }
+      
+      router.push('/survey/3')
+    } catch (error) {
+      console.error('Error saving concerns:', error)
+      router.push('/survey/3')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const handleSkip = () => {
     console.log('Skipping page 2: Clearing travel concern selections')
-    clearTravelConcerns()
+    clearConcerns()
     router.push('/survey/3')
   }
+
+  const isButtonDisabled = isLoading || isSaving
 
   return (
     <main className='font-poppins w-full'>
@@ -75,8 +99,8 @@ export default function Page() {
                 key={category.id}
                 label={category.label}
                 icon={category.icon}
-                isSelected={travelConcerns.includes(category.id)}
-                onClick={() => toggleTravelConcern(category.id)}
+                isSelected={concerns?.includes(category.id) ?? false}
+                onClick={() => toggleConcern(category.id)}
               />
             ))}
           </div>
@@ -84,10 +108,11 @@ export default function Page() {
 
         <div className='mt-12 px-4'>
           <Button
-            label='Next'
+            label={isButtonDisabled ? 'Processing...' : 'Next'}
             variant='orange'
             rounded='full'
             onClick={handleNext}
+            disabled={isButtonDisabled}
           />
 
           <div className='mt-3 text-center'>

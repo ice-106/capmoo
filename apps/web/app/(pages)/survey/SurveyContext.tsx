@@ -1,96 +1,161 @@
 'use client'
-import { createContext, useContext, useState, ReactNode } from 'react'
 
-type TravelerType = 'solo' | 'group' | null
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react'
+import { useAuth } from 'react-oidc-context'
+import { useAxios } from '~/_lib/axios'
 
-interface SurveyContextType {
-  // Page 1: Activity preferences
+type SurveyContextType = {
+  // Activity categories
   activityCategories: string[]
   toggleActivityCategory: (category: string) => void
   clearActivityCategories: () => void
-
-  // Page 2: Travel concerns
-  travelConcerns: string[]
-  toggleTravelConcern: (concern: string) => void
-  clearTravelConcerns: () => void
-
-  // Page 3: Traveler type (solo/group)
-  travelerType: TravelerType
-  setTravelerType: (type: TravelerType) => void
-  clearTravelerType: () => void
-
-  submitSurvey: () => Promise<void>
+  saveActivityPreferences: () => Promise<boolean>
+  
+  // Concerns
+  concerns: string[]
+  toggleConcern: (concern: string) => void
+  clearConcerns: () => void
+  saveConcerns: () => Promise<boolean>
+  
+  // Travel types
+  travelTypes: string[]
+  toggleTravelType: (type: string) => void
+  clearTravelTypes: () => void
+  saveTravelTypes: () => Promise<boolean>
+  
+  // Status
+  isSaving: boolean
 }
 
 const SurveyContext = createContext<SurveyContextType | undefined>(undefined)
 
-export const SurveyProvider: React.FC<{ children: ReactNode }> = ({
-  children,
-}) => {
-  // Separate state for each page
-  const [activityCategories, setActivityCategories] = useState<string[]>([])
-  const [travelConcerns, setTravelConcerns] = useState<string[]>([])
-  const [travelerType, setTravelerType] = useState<TravelerType>(null)
+const API_PATHS = {
+  PREFERENCES: '/v1/survey/preferences',
+  CONCERNS: '/v1/survey/concerns',
+  TRAVEL_TYPES: '/v1/survey/travel-types'
+};
 
-  // Activity categories functions
+export const SurveyProvider = ({ children }: { children: ReactNode }) => {
+  // States for the different survey sections
+  const [activityCategories, setActivityCategories] = useState<string[]>([])
+  const [concerns, setConcerns] = useState<string[]>([])
+  const [travelTypes, setTravelTypes] = useState<string[]>([])
+  const [isSaving, setIsSaving] = useState(false)
+  
+  const axios = useAxios()
+  const auth = useAuth()
+
+    useEffect(() => {
+      if (!auth.isAuthenticated || auth.isLoading) {
+        return;
+      }
+      const fetchUserPreferences = async () => {
+        try {
+          // Get activity preferences
+          const preferencesResponse = await axios.get(API_PATHS.PREFERENCES)
+          if (preferencesResponse.data?.preferences?.length) {
+            setActivityCategories(preferencesResponse.data.preferences)
+          }
+          
+          // Get concerns
+          const concernsResponse = await axios.get(API_PATHS.CONCERNS)
+          if (concernsResponse.data?.concerns?.length) {
+            setConcerns(concernsResponse.data.concerns)
+          }
+          
+          // Get travel types
+          const travelTypesResponse = await axios.get(API_PATHS.TRAVEL_TYPES)
+          if (travelTypesResponse.data?.travel_types?.length) {
+            setTravelTypes(travelTypesResponse.data.travel_types)
+          }
+        } catch (error) {
+          console.error('Error loading user preferences:', error)
+        }
+      }
+    
+      fetchUserPreferences()
+    }, [axios, auth.isAuthenticated, auth.isLoading])
+
   const toggleActivityCategory = (category: string) => {
-    setActivityCategories((prev) =>
+    setActivityCategories(prev =>
       prev.includes(category)
-        ? prev.filter((c) => c !== category)
+        ? prev.filter(c => c !== category)
         : [...prev, category]
     )
   }
 
-  const clearActivityCategories = () => {
-    setActivityCategories([])
+  const clearActivityCategories = () => setActivityCategories([])
+
+  const saveActivityPreferences = async (): Promise<boolean> => {
+    if (activityCategories.length === 0) return true
+    
+    setIsSaving(true)
+
+    try {
+      console.log('Saving activity preferences to:', API_PATHS.PREFERENCES);
+      await axios.post(API_PATHS.PREFERENCES, { preferences: activityCategories })
+      return true
+    } catch (error) {
+      console.error('Failed to save activity preferences:', error)
+      return false
+    } finally {
+      setIsSaving(false)
+    }
   }
 
-  // Travel concerns functions
-  const toggleTravelConcern = (concern: string) => {
-    setTravelConcerns((prev) =>
+  // Concerns methods
+  const toggleConcern = (concern: string) => {
+    setConcerns(prev =>
       prev.includes(concern)
-        ? prev.filter((c) => c !== concern)
+        ? prev.filter(c => c !== concern)
         : [...prev, concern]
     )
   }
 
-  const clearTravelConcerns = () => {
-    setTravelConcerns([])
-  }
+  const clearConcerns = () => setConcerns([])
 
-  // Traveler type functions
-  const clearTravelerType = () => {
-    setTravelerType(null)
-  }
-
-  const submitSurvey = async () => {
-    const allData = {
-      activity_preferences: activityCategories,
-      travel_concerns: travelConcerns,
-      traveler_type: travelerType || '',
-    }
-
-    console.log('📤 Submitting survey data:', JSON.stringify(allData, null, 2))
-
+  const saveConcerns = async (): Promise<boolean> => {
+    if (concerns.length === 0) return true
+    
+    setIsSaving(true)
+    
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 500))
-
-      // const response = await fetch('/api/survey', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(allData)
-      // });
-
-      // if (!response.ok) {
-      //   throw new Error(`API error: ${response.status}`);
-      // }
-
-      console.log('Survey data submitted successfully')
-      return Promise.resolve()
+      console.log('Saving concerns to:', API_PATHS.CONCERNS);
+      await axios.post(API_PATHS.CONCERNS, { concerns })
+      return true
     } catch (error) {
-      console.error('Survey submission error:', error)
-      return Promise.reject(error)
+      console.error('Failed to save concerns:', error)
+      return false
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
+  // Travel type methods
+  const toggleTravelType = (type: string) => {
+    setTravelTypes(prev =>
+      prev.includes(type)
+        ? prev.filter(t => t !== type)
+        : [...prev, type]
+    )
+  }
+
+  const clearTravelTypes = () => setTravelTypes([])
+
+  const saveTravelTypes = async (): Promise<boolean> => {
+    if (travelTypes.length === 0) return true
+    
+    setIsSaving(true)
+    
+    try {
+      console.log('Saving travel types to:', API_PATHS.TRAVEL_TYPES);
+      await axios.post(API_PATHS.TRAVEL_TYPES, { travel_types: travelTypes })
+      return true
+    } catch (error) {
+      console.error('Failed to save travel types:', error)
+      return false
+    } finally {
+      setIsSaving(false)
     }
   }
 
@@ -100,13 +165,19 @@ export const SurveyProvider: React.FC<{ children: ReactNode }> = ({
         activityCategories,
         toggleActivityCategory,
         clearActivityCategories,
-        travelConcerns,
-        toggleTravelConcern,
-        clearTravelConcerns,
-        travelerType,
-        setTravelerType,
-        clearTravelerType,
-        submitSurvey,
+        saveActivityPreferences,
+        
+        concerns,
+        toggleConcern,
+        clearConcerns,
+        saveConcerns,
+        
+        travelTypes,
+        toggleTravelType,
+        clearTravelTypes,
+        saveTravelTypes,
+        
+        isSaving
       }}
     >
       {children}
