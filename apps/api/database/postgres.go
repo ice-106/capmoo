@@ -46,9 +46,6 @@ func Migrate(db *gorm.DB) error {
 }
 
 func Seed(db *gorm.DB) error {
-	// preferences: sports, shopping, educational, nature, eating, adventure, workshop, religious
-	// concerns: price, availability, promotion, rating, popularity, location
-	// travel_types: solo, group
 	if err := db.Exec(`
 		DO $$ 
 		BEGIN
@@ -79,6 +76,60 @@ func Seed(db *gorm.DB) error {
 				('solo', NOW(), NOW()),
 				('group', NOW(), NOW())
 			ON CONFLICT (name) DO NOTHING;
+			
+			INSERT INTO categories (name, created_at, updated_at)
+			VALUES
+				('adventure', NOW(), NOW()),
+				('cultural', NOW(), NOW()),
+				('educational', NOW(), NOW()),
+				('entertainment', NOW(), NOW()),
+				('nature', NOW(), NOW()),
+				('religious', NOW(), NOW()),
+				('shopping', NOW(), NOW()),
+				('sports', NOW(), NOW())
+			ON CONFLICT (name) DO NOTHING;
+			
+			INSERT INTO hosts (name, contact, is_verified, avg_rating, created_at, updated_at)
+			VALUES (
+				'John Doe',
+				'johndoe@example.com',
+				true,
+				4.5,
+				NOW(),
+				NOW()
+			);
+
+			INSERT INTO locations (district, province, country, latitude, longitude, created_at, updated_at)
+			VALUES ('District 1', 'Bangkok', 'Thailand', 13.7563, 100.5018, NOW(), NOW());
+			
+			INSERT INTO activities (
+				name,
+				description,
+				start_date_time,
+				end_date_time,
+				price,
+				remain_slot,
+				max_participation,
+				category_id,
+				host_id,
+				location_id,
+				created_at,
+				updated_at
+			)
+			VALUES (
+				'Sunset Kayaking Tour',
+				'A guided kayaking tour through scenic coastal areas during sunset.',
+				'2025-06-15 17:00:00',
+				'2025-06-15 19:00:00',
+				45.00,
+				10,
+				10,
+				1,
+				1,
+				1,
+				NOW(),
+				NOW()
+			);
 		END $$;
 	`).Error; err != nil {
 		return fmt.Errorf("failed to seed database: %w", err)

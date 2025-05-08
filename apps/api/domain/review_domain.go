@@ -11,6 +11,8 @@ import (
 type ReviewDomain interface {
 	CreateReview(ctx context.Context, review *model.Review) error
 	GetReviewById(ctx context.Context, id uint) (*model.Review, error)
+	GetReviewByUserIdAndActivityId(ctx context.Context, userId, activityId uint) (*model.Review, error)
+	GetReviews(ctx context.Context) ([]model.Review, error)
 	GetReviewsByUserId(ctx context.Context, userId uint) ([]model.Review, error)
 	GetReviewsByActivityId(ctx context.Context, activityId uint) ([]model.Review, error)
 	GetReviewStatisticsByActivityId(ctx context.Context, activityId uint) (*model.ReviewStatistics, error)
@@ -43,6 +45,22 @@ func (d *ReviewDomainImpl) GetReviewById(ctx context.Context, id uint) (*model.R
 		return nil, fmt.Errorf("can't get review from ReviewDomain: %w", err)
 	}
 	return review, nil
+}
+
+func (d *ReviewDomainImpl) GetReviewByUserIdAndActivityId(ctx context.Context, userId, activityId uint) (*model.Review, error) {
+	review, err := d.reviewRepository.GetReviewByUserIdAndActivityId(ctx, userId, activityId)
+	if err != nil {
+		return nil, fmt.Errorf("can't get review by user id and activity id from ReviewDomain: %w", err)
+	}
+	return review, nil
+}
+
+func (d *ReviewDomainImpl) GetReviews(ctx context.Context) ([]model.Review, error) {
+	reviews, err := d.reviewRepository.GetReviews(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("can't get reviews from ReviewDomain: %w", err)
+	}
+	return reviews, nil
 }
 
 func (d *ReviewDomainImpl) GetReviewsByUserId(ctx context.Context, userId uint) ([]model.Review, error) {

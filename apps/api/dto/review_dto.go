@@ -3,9 +3,10 @@ package dto
 import "time"
 
 type CreateUserReviewRequest struct {
-	Rating     int    `json:"rating" validate:"required,gte=1,lte=5" example:"4"`
-	Comment    string `json:"comment" validate:"required" example:"Great experience!"`
-	ActivityId uint   `json:"activity_id" validate:"required"`
+	ActivityId uint     `json:"activity_id" validate:"required"`
+	Rating     int      `json:"rating" validate:"required,gte=1,lte=5" example:"4"`
+	Comment    string   `json:"comment" validate:"required" example:"Great experience!"`
+	Images     []string `json:"images" validate:"required" example:"https://example.com/image1.jpg,https://example.com/image2.jpg"`
 }
 
 type GetUserReviewsResponse struct {

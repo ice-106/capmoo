@@ -37,6 +37,7 @@ func (v1 *V1Handler) RegisterV1Router(r fiber.Router) {
 	v1.RegisterUserRouter(guardRouter)
 	v1.RegisterSurveyRouter(guardRouter)
 	v1.RegisterActivityRouter(guardRouter)
+	v1.RegisterReviewRouter(guardRouter)
 }
 
 func (v1 *V1Handler) RegisterUserRouter(r fiber.Router) {
@@ -76,9 +77,16 @@ func (v1 *V1Handler) RegisterActivityRouter(r fiber.Router) {
 
 	activityRouter.Get("/:activityId", v1.activityHandler.GetActivityDetail)
 	activityRouter.Post("/:activityId/reviews", v1.reviewHandler.CreateUserReview)
+	activityRouter.Post("/:activityId/reviews/upload", v1.reviewHandler.UploadReviewImages)
 	activityRouter.Get("/:activityId/reviews", v1.reviewHandler.GetReviewsByActivityId)
 	activityRouter.Get("/:activityId/reviews/:reviewId", v1.reviewHandler.GetReviewById)
 	activityRouter.Get("/:activityId/reviews/:reviewId/stats", v1.reviewHandler.GetReviewStatisticsById)
 	activityRouter.Patch("/:activityId/reviews/:reviewId", v1.reviewHandler.UpdateUserReviewById)
 	activityRouter.Delete("/:activityId/reviews/:reviewId", v1.reviewHandler.DeleteUserReviewById)
+}
+
+func (v1 *V1Handler) RegisterReviewRouter(r fiber.Router) {
+	reviewRouter := r.Group("/reviews")
+
+	reviewRouter.Get("/", v1.reviewHandler.GetReviews)
 }
