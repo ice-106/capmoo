@@ -34,7 +34,9 @@ func (h *UserHandler) GetUsers(c *fiber.Ctx) error {
 			Id:        user.Id,
 			CreatedAt: user.CreatedAt,
 			UpdatedAt: user.UpdatedAt,
+			Name:      user.Name,
 			OidcId:    user.OidcId.String(),
+			Email:     user.Email,
 		})
 	}
 

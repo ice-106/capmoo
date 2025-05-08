@@ -12,6 +12,7 @@ import (
 	"github.com/capmoo/api/middleware"
 	"github.com/capmoo/api/repository"
 	"github.com/capmoo/api/route"
+	"github.com/go-playground/validator/v10"
 )
 
 // must used to panic if error is not nil.
@@ -41,21 +42,27 @@ func InitDI(ctx context.Context, cfg *config.Config) (r *route.V1Handler, err er
 	database.Migrate(gormDB)
 	database.Seed(gormDB)
 
+	// validator
+	validator := validator.New(validator.WithRequiredStructEnabled())
+
 	// repository
 	userRepository := repository.NewUserRepository(gormDB)
+	surveryRepository := repository.NewSurveyRepository(gormDB)
 
 	// domain
 	authDomain := domain.NewAuthDomain(cfg)
 	userDomain := domain.NewUserDomain(userRepository)
+	surveyDomain := domain.NewSurveyDomain(surveryRepository)
 
 	// handler
 	userHandler := handler.NewUserHandler(userDomain)
+	surveyHandler := handler.NewSurveyHandler(surveyDomain, validator)
 
 	// middleware
 	authMiddleware := middleware.NewAuthMiddleware(authDomain, userDomain)
 
 	// route
-	v1Handler := route.V1NewHandler(authMiddleware, userHandler)
+	v1Handler := route.V1NewHandler(authMiddleware, userHandler, surveyHandler)
 
 	return v1Handler, nil
 }
