@@ -62,14 +62,6 @@ func (v1 *V1Handler) RegisterActivityRouter(r fiber.Router) {
 	activityRouter.Get("/search", v1.activityHandler.GetFilteredActivities)
 	activityRouter.Get("/locations", v1.activityHandler.GetLocations)
 	activityRouter.Get("/categories", v1.activityHandler.GetCategories)
-	activityRouter.Get("/:activityId", v1.activityHandler.GetActivityDetail)
-
-	activityRouter.Post("/:activityId/reviews", v1.activityHandler.CreateUserReview)
-	activityRouter.Get("/:activityId/reviews", v1.activityHandler.GetReviewsByActivityId)
-	activityRouter.Get("/:activityId/reviews/:reviewId", v1.activityHandler.GetReviewById)
-	activityRouter.Get("/:activityId/reviews/:reviewId/stats", v1.activityHandler.GetReviewStatisticsById)
-	activityRouter.Patch("/:activityId/reviews/:reviewId", v1.activityHandler.UpdateUserReviewById)
-	activityRouter.Delete("/:activityId/reviews/:reviewId", v1.activityHandler.DeleteUserReviewById)
 
 	activityRouter.Post("/archive/:activityId", v1.activityHandler.ArchiveUserActivityById)
 	activityRouter.Get("/archive", v1.activityHandler.GetArchivedUserActivities)
@@ -78,4 +70,12 @@ func (v1 *V1Handler) RegisterActivityRouter(r fiber.Router) {
 	activityRouter.Post("/schedule/:activityId", v1.activityHandler.SaveUserActivityScheduleById)
 	activityRouter.Get("/schedule", v1.activityHandler.GetUserActivitySchedule)
 	activityRouter.Delete("/schedule/:activityId", v1.activityHandler.DeleteUserActivityScheduleById)
+
+	activityRouter.Get("/:activityId", v1.activityHandler.GetActivityDetail)
+	activityRouter.Post("/:activityId/reviews", v1.activityHandler.CreateUserReview)
+	activityRouter.Get("/:activityId/reviews", v1.activityHandler.GetReviewsByActivityId)
+	activityRouter.Get("/:activityId/reviews/:reviewId", v1.activityHandler.GetReviewById)
+	activityRouter.Get("/:activityId/reviews/:reviewId/stats", v1.activityHandler.GetReviewStatisticsById)
+	activityRouter.Patch("/:activityId/reviews/:reviewId", v1.activityHandler.UpdateUserReviewById)
+	activityRouter.Delete("/:activityId/reviews/:reviewId", v1.activityHandler.DeleteUserReviewById)
 }

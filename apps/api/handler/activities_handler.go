@@ -11,20 +11,23 @@ import (
 	"github.com/capmoo/api/dto"
 	"github.com/capmoo/api/model"
 	"github.com/capmoo/api/qid"
+	"github.com/capmoo/api/upload"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 )
 
 type ActivityHandler struct {
 	activityDomain domain.ActivityDomain
+	uploadService  *upload.UploadService
 	validator      *validator.Validate
 	userDomain     domain.UserDomain
 	reviewDomain   domain.ReviewDomain
 }
 
-func NewActivityHandler(activityDomain domain.ActivityDomain, validator *validator.Validate, userDomain domain.UserDomain, reviewDomain domain.ReviewDomain) *ActivityHandler {
+func NewActivityHandler(activityDomain domain.ActivityDomain, uploadService *upload.UploadService, validator *validator.Validate, userDomain domain.UserDomain, reviewDomain domain.ReviewDomain) *ActivityHandler {
 	return &ActivityHandler{
 		activityDomain: activityDomain,
+		uploadService:  uploadService,
 		validator:      validator,
 		userDomain:     userDomain,
 		reviewDomain:   reviewDomain,

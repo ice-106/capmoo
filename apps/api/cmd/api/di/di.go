@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"reflect"
 
+	"github.com/capmoo/api/awss3"
 	"github.com/capmoo/api/config"
 	"github.com/capmoo/api/database"
 	"github.com/capmoo/api/domain"
@@ -12,6 +13,7 @@ import (
 	"github.com/capmoo/api/middleware"
 	"github.com/capmoo/api/repository"
 	"github.com/capmoo/api/route"
+	"github.com/capmoo/api/upload"
 	"github.com/go-playground/validator/v10"
 )
 
@@ -42,8 +44,10 @@ func InitDI(ctx context.Context, cfg *config.Config) (r *route.V1Handler, err er
 	database.Migrate(gormDB)
 	database.Seed(gormDB)
 
-	// validator
 	validator := validator.New(validator.WithRequiredStructEnabled())
+
+	s3 := must(awss3.NewS3(ctx, cfg))
+	uploadService := upload.New(s3, cfg)
 
 	// repository
 	userRepository := repository.NewUserRepository(gormDB)
@@ -60,7 +64,7 @@ func InitDI(ctx context.Context, cfg *config.Config) (r *route.V1Handler, err er
 
 	// handler
 	userHandler := handler.NewUserHandler(userDomain, validator, reviewDomain)
-	activityHandler := handler.NewActivityHandler(activityDomain, validator, userDomain, reviewDomain)
+	activityHandler := handler.NewActivityHandler(activityDomain, uploadService, validator, userDomain, reviewDomain)
 	surveyHandler := handler.NewSurveyHandler(surveyDomain, validator)
 
 	// middleware

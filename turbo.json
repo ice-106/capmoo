@@ -7,7 +7,11 @@
     "API_DATABASE_URL",
     "API_ALLOWED_ORIGINS",
     "API_ALLOWED_HEADERS",
-    "API_COGNITO_POOL_ID"
+    "API_COGNITO_POOL_ID",
+    "API_S3_REGION",
+    "API_S3_ACCESS_KEY_ID",
+    "API_S3_SECRET_ACCESS_KEY",
+    "API_S3_BUCKET_NAME"
   ],
   "tasks": {
     "build": {
