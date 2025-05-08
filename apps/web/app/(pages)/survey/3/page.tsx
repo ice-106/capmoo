@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import Progressbar from '~/_components/progress-bar'
 import SelectionCard from '../_components/selection-card'
 import { useSurvey } from '../SurveyContext'
@@ -13,71 +13,60 @@ import TextBtn from '~/_components/text-button'
 export default function Page() {
   const router = useRouter()
   const {
-    travelerType,
-    setTravelerType,
-    clearTravelerType,
-    submitSurvey,
+    travelTypes,
+    toggleTravelType,
+    clearTravelTypes,
+    saveTravelTypes,
+    isSaving,
     activityCategories,
-    travelConcerns,
+    concerns
   } = useSurvey()
+
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     console.log('Current survey state:', {
       activityCategories,
-      travelConcerns,
-      travelerType,
+      concerns,
+      travelTypes
     })
-  }, [activityCategories, travelConcerns, travelerType])
+  }, [activityCategories, concerns, travelTypes])
 
   const handleDone = async () => {
-    console.log('=== SURVEY SUBMISSION DEBUG ===')
-    console.log('Preparing to submit the following data:')
-
-    const previewData = {
-      questions: {
-        '1_activity_preferences': activityCategories,
-        '2_travel_concerns': travelConcerns,
-        '3_traveler_type': travelerType || '',
-      },
-    }
-
-    console.log(JSON.stringify(previewData, null, 2))
-    console.log('==============================')
-
+    setIsLoading(true)
+    
     try {
-      await submitSurvey()
-      console.log('Survey submitted successfully!')
+      console.log('=== SURVEY SUBMISSION DEBUG ===')
+      console.log('Saving travel type selections:', travelTypes)
+      
+      if (travelTypes.length > 0) {
+        const success = await saveTravelTypes()
+        console.log('Save result:', success ? 'successful' : 'failed')
+      }
+      
+      console.log('Survey completed successfully!')
+      console.log('Final survey data:')
+      console.log({
+        activityPreferences: activityCategories,
+        travelConcerns: concerns,
+        travelTypes: travelTypes
+      })
+      
       router.push('/discover')
     } catch (error) {
-      console.error('Survey submission failed:', error)
+      console.error('Error completing survey:', error)
+      router.push('/discover')
+    } finally {
+      setIsLoading(false)
     }
   }
 
-  const handleSkip = async () => {
-    console.log('Skipping page 3: Clearing traveler type selection')
-    clearTravelerType()
-
-    console.log('Submitting with skipped data:')
-
-    const finalData = {
-      questions: {
-        '1_activity_preferences': activityCategories,
-        '2_travel_concerns': travelConcerns,
-        '3_traveler_type': '',
-      },
-    }
-
-    console.log(JSON.stringify(finalData, null, 2))
-
-    // Submit the survey even when skipping
-    try {
-      await submitSurvey()
-      console.log('Survey submitted successfully (with skipped step)!')
-      router.push('/discover')
-    } catch (error) {
-      console.error('Survey submission failed:', error)
-    }
+  const handleSkip = () => {
+    clearTravelTypes()
+    router.push('/discover')
   }
+
+  const isButtonDisabled = isLoading || isSaving
 
   return (
     <main className='font-poppins w-full'>
@@ -95,30 +84,25 @@ export default function Page() {
             variant='card'
             icon={<SoloIcon size={36} />}
             label='Solo'
-            isSelected={travelerType === 'solo'}
-            onClick={() => {
-              setTravelerType('solo')
-              console.log('Selected traveler type: solo')
-            }}
+            isSelected={travelTypes?.includes('solo') ?? false}
+            onClick={() => toggleTravelType('solo')}
           />
           <SelectionCard
             variant='card'
             icon={<GroupIcon size={36} />}
             label='Group'
-            isSelected={travelerType === 'group'}
-            onClick={() => {
-              setTravelerType('group')
-              console.log('Selected traveler type: group')
-            }}
+            isSelected={travelTypes?.includes('group') ?? false}
+            onClick={() => toggleTravelType('group')}
           />
         </div>
 
         <div className='mt-12 px-4'>
           <Button
-            label='Done !'
+            label={isButtonDisabled ? 'Processing...' : 'Done!'}
             variant='orange'
             rounded='full'
             onClick={handleDone}
+            disabled={isButtonDisabled}
           />
 
           <div className='mt-3 text-center'>
