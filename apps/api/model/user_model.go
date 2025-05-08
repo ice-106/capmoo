@@ -14,6 +14,9 @@ type User struct {
 	Concerns    []Concern    `gorm:"many2many:user_concerns"`
 	Reviews     []Review     `gorm:"foreignKey:UserId"`
 	Bookings    []Booking    `gorm:"foreignKey:UserId"`
+
+	ActivitiesArchives  []Activity `gorm:"many2many:user_activities_archives"`
+	ActivitiesSchedules []Activity `gorm:"many2many:user_activities_schedules"`
 }
 
 func (User) TableName() string {

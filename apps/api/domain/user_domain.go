@@ -14,6 +14,9 @@ type UserDomain interface {
 	GetUsers(ctx context.Context) ([]model.User, error)
 	UpdateUserById(ctx context.Context, id uint, user *model.User) error
 	DeleteUserById(ctx context.Context, id uint) error
+	ArchiveUserActivity(ctx context.Context, userId uint, activityId uint) error
+	GetArchivedUserActivities(ctx context.Context, userId uint) ([]model.Activity, error)
+	UnarchiveUserActivity(ctx context.Context, userId uint, activityId uint) error
 }
 
 type UserDomainImpl struct {
@@ -62,6 +65,28 @@ func (d *UserDomainImpl) UpdateUserById(ctx context.Context, id uint, user *mode
 func (d *UserDomainImpl) DeleteUserById(ctx context.Context, id uint) error {
 	if err := d.userRepository.DeleteUserById(ctx, id); err != nil {
 		return fmt.Errorf("can't delete user from UserDomain: %w", err)
+	}
+	return nil
+}
+
+func (d *UserDomainImpl) ArchiveUserActivity(ctx context.Context, userId uint, activityId uint) error {
+	if err := d.userRepository.ArchiveUserActivity(ctx, userId, activityId); err != nil {
+		return fmt.Errorf("can't archive user activity from UserDomain: %w", err)
+	}
+	return nil
+}
+
+func (d *UserDomainImpl) GetArchivedUserActivities(ctx context.Context, userId uint) ([]model.Activity, error) {
+	activities, err := d.userRepository.GetArchivedUserActivities(ctx, userId)
+	if err != nil {
+		return nil, fmt.Errorf("can't get archived user activities from UserDomain: %w", err)
+	}
+	return activities, nil
+}
+
+func (d *UserDomainImpl) UnarchiveUserActivity(ctx context.Context, userId uint, activityId uint) error {
+	if err := d.userRepository.UnarchiveUserActivity(ctx, userId, activityId); err != nil {
+		return fmt.Errorf("can't unarchive user activity from UserDomain: %w", err)
 	}
 	return nil
 }
