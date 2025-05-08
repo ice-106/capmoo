@@ -30,9 +30,23 @@ func NewReviewRepository(db *gorm.DB) *ReviewRepositoryImpl {
 }
 
 func (r *ReviewRepositoryImpl) CreateReview(ctx context.Context, review *model.Review) error {
+	var user model.User
+	if err := r.db.WithContext(ctx).Where("id = ?", review.UserId).First(&user).Error; err != nil {
+		return err
+	}
+
+	var activity model.Activity
+	if err := r.db.WithContext(ctx).Where("id = ?", review.ActivityId).First(&activity).Error; err != nil {
+		return err
+	}
+
+	review.User = user
+	review.Activity = activity
+
 	if err := r.db.WithContext(ctx).Create(review).Error; err != nil {
 		return err
 	}
+
 	return nil
 }
 

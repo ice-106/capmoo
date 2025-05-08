@@ -10,6 +10,7 @@ import (
 
 type UserDomain interface {
 	CreateUserIfNotExists(ctx context.Context, user *model.User) (*model.User, error)
+	GetUserById(ctx context.Context, id uint) (*model.User, error)
 	GetUsers(ctx context.Context) ([]model.User, error)
 }
 
@@ -31,6 +32,14 @@ func (d *UserDomainImpl) CreateUserIfNotExists(ctx context.Context, user *model.
 		return nil, fmt.Errorf("can't create user from UserDomain: %w", err)
 	}
 	return createdUser, nil
+}
+
+func (d *UserDomainImpl) GetUserById(ctx context.Context, id uint) (*model.User, error) {
+	user, err := d.userRepository.GetUserById(ctx, id)
+	if err != nil {
+		return nil, fmt.Errorf("can't get user from UserDomain: %w", err)
+	}
+	return user, nil
 }
 
 func (d *UserDomainImpl) GetUsers(ctx context.Context) ([]model.User, error) {
