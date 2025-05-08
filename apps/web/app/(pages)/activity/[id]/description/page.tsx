@@ -26,6 +26,15 @@ export default function Page() {
   const [activityData, setActivityData] = useState<ActivityData | null>(null)
   const [isSavedToSchedule, setIsSavedToSchedule] = useState(false)
   const [isSavedToArchive, setIsSavedToArchive] = useState(false)
+  const [reviews, setReviews] = useState<
+    | {
+        profileImgUrl: string
+        userName: string
+        reviewText: string
+        reviewUrl: string
+      }[]
+    | []
+  >([])
 
   // Log the ID from the route
   useEffect(() => {
@@ -68,6 +77,23 @@ export default function Page() {
     }
 
     fetchSavedActivitiesArchive()
+
+    const fetchReviews = async () => {
+      try {
+        const response = await axios.get(`/v1/activities/${activityId}/reviews`)
+        const reviewsData = response.data.data.map((review: any) => ({
+          profileImgUrl: '/images/default_profile.png',
+          userName: review.user.name,
+          reviewText: review.comment,
+          reviewUrl: review.id,
+        }))
+        setReviews(reviewsData)
+      } catch (error) {
+        console.error('Error fetching reviews:', error)
+      }
+    }
+
+    fetchReviews()
   }, [activityId])
 
   const handleBooking = () => {
@@ -98,6 +124,10 @@ export default function Page() {
       reviewUrl: '9',
     },
   ]
+
+  if (!activityData) {
+    return <div>Not Found</div>
+  }
 
   return (
     <main className='font-poppins w-full'>
@@ -133,7 +163,7 @@ export default function Page() {
               onClick={() => router.push(`/reviews?q=${activityData?.name}`)}
             />
           </span>
-          {mockReviewData.map((review, index) => (
+          {reviews.map((review, index) => (
             <ReviewCard
               key={index}
               profileImgUrl={review.profileImgUrl}

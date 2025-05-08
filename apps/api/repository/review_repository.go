@@ -54,7 +54,7 @@ func (r *ReviewRepositoryImpl) CreateReview(ctx context.Context, review *model.R
 
 func (r *ReviewRepositoryImpl) GetReviewById(ctx context.Context, id uint) (*model.Review, error) {
 	var review model.Review
-	if err := r.db.WithContext(ctx).Where("id = ?", id).First(&review).Error; err != nil {
+	if err := r.db.WithContext(ctx).Preload("Activity").Preload("User").Where("id = ?", id).First(&review).Error; err != nil {
 		return nil, err
 	}
 	return &review, nil
@@ -62,7 +62,7 @@ func (r *ReviewRepositoryImpl) GetReviewById(ctx context.Context, id uint) (*mod
 
 func (r *ReviewRepositoryImpl) GetReviewByUserIdAndActivityId(ctx context.Context, userId, activityId uint) (*model.Review, error) {
 	var review model.Review
-	if err := r.db.WithContext(ctx).Where("user_id = ? AND activity_id = ?", userId, activityId).First(&review).Error; err != nil {
+	if err := r.db.WithContext(ctx).Preload("Activity").Preload("User").Where("user_id = ? AND activity_id = ?", userId, activityId).First(&review).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, nil
 		}
@@ -73,7 +73,7 @@ func (r *ReviewRepositoryImpl) GetReviewByUserIdAndActivityId(ctx context.Contex
 
 func (r *ReviewRepositoryImpl) GetReviews(ctx context.Context) ([]model.Review, error) {
 	var reviews []model.Review
-	if err := r.db.WithContext(ctx).Find(&reviews).Error; err != nil {
+	if err := r.db.WithContext(ctx).Preload("Activity").Preload("User").Find(&reviews).Error; err != nil {
 		return nil, err
 	}
 	return reviews, nil
@@ -81,7 +81,7 @@ func (r *ReviewRepositoryImpl) GetReviews(ctx context.Context) ([]model.Review, 
 
 func (r *ReviewRepositoryImpl) GetReviewsByUserId(ctx context.Context, userId uint) ([]model.Review, error) {
 	var reviews []model.Review
-	if err := r.db.WithContext(ctx).Where("user_id = ?", userId).Find(&reviews).Error; err != nil {
+	if err := r.db.WithContext(ctx).Preload("Activity").Preload("User").Where("user_id = ?", userId).Find(&reviews).Error; err != nil {
 		return nil, err
 	}
 	return reviews, nil
@@ -89,7 +89,7 @@ func (r *ReviewRepositoryImpl) GetReviewsByUserId(ctx context.Context, userId ui
 
 func (r *ReviewRepositoryImpl) GetReviewsByActivityId(ctx context.Context, activityId uint) ([]model.Review, error) {
 	var reviews []model.Review
-	if err := r.db.WithContext(ctx).Where("activity_id = ?", activityId).Find(&reviews).Error; err != nil {
+	if err := r.db.WithContext(ctx).Preload("Activity").Preload("User").Where("activity_id = ?", activityId).Find(&reviews).Error; err != nil {
 		return nil, err
 	}
 	return reviews, nil
