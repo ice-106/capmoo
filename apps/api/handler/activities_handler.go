@@ -183,7 +183,7 @@ func (h *ActivityHandler) GetFilteredActivities(c *fiber.Ctx) error {
 	return api.Ok(c, response)
 }
 
-func (h *ActivityHandler) CreateReview(c *fiber.Ctx) error {
+func (h *ActivityHandler) CreateUserReview(c *fiber.Ctx) error {
 	ctx := c.Context()
 	userId := api.MustGetUserIDFromContext(c)
 
@@ -265,7 +265,59 @@ func (h *ActivityHandler) GetReviews(c *fiber.Ctx) error {
 	return api.Ok(c, response)
 }
 
-func (h *ActivityHandler) GetReviewStatistics(c *fiber.Ctx) error {
+func (h *ActivityHandler) GetReviewById(c *fiber.Ctx) error {
+	ctx := c.Context()
+
+	var params struct {
+		ActivityId qid.QID `params:"id"`
+		ReviewId   qid.QID `params:"reviewId"`
+	}
+
+	if err := c.ParamsParser(&params); err != nil {
+		slog.InfoContext(ctx, "Failed to parse params from GetUserReview", "error", err)
+		return api.BadInput(c)
+	}
+
+	review, err := h.reviewDomain.GetReviewById(ctx, params.ReviewId.Uint())
+	if err != nil {
+		slog.InfoContext(ctx, "Unexpected error from GetReviewById", "error", err)
+		return api.InternalServerError(c)
+	}
+
+	response := dto.GetUserReviewsResponse{
+		Id:        review.Id,
+		CreatedAt: review.CreatedAt,
+		UpdatedAt: review.UpdatedAt,
+		Rating:    review.Rating,
+		Comment:   review.Comment,
+		UserId:    review.UserId,
+		User: dto.GetUserResponse{
+			Id:        review.User.Id,
+			CreatedAt: review.User.CreatedAt,
+			UpdatedAt: review.User.UpdatedAt,
+			Name:      review.User.Name,
+			Email:     review.User.Email,
+			OidcId:    review.User.OidcId.String(),
+		},
+		ActivityId: review.ActivityId,
+		Activity: dto.GetActivityResponse{
+			Id:               review.Activity.Id,
+			CreatedAt:        review.Activity.CreatedAt,
+			UpdatedAt:        review.Activity.UpdatedAt,
+			Name:             review.Activity.Name,
+			Description:      review.Activity.Description,
+			StartDateTime:    review.Activity.StartDateTime,
+			EndDateTime:      review.Activity.EndDateTime,
+			Price:            review.Activity.Price,
+			RemainSlot:       review.Activity.RemainSlot,
+			MaxParticipation: review.Activity.MaxParticipation,
+		},
+	}
+
+	return api.Ok(c, response)
+}
+
+func (h *ActivityHandler) GetReviewStatisticsById(c *fiber.Ctx) error {
 	ctx := c.Context()
 
 	var params struct {
@@ -293,7 +345,7 @@ func (h *ActivityHandler) GetReviewStatistics(c *fiber.Ctx) error {
 	return api.Ok(c, response)
 }
 
-func (h *ActivityHandler) UpdateReview(c *fiber.Ctx) error {
+func (h *ActivityHandler) UpdateUserReviewById(c *fiber.Ctx) error {
 	ctx := c.Context()
 	userId := api.MustGetUserIDFromContext(c)
 
@@ -377,7 +429,7 @@ func (h *ActivityHandler) UpdateReview(c *fiber.Ctx) error {
 	return api.Ok(c, response)
 }
 
-func (h *ActivityHandler) DeleteReview(c *fiber.Ctx) error {
+func (h *ActivityHandler) DeleteUserReviewById(c *fiber.Ctx) error {
 	ctx := c.Context()
 	userId := api.MustGetUserIDFromContext(c)
 
