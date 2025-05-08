@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect, useRef } from 'react'
+import React, { useState, useLayoutEffect, useRef, useEffect } from 'react'
 import { SearchFormValues } from '../_types/search'
 import { ArrowLeft } from 'lucide-react'
 import SearchBar from './search-bar'
@@ -6,6 +6,7 @@ import Dropdown from './dropdown'
 import TextBox from './text-box'
 import TextBtn from './text-button'
 import { useSwipeGesture } from '../_hooks/use-swipe-gesture'
+import { useAxios } from '~/_lib/axios'
 
 interface SearchDrawerProps {
   value: string
@@ -32,6 +33,7 @@ const SearchDrawer: React.FC<SearchDrawerProps> = ({
   initialMaxPrice = '',
   initialCategories = [],
 }) => {
+  const axios = useAxios()
   // Initialize state with the passed initial values
   const [selectedLocation, setSelectedLocation] =
     useState<string[]>(initialLocation)
@@ -43,12 +45,38 @@ const SearchDrawer: React.FC<SearchDrawerProps> = ({
   // Create refs for the TextBox components
   const minPriceRef = useRef<HTMLInputElement>(null)
   const maxPriceRef = useRef<HTMLInputElement>(null)
+  const [locations, setLocations] = useState<{ id: number, province: string }[]>([])
+  const [categories, setCategories] = useState<{ id: number, name: string }[]>([])
 
   // Use our custom hook
   const [translateX, swipeHandlers] = useSwipeGesture({
     direction: 'right',
     onSwipeComplete: onClose,
   })
+
+  useEffect(() => {
+    const fetchLocations = async () => {
+      try {
+        const response = await axios.get('/v1/activities/locations')
+        setLocations(response.data.data)
+      } catch (error) {
+        console.error('Error fetching locations:', error)
+      }
+    }
+
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get('/v1/activities/categories')
+        setCategories(response.data.data)
+      } catch (error) {
+        console.error('Error fetching categories:', error)
+      }
+    }
+
+    // Fetch locations and categories when the component mounts
+    fetchCategories()
+    fetchLocations()
+  }, [])
 
   useLayoutEffect(() => {
     document.body.style.overflow = 'hidden'
@@ -127,10 +155,15 @@ const SearchDrawer: React.FC<SearchDrawerProps> = ({
                 )}
               </div>
               <Dropdown
-                selected={selectedLocation}
-                onSelect={setSelectedLocation}
+                selected={selectedLocation.map((id) => locations.find((loc) => loc.id === Number(id))?.province || '')}
+                onSelect={(selectedProvinces) => {
+                  const selectedIds = selectedProvinces.map(
+                    (province) => locations.find((loc) => loc.province === province)?.id || 0
+                  )
+                  setSelectedLocation(selectedIds.filter((id) => id !== 0).map(String))
+                }}
                 defaultText='Select Area'
-                options={['Bangkok', 'Chiang Mai', 'Phuket', 'Nan']}
+                options={locations.map((location) => location.province)}
               />
             </div>
 
@@ -175,10 +208,15 @@ const SearchDrawer: React.FC<SearchDrawerProps> = ({
                 )}
               </div>
               <Dropdown
-                selected={selectedCategories}
-                onSelect={setSelectedCategories}
+                selected={selectedCategories.map((id) => categories.find((cat) => cat.id === Number(id))?.name || '')}
+                onSelect={(selectedNames) => {
+                  const selectedIds = selectedNames.map(
+                    (name) => categories.find((cat) => cat.name === name)?.id || 0
+                  )
+                  setSelectedCategories(selectedIds.filter((id) => id !== 0).map(String))
+                }}
                 defaultText='Select Categories'
-                options={['Sport', 'Shopping', 'Education', 'Nature', 'Eating', 'Adventure', 'Workshop', 'Religious']}
+                options={categories.map((category) => category.name)}
               />
             </div>
           </div>

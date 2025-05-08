@@ -47,6 +47,7 @@ func InitDI(ctx context.Context, cfg *config.Config) (r *route.V1Handler, err er
 
 	// repository
 	userRepository := repository.NewUserRepository(gormDB)
+	activityRepository := repository.NewActivityRepository(gormDB)
 	surveryRepository := repository.NewSurveyRepository(gormDB)
 	reviewRepository := repository.NewReviewRepository(gormDB)
 
@@ -55,16 +56,18 @@ func InitDI(ctx context.Context, cfg *config.Config) (r *route.V1Handler, err er
 	userDomain := domain.NewUserDomain(userRepository)
 	surveyDomain := domain.NewSurveyDomain(surveryRepository)
 	reviewDomain := domain.NewReviewDomain(reviewRepository)
+	activityDomain := domain.ActivityDomain(activityRepository)
 
 	// handler
 	userHandler := handler.NewUserHandler(userDomain, validator, reviewDomain)
+	activityHandler := handler.NewActivityHandler(activityDomain)
 	surveyHandler := handler.NewSurveyHandler(surveyDomain, validator)
 
 	// middleware
 	authMiddleware := middleware.NewAuthMiddleware(authDomain, userDomain)
 
 	// route
-	v1Handler := route.V1NewHandler(authMiddleware, userHandler, surveyHandler)
+	v1Handler := route.V1NewHandler(authMiddleware, userHandler, surveyHandler, activityHandler)
 
 	return v1Handler, nil
 }

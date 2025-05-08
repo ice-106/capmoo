@@ -5,7 +5,7 @@ export const useAxios = (): AxiosInstance => {
   const auth = useAuth()
 
   const instance = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_BASE_URL,
+    baseURL: process.env.NEXT_PUBLIC_API_URL,
   })
 
   instance.interceptors.request.use(
@@ -25,8 +25,13 @@ export const useAxios = (): AxiosInstance => {
       return response
     },
     (error) => {
-      if (error.response.status === 401) {
-        auth.signoutRedirect()
+      // Got error saying "TypeError: Cannot read properties of undefined (reading 'status')" so adding this to be sure
+      if (error.response) {
+        if (error.response.status === 401) {
+          auth.signoutRedirect()
+        }
+      } else {
+        console.error('Network or unknown error:', error.message)
       }
       return Promise.reject(error)
     }

@@ -7,20 +7,23 @@ import (
 )
 
 type V1Handler struct {
-	authMiddleware *middleware.AuthMiddleware
-	userHandler    *handler.UserHandler
-	surveyHandler  *handler.SurveyHandler
+	authMiddleware  *middleware.AuthMiddleware
+	userHandler     *handler.UserHandler
+	surveyHandler   *handler.SurveyHandler
+	activityHandler *handler.ActivityHandler
 }
 
 func V1NewHandler(
 	authMiddleware *middleware.AuthMiddleware,
 	userHandler *handler.UserHandler,
 	surveyHandler *handler.SurveyHandler,
+	activityHandler *handler.ActivityHandler,
 ) *V1Handler {
 	return &V1Handler{
-		authMiddleware: authMiddleware,
-		userHandler:    userHandler,
-		surveyHandler:  surveyHandler,
+		authMiddleware:  authMiddleware,
+		userHandler:     userHandler,
+		surveyHandler:   surveyHandler,
+		activityHandler: activityHandler,
 	}
 }
 
@@ -30,6 +33,7 @@ func (v1 *V1Handler) RegisterV1Router(r fiber.Router) {
 	guardRouter := v1Router.Use(v1.authMiddleware.Handler)
 	v1.RegisterUserRouter(guardRouter)
 	v1.RegisterSurveyRouter(guardRouter)
+	v1.RegisterActivityRouter(guardRouter)
 }
 
 func (v1 *V1Handler) RegisterUserRouter(r fiber.Router) {
@@ -51,4 +55,13 @@ func (v1 *V1Handler) RegisterSurveyRouter(r fiber.Router) {
 	surveyRouter.Get("/concerns", v1.surveyHandler.GetUserConcerns)
 	surveyRouter.Post("/travel-types", v1.surveyHandler.CreateUserTravelTypes)
 	surveyRouter.Get("/travel-types", v1.surveyHandler.GetUserTravelTypes)
+}
+
+func (v1 *V1Handler) RegisterActivityRouter(r fiber.Router) {
+	activityRouter := r.Group("/activities")
+
+	activityRouter.Get("/search", v1.activityHandler.GetFilteredActivities)
+	activityRouter.Get("/locations", v1.activityHandler.GetLocations)
+	activityRouter.Get("/categories", v1.activityHandler.GetCategories)
+	activityRouter.Get("/:id", v1.activityHandler.GetActivityDetail)
 }
