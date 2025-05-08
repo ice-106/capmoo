@@ -28,3 +28,17 @@ type GetUserReviewsResponse struct {
 	ActivityId uint            `json:"activity_id"`
 	// Activity   GetActivityResponse     `json:"activity"` // TODO: add activity response struct
 }
+
+type UpdateUserByIdRequest struct {
+	Name  string `json:"name"`
+	Email string `json:"email" validate:"omitempty,email"`
+}
+
+type UpdateUserByIdResponse struct {
+	Id        uint       `json:"id"`
+	CreatedAt time.Time  `json:"created_at"`
+	UpdatedAt *time.Time `json:"updated_at"`
+	Name      string     `json:"name"`
+	Email     string     `json:"email"`
+	OidcId    string     `json:"oidc_id"`
+}
