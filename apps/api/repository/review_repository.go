@@ -13,7 +13,7 @@ type ReviewRepository interface {
 	GetReviewsByUserId(ctx context.Context, userId uint) ([]model.Review, error)
 	GetReviewsByActivityId(ctx context.Context, activityId uint) ([]model.Review, error)
 	GetReviewStatisticsByActivityId(ctx context.Context, activityId uint) (*model.ReviewStatistics, error)
-	EditReviewById(ctx context.Context, id uint, review *model.Review) error
+	UpdateReviewById(ctx context.Context, id uint, review *model.Review) error
 	DeleteReviewById(ctx context.Context, id uint) error
 }
 
@@ -96,7 +96,7 @@ func (r *ReviewRepositoryImpl) GetReviewStatisticsByActivityId(ctx context.Conte
 	return &statistics, nil
 }
 
-func (r *ReviewRepositoryImpl) EditReviewById(ctx context.Context, id uint, review *model.Review) error {
+func (r *ReviewRepositoryImpl) UpdateReviewById(ctx context.Context, id uint, review *model.Review) error {
 	if err := r.db.WithContext(ctx).Model(&model.Review{}).Where("id = ?", id).Updates(review).Error; err != nil {
 		return err
 	}
