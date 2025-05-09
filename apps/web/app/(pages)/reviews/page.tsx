@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useState, useEffect, act } from 'react'
+import { useState, useEffect, act, Suspense } from 'react'
 import SearchBar from '../../_components/search-bar'
 import HeaderwithIcon from '../../_components/header-with-icon'
 import Footer from '../../_components/footer'
@@ -26,7 +26,15 @@ interface Review {
   }
 }
 
-export default function ReviewPage() {
+export default function Page() {
+  return (
+    <Suspense>
+      <ReviewPage />
+    </Suspense>
+  )
+}
+
+function ReviewPage() {
   const router = useRouter()
   const axios = useAxios()
   const auth = useAuth()
