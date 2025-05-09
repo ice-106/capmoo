@@ -87,6 +87,7 @@ export default function ProfileEditPage() {
       })
 
       console.log('User updated successfully:', response.data)
+      router.push('/profile')
     } catch (error) {
       console.error('Error updating user:', error)
     }
