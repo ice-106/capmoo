@@ -1,10 +1,12 @@
 package domain
 
 import (
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
+	"time"
 
 	"github.com/capmoo/api/config"
 )
@@ -40,14 +42,25 @@ type ErrorResponse struct {
 }
 
 func (a *AuthDomainImpl) ValidateAccessToken(accessToken string) (*UserInfo, error) {
-	req, err := http.NewRequest("GET", fmt.Sprintf("https://%s.auth.ap-southeast-1.amazoncognito.com/oauth2/userInfo", a.config.CognitoPoolId), nil)
+	url := fmt.Sprintf("https://%s.auth.ap-southeast-1.amazoncognito.com/oauth2/userInfo", a.config.CognitoPoolId)
+
+	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, fmt.Errorf("can't validate access token when creating request: %w", err)
 	}
 
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", accessToken))
 
-	client := &http.Client{}
+	customTransport := &http.Transport{
+		TLSClientConfig: &tls.Config{
+			InsecureSkipVerify: true,
+		},
+	}
+	client := &http.Client{
+		Transport: customTransport,
+		Timeout:   10 * time.Second,
+	}
+
 	resp, err := client.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("can't validate access token when sending request: %w", err)
@@ -59,19 +72,17 @@ func (a *AuthDomainImpl) ValidateAccessToken(accessToken string) (*UserInfo, err
 		return nil, fmt.Errorf("can't validate access token when reading response body: %w", err)
 	}
 
-	if resp.StatusCode == 200 {
+	if resp.StatusCode == http.StatusOK {
 		var userInfo UserInfo
 		if err := json.Unmarshal(body, &userInfo); err != nil {
 			return nil, fmt.Errorf("can't validate access token when unmarshalling response body: %w", err)
 		}
-
 		return &userInfo, nil
 	} else {
 		var errResp ErrorResponse
 		if err := json.Unmarshal(body, &errResp); err != nil {
 			return nil, fmt.Errorf("can't validate access token when unmarshalling error response body: %w", err)
 		}
-
 		return nil, fmt.Errorf("can't validate access token: %s", errResp.ErrorDescription)
 	}
 }
