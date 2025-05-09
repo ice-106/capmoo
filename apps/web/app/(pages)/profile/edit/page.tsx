@@ -9,10 +9,12 @@ import Modal from '~/_components/modal'
 import { PencilLine } from 'lucide-react'
 import Button from '~/_components/button'
 import FooterTemplate from '~/_components/footer-template'
+import { useAxios } from '~/_lib/axios'
 
 const defaultUsername = 'anonymous user'
 
 export default function ProfileEditPage() {
+  const axios = useAxios()
   const auth = useAuth()
   const router = useRouter()
   const [isOpenEdit, setIsOpenEdit] = useState(false)
@@ -28,13 +30,22 @@ export default function ProfileEditPage() {
   })
 
   useEffect(() => {
-    if (name.current) {
-      name.current.value = auth.user?.profile?.name as string
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get('/v1/user/me')
+        const userData = response.data.data
+        console.log('User data:', userData)
+        if (userData) {
+          name.current!.value = userData.name || ''
+          email.current!.value = userData.email || ''
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error)
+      }
     }
-    if (email.current) {
-      email.current.value = auth.user?.profile?.email as string
-    }
-  }, [auth])
+
+    fetchUserData()
+  }, []);
 
   // Function to handle confirming the new username
   const confirmUsernameChange = () => {
@@ -52,7 +63,7 @@ export default function ProfileEditPage() {
     setIsOpenEdit(false)
   }
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const nameValue = name.current?.value.trim() || ''
     const emailValue = email.current?.value.trim() || ''
 
@@ -68,9 +79,17 @@ export default function ProfileEditPage() {
       return
     }
 
-    // Proceed to save logic if inputs are valid
+    try {
+      // Send the updated user information to the backend
+      const response = await axios.patch('/v1/user/me', {
+        name: nameValue,
+        email: emailValue,
+      })
 
-    console.log('Save success')
+      console.log('User updated successfully:', response.data)
+    } catch (error) {
+      console.error('Error updating user:', error)
+    }
   }
 
   return (
