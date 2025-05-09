@@ -12,18 +12,18 @@ import { useAuth } from 'react-oidc-context'
 
 // This interface matches the review DTO from your backend
 interface Review {
-  id: number;
-  created_at: string;
-  updated_at: string | null;
-  rating: number;
-  comment: string;
-  images: string[];
-  activity_id: number;
+  id: number
+  created_at: string
+  updated_at: string | null
+  rating: number
+  comment: string
+  images: string[]
+  activity_id: number
   activity: {
-    id: number;
-    name: string;
-    image_url?: string; // Optional since it might not be present in all responses
-  };
+    id: number
+    name: string
+    image_url?: string // Optional since it might not be present in all responses
+  }
 }
 
 export default function ReviewPage() {
@@ -41,69 +41,59 @@ export default function ReviewPage() {
 
   // Fetch reviews from API
   // Modify the useEffect dependency array to avoid too many rerenders
- // This is for a component that needs reviews for a specific activity
-useEffect(() => {
-  const fetchActivityReviews = async () => {
-    if (!auth.isAuthenticated) {
-      return;
-    }
-
-    console.log()
-    setIsLoading(true);
-    setError(null);
-    
-    try {
-      // Use the correct endpoint with the activityId parameter
-
-      const urlPath = activityId === null ? '/v1/reviews' : `/v1/activities/${activityId}/reviews`;
-
-      const response = await axios.get(urlPath);
-      
-      if (!response.data || !response.data.data) {
-        throw new Error('Invalid response format');
+  // This is for a component that needs reviews for a specific activity
+  useEffect(() => {
+    const fetchActivityReviews = async () => {
+      if (!auth.isAuthenticated) {
+        return
       }
-      
-      setReviews(response.data.data);
-    } catch (err: any) {
-      console.error(`Error fetching reviews for activity ${activityId}:`, err);
-      setError(err.message || 'Failed to load reviews');
-      
-      setReviews([]);
-    } finally {
-      setIsLoading(false);
+
+      console.log()
+      setIsLoading(true)
+      setError(null)
+
+      try {
+        // Use the correct endpoint with the activityId parameter
+
+        const urlPath =
+          activityId === null
+            ? '/v1/reviews'
+            : `/v1/activities/${activityId}/reviews`
+
+        const response = await axios.get(urlPath)
+
+        if (!response.data || !response.data.data) {
+          throw new Error('Invalid response format')
+        }
+
+        setReviews(response.data.data)
+      } catch (err: any) {
+        console.error(`Error fetching reviews for activity ${activityId}:`, err)
+        setError(err.message || 'Failed to load reviews')
+
+        setReviews([])
+      } finally {
+        setIsLoading(false)
+      }
     }
-  };
-  
-  fetchActivityReviews();
-}, [activityId, auth.isAuthenticated]);
+
+    fetchActivityReviews()
+  }, [activityId, auth.isAuthenticated])
 
   // Convert reviews to the format expected by the Masonry component
-  const reviewItems = reviews.map(review => ({
+  const reviewItems = reviews.map((review) => ({
     id: review.id.toString(),
     imgUrl: review.images?.[0] || '/images/review-placeholder.jpg',
     text: review.activity?.name || 'Unknown Activity',
     onClickUrl: `/reviews/description/${review.id}?q=${review.activity_id}`,
-  }));
-
-  // Fallback to mock data if no reviews from API
-  const mockItems = [
-    {
-      "id": "1",
-      "imgUrl": "/images/activity/user/activity_1.jpg",
-      "text": "The Sahur at Wat Phra Kaew 🛕✨",
-      "onClickUrl": "/reviews/description/1"
-    },
-  ];
-
-  // Use actual data if available, otherwise fall back to mock data
-  const displayItems = reviews.length > 0 ? reviewItems : mockItems;
+  }))
 
   // filter reviews based on search query
   const filteredReviews = searchQuery
-    ? displayItems.filter((item) =>
+    ? reviewItems.filter((item) =>
         item.text.toLowerCase().includes(searchQuery.toLowerCase())
       )
-    : displayItems;
+    : reviewItems
 
   return (
     <main className='font-poppins w-full'>
@@ -153,7 +143,7 @@ useEffect(() => {
         {!isLoading && error && (
           <div className='py-12 text-center'>
             <p className='text-red-500'>{error}</p>
-            <button 
+            <button
               className='text-orange mt-2 text-sm underline'
               onClick={() => router.refresh()}
             >
