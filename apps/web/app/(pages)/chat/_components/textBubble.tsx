@@ -13,7 +13,7 @@ const TextBubble = ({
   image,
   showNameTag = true,
 }: TextBubbleProps) => {
-  const baseClasses = 'rounded-lg p-3 text-sm break-words max-w-[85%]'
+  const baseClasses = 'rounded-lg p-3 text-sm break-words max-w-[85%] whitespace-pre-line'
   const aiClasses = 'bg-orange text-white self-start'
   const userClasses = 'bg-white border border-darkgrey text-darkgrey self-end'
 
