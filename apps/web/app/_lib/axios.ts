@@ -1,8 +1,10 @@
 import axios, { type AxiosInstance } from 'axios'
+import { useRouter } from 'next/navigation'
 import { useAuth } from 'react-oidc-context'
 
 export const useAxios = (): AxiosInstance => {
   const auth = useAuth()
+  const router = useRouter()
 
   const instance = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -10,12 +12,25 @@ export const useAxios = (): AxiosInstance => {
 
   instance.interceptors.request.use(
     (config) => {
-      if (auth.isAuthenticated && auth.user?.access_token) {
-        config.headers.Authorization = `Bearer ${auth.user.access_token}`
+      if (!auth.user) {
+        return config
       }
+      config.headers.Authorization = `Bearer ${auth.user.access_token}`
       return config
     },
     (error) => {
+      return Promise.reject(error)
+    }
+  )
+
+  instance.interceptors.response.use(
+    (response) => {
+      return response
+    },
+    (error) => {
+      if (error.response.status === 401) {
+        router.push('/')
+      }
       return Promise.reject(error)
     }
   )

@@ -23,3 +23,4 @@ FROM debian:bookworm-slim
 COPY --from=builder /build/dist/api /usr/local/bin/api
 
 # Run the binary
+ENTRYPOINT ["api"]
