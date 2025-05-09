@@ -162,7 +162,7 @@ func Seed(db *gorm.DB) error {
                 30.00,
                 20,
                 20,
-                ARRAY['activities/activity_5_20250509_071042.jpg'],
+                ARRAY['activities/bangkok_walking_tour_20250509_160902.jpg'],
                 2,
                 3,
                 2,
@@ -195,7 +195,7 @@ func Seed(db *gorm.DB) error {
                 20.00,
                 50,
                 50,
-                ARRAY['activities/activity_6_20250509_071042.jpg'],
+                ARRAY['activities/chatuchak_market_20250509_160902.jpg'],
                 7,
                 2,
                 3,
@@ -228,7 +228,7 @@ func Seed(db *gorm.DB) error {
                 25.00,
                 15,
                 15,
-                ARRAY['activities/activity_7_20250509_071042.jpg'],
+                ARRAY['activities/thonburi_20250509_160902.jpg'],
                 5,
                 3,
                 4,
@@ -261,7 +261,7 @@ func Seed(db *gorm.DB) error {
                 15.00,
                 100,
                 50,
-                ARRAY['activities/activity_8_20250509_071042.jpg'],
+                ARRAY['activities/top_5_night_markets_bangkok_1_20250509_160901.jpg'],
                 7,
                 2,
                 1,
@@ -294,7 +294,10 @@ func Seed(db *gorm.DB) error {
                 50.00,
                 30,
                 30,
-                ARRAY['activities/activity_9_20250509_071042.jpg'],
+                ARRAY[
+									'activities/wat_phra_keaw_2_20250509_160901.jpg',
+									'activities/wat_phra_keaw_20250509_160901.jpg'
+								],
                 2,
                 3,
                 2,
@@ -327,7 +330,10 @@ func Seed(db *gorm.DB) error {
                 40.00,
                 25,
                 25,
-                ARRAY['activities/activity_10_20250509_071042.jpg'],
+                ARRAY[
+									'activities/food_tour_1_20250509_160901.jpg',
+									'activities/food_tour_2_20250509_160901.jpg'
+								],
                 9,
                 1,
                 3,
@@ -360,7 +366,7 @@ func Seed(db *gorm.DB) error {
 				35.00,
 				20,
 				20,
-				ARRAY['activities/activity_11_20250509_071042.jpg'],
+				ARRAY['activities/activity_5_min_20250509_114112.jpg'],
 				1,
 				2,
 				4,
@@ -393,7 +399,9 @@ func Seed(db *gorm.DB) error {
 				20.00,
 				50,
 				50,
-				ARRAY['activities/activity_12_20250509_071042.jpg'],
+				ARRAY[
+					'activities/asiatique_20250509_160954.jpg'
+				],
 				7,
 				3,
 				1,
@@ -426,7 +434,12 @@ func Seed(db *gorm.DB) error {
 				60.00,
 				15,
 				15,
-				ARRAY['activities/activity_13_20250509_071042.jpg'],
+				ARRAY[
+					'activities/temple_hopping_4_20250509_160954.jpg',
+					'activities/temple_hopping_3_20250509_160954.jpg',
+					'activities/temple_hopping_2_20250509_160954.jpg',
+					'activities/temple_hopping_20250509_160954.jpg'
+				],
 				2,
 				3,
 				2,
@@ -459,7 +472,11 @@ func Seed(db *gorm.DB) error {
 				10.00,
 				20,
 				20,
-				ARRAY['activities/activity_14_20250509_071042.jpg'],
+				ARRAY[
+					'activities/morning_yoga_3_20250509_160953.jpg',
+					'activities/morning_yoga_2_20250509_160954.jpg',
+					'activities/morning_yoga_1_20250509_160954.jpg'
+				],
 				10,
 				2,
 				4,
@@ -492,7 +509,12 @@ func Seed(db *gorm.DB) error {
 				25.00,
 				30,
 				30,
-				ARRAY['activities/activity_15_20250509_071042.jpg'],
+				ARRAY[
+					'activities/bacc_4_20250509_161030.jpg',
+					'activities/bacc_3_20250509_161030.jpg',
+					'activities/bacc_2_20250509_161030.jpg',
+					'activities/bacc_1_20250509_161030.jpg'
+				],
 				3,
 				3,
 				1,
@@ -525,7 +547,11 @@ func Seed(db *gorm.DB) error {
 				70.00,
 				50,
 				50,
-				ARRAY['activities/activity_16_20250509_071042.jpg'],
+				ARRAY[
+					'activities/cruise_3_20250509_161030.jpg',
+					'activities/cruise_1_20250509_161030.jpg',
+					'activities/cruise_2_20250509_161030.jpg'
+				],
 				5,
 				3,
 				2,
@@ -558,7 +584,12 @@ func Seed(db *gorm.DB) error {
 				45.00,
 				10,
 				10,
-				ARRAY['activities/activity_17_20250509_071042.jpg'],
+				ARRAY[
+					'activities/cooking_4_20250509_161029.jpg',
+					'activities/cooking_3_20250509_161030.jpg',
+					'activities/cooking_2_20250509_161030.jpg',
+					'activities/cooking_1_20250509_161030.jpg'
+				],
 				9,
 				1,
 				3,
@@ -591,7 +622,10 @@ func Seed(db *gorm.DB) error {
 				30.00,
 				25,
 				25,
-				ARRAY['activities/activity_18_20250509_071042.jpg'],
+				ARRAY[
+					'activities/floatingmarket_2_20250509_161108.jpg',
+					'activities/floatingmarket_1_20250509_161108.jpg'
+				],
 				7,
 				2,
 				4,
@@ -624,7 +658,10 @@ func Seed(db *gorm.DB) error {
 				20.00,
 				30,
 				30,
-				ARRAY['activities/activity_19_20250509_071042.jpg'],
+				ARRAY[
+					'activities/street_food_2_20250509_161108.jpg',
+					'activities/street_food_1_20250509_161108.jpg'
+				],
 				9,
 				1,
 				2,
@@ -657,7 +694,10 @@ func Seed(db *gorm.DB) error {
 				35.00,
 				20,
 				20,
-				ARRAY['activities/activity_20_20250509_071042.jpg'],
+				ARRAY[
+					'activities/historical_canal_2_20250509_161108.jpg',
+					'activities/historical_canal_1_20250509_161108.jpg'
+				],
 				2,
 				3,
 				4,
