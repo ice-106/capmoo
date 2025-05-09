@@ -68,14 +68,18 @@ export default function Page() {
       // Process the response
       const responseText = await response.text()
       let aiResponse = responseText
-
+      console.log('Response:', responseText)
       // Try to extract response from JSON if applicable
       try {
         const data = JSON.parse(responseText)
-        aiResponse = data.response || data.message || responseText
-      } catch {
-        // Keep the text response as is if not JSON
+        console.log('Parsed JSON:', data)
+        aiResponse = data.response
+        console.log('AI Response:', aiResponse)
+      } catch (jsonError) {
+        console.warn('Failed to parse JSON response:', jsonError)
       }
+
+      aiResponse = processEscapeSequences(aiResponse)
 
       // Add AI response to chat
       setMessages((prev) => [
@@ -154,4 +158,15 @@ export default function Page() {
       <Footer />
     </main>
   )
+}
+
+function processEscapeSequences(text: string): string {
+  // Replace literal "\n" with actual newlines
+  return text
+    .replace(/\\n/g, '\n')
+    .replace(/\\t/g, '\t')
+    .replace(/\\r/g, '\r')
+    .replace(/\\'/g, "'")
+    .replace(/\\"/g, '"')
+    .replace(/\\\\/g, '\\');
 }
