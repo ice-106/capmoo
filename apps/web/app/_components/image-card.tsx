@@ -34,7 +34,10 @@ const ImageCard: React.FC<ImageCardProps> = ({
   }
 
   return (
-    <div className='flex cursor-pointer flex-col gap-y-2' onClick={handleClick}>
+    <div
+      className='flex w-32 cursor-pointer flex-col gap-y-2'
+      onClick={handleClick}
+    >
       <div
         className={`bg-lightgrey relative flex-shrink-0 overflow-hidden rounded-2xl ${aspectRatioClasses[aspectRatio]}`}
       >

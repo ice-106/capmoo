@@ -6,15 +6,47 @@ import Header from '../../_components/header'
 import Footer from '../../_components/footer'
 import Carousel from '../../_components/carousel'
 import SearchBar from '../../_components/search-bar'
+import { useAxios } from '~/_lib/axios'
+import { useEffect, useState } from 'react'
 
 export default function Page() {
+  const axios = useAxios()
   const router = useRouter()
+
+  const [activities, setActivities] = useState<
+    | {
+        imgUrl: string
+        text: string
+        onClickUrl: string
+      }[]
+    | []
+  >([])
+
+  useEffect(() => {
+    const fetchActivities = async () => {
+      try {
+        const response = await axios.get('/v1/activities/search')
+
+        const mappedActivities = response.data.data.map((activity: any) => ({
+          imgUrl: activity.images[0],
+          text: activity.name,
+          onClickUrl: `/activity/${activity.id}/description`,
+        }))
+
+        setActivities(mappedActivities)
+      } catch (error) {
+        console.error('Error fetching activities:', error)
+      }
+    }
+
+    fetchActivities()
+  }, [])
 
   const imgArrayPopular = [
     {
-      "imgUrl": "/images/activity/user/activity_9.jpg",
-      "text": "Kayaking Along Nan River",
-      "onClickUrl": "/activity/9/description"
+      imgUrl: '/images/activity/user/activity_9.jpg',
+      text: 'Kayaking Along Nan River',
+      onClickUrl: '/activity/9/description',
     },
     {
       imgUrl: '/images/activity/user/activity_1.jpg',
@@ -50,14 +82,14 @@ export default function Page() {
       onClickUrl: '/activity/6/description',
     },
     {
-      "imgUrl": "/images/activity/user/activity_7.jpg",
-      "text": "Playing and Taking Pictures with Horse",
-      "onClickUrl": "/activity/7/description"
+      imgUrl: '/images/activity/user/activity_7.jpg',
+      text: 'Playing and Taking Pictures with Horse',
+      onClickUrl: '/activity/7/description',
     },
     {
-      "imgUrl": "/images/activity/user/activity_8.jpg",
-      "text": "River Seaweed Harvesting Adventure",
-      "onClickUrl": "/activity/8/description"
+      imgUrl: '/images/activity/user/activity_8.jpg',
+      text: 'River Seaweed Harvesting Adventure',
+      onClickUrl: '/activity/8/description',
     },
   ]
 
@@ -118,12 +150,12 @@ export default function Page() {
         />
         <Carousel
           header='Popular Activities'
-          images={imgArrayPopular}
+          images={activities}
           exploreLink='/discover'
         />
         <Carousel
           header='Upcoming Activities'
-          images={imgArrayUpcoming}
+          images={activities.reverse()}
           exploreLink='/discover'
         />
       </div>

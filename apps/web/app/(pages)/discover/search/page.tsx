@@ -70,7 +70,7 @@ export function SearchResultsPage() {
 
         // Map the response to the expected format for your frontend
         const formattedResults = response.data.data.map((activity: any) => ({
-          imgUrl: activity.imgUrl || '/images/activity/user/activity_9.jpg', // Replace with the actual image URL field from the backend
+          imgUrl: activity.images[0], // Replace with the actual image URL field from the backend
           text: activity.name, // Replace with the actual name field from the backend
           onClickUrl: `/activity/${activity.id}/description`, // Replace with the actual activity ID
         }))
@@ -98,7 +98,7 @@ export function SearchResultsPage() {
     if (formValues.searchTerm) params.append('q', formValues.searchTerm)
 
     if ((formValues.location ?? []).length > 0) {
-      ; (formValues.location ?? []).forEach((loc: string) => {
+      ;(formValues.location ?? []).forEach((loc: string) => {
         params.append('location', loc)
       })
     }
@@ -107,7 +107,7 @@ export function SearchResultsPage() {
     if (formValues.maxPrice) params.append('maxPrice', formValues.maxPrice)
 
     if ((formValues.categories ?? []).length > 0) {
-      ; (formValues.categories ?? []).forEach((cat: string) => {
+      ;(formValues.categories ?? []).forEach((cat: string) => {
         params.append('category', cat)
       })
     }
@@ -192,7 +192,7 @@ export function SearchResultsPage() {
       {isDrawerOpen && (
         <SearchDrawer
           value={queryParams.q}
-          onChange={() => { }}
+          onChange={() => {}}
           onSubmit={(formValues) => {
             handleSearch(formValues)
             closeSearchDrawer()

@@ -33,10 +33,10 @@ const PreviousActivitySelector: React.FC<PreviousActivitySelectorProps> = ({
         <CalendarClock className='text-darkgrey h-6 w-6' />
         {activityDate}
       </span>
-      <span className='flex gap-x-2'>
+      {/* <span className='flex gap-x-2'>
         <MapPin className='text-darkgrey h-6 w-6' />
         {activityLocation}
-      </span>
+      </span> */}
     </div>
   )
 }

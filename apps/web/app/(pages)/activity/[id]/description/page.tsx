@@ -15,8 +15,11 @@ interface ActivityData {
   name: string
   description: string
   price: number
-  location: string
-  startDateTime: string
+  location: {
+    province: string
+  }
+  start_date_time: string
+  images: string[]
 }
 
 export default function Page() {
@@ -38,35 +41,46 @@ export default function Page() {
     | []
   >([])
 
+  console.log(activityData)
+
   // Check if user has scheduled or archived this activity
   useEffect(() => {
-    if (!auth.isAuthenticated) return;
-    
+    const fetchActivityData = async () => {
+      try {
+        const response = await axios.get(`/v1/activities/${activityId}`)
+        setActivityData(response.data.data[0])
+      } catch (error) {
+        console.error('Error fetching activity data:', error)
+      }
+    }
+
+    fetchActivityData()
+
     const checkUserStatus = async () => {
       try {
         // Check scheduled activities
-        const scheduledResponse = await axios.get('/v1/activities/schedule');
+        const scheduledResponse = await axios.get('/v1/activities/schedule')
         if (scheduledResponse.data?.data) {
           const isInSchedule = scheduledResponse.data.data.some(
             (activity: any) => activity.id === activityId
-          );
-          setIsScheduled(isInSchedule);
+          )
+          setIsSavedToSchedule(isInSchedule)
         }
-        
+
         // Check archived activities
-        const archivedResponse = await axios.get('/v1/activities/archive');
+        const archivedResponse = await axios.get('/v1/activities/archive')
         if (archivedResponse.data?.data) {
           const isInArchive = archivedResponse.data.data.some(
             (activity: any) => activity.id === activityId
-          );
-          setIsArchived(isInArchive);
+          )
+          setIsSavedToArchive(isInArchive)
         }
       } catch (error) {
         console.error('Error fetching activity data:', error)
       }
     }
 
-    fetchActivityData(activityId)
+    checkUserStatus()
 
     const fetchSavedActivities = async () => {
       try {
@@ -119,30 +133,6 @@ export default function Page() {
     router.push(`/activity/${activityId}/booking`)
   }
 
-  const mockReviewData = [
-    {
-      profileImgUrl: '/images/default_profile.png',
-      userName: 'TungDudeCarryThailand',
-      reviewText:
-        'I had an amazing experience at Rongbom Rimnam! The horses were so friendly, and the location was beautiful. It was a great way to spend the day with friends and take some memorable photos. Highly recommend it for anyone looking to enjoy nature and animals!',
-      reviewUrl: '7',
-    },
-    {
-      profileImgUrl: '/images/default_profile.png',
-      userName: 'KikiLittleWitch',
-      reviewText:
-        "The river seaweed harvesting was such a fun and unique activity! I loved the bamboo raft ride, and it was so interesting learning about the local techniques. The guides were super knowledgeable and made the experience even better. I can't wait to come back for more adventures!",
-      reviewUrl: '8',
-    },
-    {
-      profileImgUrl: '/images/default_profile.png',
-      userName: 'MildWannaGoToSleep',
-      reviewText:
-        'Kayaking along Nan River was so peaceful and relaxing. The scenery was absolutely stunning, and paddling through the calm waters was a perfect way to unwind. Even as a beginner, I felt very comfortable, and the guides made sure we had an awesome time. Definitely worth the experience!',
-      reviewUrl: '9',
-    },
-  ]
-
   if (!activityData) {
     return <div>Not Found</div>
   }
@@ -150,17 +140,17 @@ export default function Page() {
   return (
     <main className='font-poppins w-full'>
       <NameSection
-        images={[{ src: '/images/default_profile.png' }]}
+        images={activityData.images.map((img) => ({ src: img }))}
         rating={5}
         name={activityData?.name || ''}
-        date={activityData?.startDateTime || ''}
-        location={activityData?.location || ''}
+        date={activityData?.start_date_time || ''}
+        location={activityData?.location.province || ''}
         price={activityData?.price?.toString().concat(' THB') || ''}
         onSaveArchive={async () => {
           try {
             await axios.post(`/v1/activities/archive/${activityId}`, {
               activityId: activityId,
-              startDateTime: activityData?.startDateTime,
+              startDateTime: activityData?.start_date_time,
             })
             setIsSavedToArchive(true)
           } catch (error) {
@@ -191,14 +181,14 @@ export default function Page() {
             />
           ))}
         </section>
-        
-        {previewReviews.length > 0 && (
+
+        {reviews.length > 0 && (
           <span className='text-lightgrey text-center text-xs'>
             That&apos;s all for now {':)'}
           </span>
         )}
       </div>
-      
+
       <FooterTemplate>
         <div className='flex gap-x-4'>
           <Button
@@ -210,7 +200,7 @@ export default function Page() {
               try {
                 await axios.post(`/v1/activities/schedule/${activityId}`, {
                   activityId: activityId,
-                  startDateTime: activityData?.startDateTime,
+                  startDateTime: activityData?.start_date_time,
                 })
                 setIsSavedToSchedule(true)
               } catch (error) {
@@ -223,18 +213,33 @@ export default function Page() {
             variant='orange'
             rounded='lg'
             onClick={handleBooking}
-            disabled={isSaving}
+            // disabled={isSaving}
           />
         </div>
-        
+
         {/* Archive button shown below the main buttons */}
-        <div className='mt-2 w-full text-center'>
+        {/* <div className='mt-2 w-full text-center'>
           <TextBtn
             text={isArchived ? 'Unarchive Activity' : 'Archive Activity'}
-            onClick={handleArchive}
+            onClick={async () => {
+              try {
+                if (isSavedToArchive) {
+                  await axios.delete(`/v1/activities/archive/${activityId}`)
+                  setIsSavedToArchive(false)
+                } else {
+                  await axios.post(`/v1/activities/archive/${activityId}`, {
+                    activityId: activityId,
+                    startDateTime: activityData?.startDateTime,
+                  })
+                  setIsSavedToArchive(true)
+                }
+              } catch (error) {
+                console.error('Error saving activity:', error)
+              }
+            }}
             className='text-sm text-gray-500'
           />
-        </div>
+        </div> */}
       </FooterTemplate>
     </main>
   )

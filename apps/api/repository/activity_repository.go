@@ -8,6 +8,7 @@ import (
 )
 
 type ActivityRepository interface {
+	CreateActivity(ctx context.Context, activity *model.Activity) error
 	GetCategories(ctx context.Context) ([]model.Category, error)
 	GetLocations(ctx context.Context) ([]model.Location, error)
 	GetActivityDetail(ctx context.Context, id uint) ([]model.Activity, error)
@@ -25,6 +26,13 @@ func NewActivityRepository(db *gorm.DB) *ActivityRepositoryImpl {
 }
 
 var _ ActivityRepository = &ActivityRepositoryImpl{}
+
+func (r *ActivityRepositoryImpl) CreateActivity(ctx context.Context, activity *model.Activity) error {
+	if err := r.db.WithContext(ctx).Create(activity).Error; err != nil {
+		return err
+	}
+	return nil
+}
 
 func (r *ActivityRepositoryImpl) GetCategories(ctx context.Context) ([]model.Category, error) {
 	var categories []model.Category
@@ -44,7 +52,7 @@ func (r *ActivityRepositoryImpl) GetLocations(ctx context.Context) ([]model.Loca
 
 func (r *ActivityRepositoryImpl) GetActivityDetail(ctx context.Context, id uint) ([]model.Activity, error) {
 	var activities []model.Activity
-	if err := r.db.WithContext(ctx).Preload("Location").Where("id = ?", id).Find(&activities).Error; err != nil {
+	if err := r.db.WithContext(ctx).Preload("Category").Preload("Host").Preload("Location").Where("id = ?", id).Find(&activities).Error; err != nil {
 		return nil, err
 	}
 	return activities, nil

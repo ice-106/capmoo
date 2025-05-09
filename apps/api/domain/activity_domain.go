@@ -9,6 +9,7 @@ import (
 )
 
 type ActivityDomain interface {
+	CreateActivity(ctx context.Context, activity *model.Activity) error
 	GetCategories(ctx context.Context) ([]model.Category, error)
 	GetLocations(ctx context.Context) ([]model.Location, error)
 	GetActivityDetail(ctx context.Context, id uint) ([]model.Activity, error)
@@ -25,6 +26,13 @@ func NewActivityDomain(activityRepository repository.ActivityRepository) *Activi
 	return &ActivityDomainImpl{
 		activityRepository: activityRepository,
 	}
+}
+
+func (d *ActivityDomainImpl) CreateActivity(ctx context.Context, activity *model.Activity) error {
+	if err := d.activityRepository.CreateActivity(ctx, activity); err != nil {
+		return fmt.Errorf("can't create activity from ActivityDomain: %w", err)
+	}
+	return nil
 }
 
 func (d *ActivityDomainImpl) GetCategories(ctx context.Context) ([]model.Category, error) {
