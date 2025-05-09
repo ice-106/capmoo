@@ -52,7 +52,7 @@ func (r *ActivityRepositoryImpl) GetLocations(ctx context.Context) ([]model.Loca
 
 func (r *ActivityRepositoryImpl) GetActivityDetail(ctx context.Context, id uint) ([]model.Activity, error) {
 	var activities []model.Activity
-	if err := r.db.WithContext(ctx).Preload("Location").Where("id = ?", id).Find(&activities).Error; err != nil {
+	if err := r.db.WithContext(ctx).Preload("Category").Preload("Host").Preload("Location").Where("id = ?", id).Find(&activities).Error; err != nil {
 		return nil, err
 	}
 	return activities, nil

@@ -2,6 +2,8 @@ package model
 
 import (
 	"time"
+
+	"github.com/lib/pq"
 )
 
 type Activity struct {
@@ -9,13 +11,13 @@ type Activity struct {
 
 	Name string `gorm:"not null"`
 
-	Description      string    `gorm:"not null"`
-	StartDateTime    time.Time `gorm:"not null"`
-	EndDateTime      time.Time `gorm:"not null"`
-	Price            float64   `gorm:"not null;default:0;check:price >= 0"`
-	RemainSlot       int       `gorm:"not null"`
-	MaxParticipation int       `gorm:"not null;default:0;check:max_participation > 0"`
-	Images           []string  `gorm:"type:text[];not null"`
+	Description      string         `gorm:"not null"`
+	StartDateTime    time.Time      `gorm:"not null"`
+	EndDateTime      time.Time      `gorm:"not null"`
+	Price            float64        `gorm:"not null;default:0;check:price >= 0"`
+	RemainSlot       int            `gorm:"not null"`
+	MaxParticipation int            `gorm:"not null;default:0;check:max_participation > 0"`
+	Images           pq.StringArray `gorm:"type:text[];not null"`
 
 	CategoryId     uint     `gorm:"not null"`
 	Category       Category `gorm:"foreignKey:CategoryId"`

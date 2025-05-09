@@ -162,7 +162,7 @@ func (h *ActivityHandler) GetActivityDetail(c *fiber.Ctx) error {
 	}
 
 	// Map activity detail to response DTO
-	response := make([]dto.GetActivityResponse, 0, len(activities))
+	response := make([]dto.GetActivityDetailResponse, 0, len(activities))
 	for _, activity := range activities {
 		presignedUrls := make([]string, 0, len(activity.Images))
 		for _, image := range activity.Images {
@@ -174,7 +174,7 @@ func (h *ActivityHandler) GetActivityDetail(c *fiber.Ctx) error {
 			presignedUrls = append(presignedUrls, presignedUrl)
 		}
 
-		response = append(response, dto.GetActivityResponse{
+		response = append(response, dto.GetActivityDetailResponse{
 			Id:               activity.Id,
 			CreatedAt:        activity.CreatedAt,
 			UpdatedAt:        activity.UpdatedAt,
@@ -186,6 +186,14 @@ func (h *ActivityHandler) GetActivityDetail(c *fiber.Ctx) error {
 			RemainSlot:       activity.RemainSlot,
 			MaxParticipation: activity.MaxParticipation,
 			Images:           presignedUrls,
+			Category: dto.GetCategoriesResponse{
+				Id:   activity.Category.Id,
+				Name: activity.Category.Name,
+			},
+			Location: dto.GetLocationsResponse{
+				Id:       activity.Location.Id,
+				Province: activity.Location.Province,
+			},
 		})
 	}
 

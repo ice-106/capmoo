@@ -90,17 +90,16 @@ func Seed(db *gorm.DB) error {
 			ON CONFLICT (name) DO NOTHING;
 			
 			INSERT INTO hosts (name, contact, is_verified, avg_rating, created_at, updated_at)
-			VALUES (
-				'John Doe',
-				'johndoe@example.com',
-				true,
-				4.5,
-				NOW(),
-				NOW()
+			SELECT 'John Doe', 'johndoe@example.com', true, 4.5, NOW(), NOW()
+			WHERE NOT EXISTS (
+				SELECT 1 FROM hosts WHERE name = 'John Doe' AND contact = 'johndoe@example.com'
 			);
 
 			INSERT INTO locations (district, province, country, latitude, longitude, created_at, updated_at)
-			VALUES ('Samyan', 'Bangkok', 'Thailand', 13.7563, 100.5018, NOW(), NOW());
+			SELECT 'Samyan', 'Bangkok', 'Thailand', 13.7563, 100.5018, NOW(), NOW()
+			WHERE NOT EXISTS (
+				SELECT 1 FROM locations WHERE district = 'Samyan' AND province = 'Bangkok' AND country = 'Thailand'
+			);
 			
 			INSERT INTO activities (
 				name,
@@ -117,7 +116,7 @@ func Seed(db *gorm.DB) error {
 				created_at,
 				updated_at
 			)
-			VALUES (
+			SELECT
 				'Dream World Bangkok Thrills, Snow & Fantasy',
 				'Dream World Bangkok is a vibrant amusement park offering over 40 rides and attractions spread across seven themed zones. From thrilling roller coasters to enchanting snow experiences, its a perfect destination for families and adventure enthusiasts.',
 				'2025-05-15 17:00:00',
@@ -131,6 +130,8 @@ func Seed(db *gorm.DB) error {
 				1,
 				NOW(),
 				NOW()
+			WHERE NOT EXISTS (
+				SELECT 1 FROM activities WHERE name = 'Dream World Bangkok Thrills, Snow & Fantasy' AND host_id = 1 AND location_id = 1
 			);
 		END $$;
 	`).Error; err != nil {

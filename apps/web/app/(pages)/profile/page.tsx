@@ -27,7 +27,7 @@ export default function ProfilePage() {
         const response = await axios.get('/v1/activities/archive')
         if (response.data.data.length > 0) {
           const activities = response.data.data.map((activity: any) => ({
-            imgUrl: '/images/activity/user/activity_3.jpg', // TODO: replace with activity.images after image upload is implemented
+            imgUrl: activity.images[0],
             text: activity.name,
             onClickUrl: `/activity/${activity.id}/description`,
           }))
