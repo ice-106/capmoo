@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"log/slog"
 	"strings"
 
 	"github.com/capmoo/api/api"
@@ -42,6 +43,7 @@ func (a *AuthMiddleware) Handler(c *fiber.Ctx) error {
 
 	userInfo, err := a.authDomain.ValidateAccessToken(authToken)
 	if err != nil {
+		slog.InfoContext(c.Context(), "authToken", slog.String("token", authToken), slog.Any("error", err))
 		return api.SendError(c, fiber.StatusUnauthorized, api.Error{
 			Code:    "INVALID_TOKEN",
 			Message: "Invalid access token",
