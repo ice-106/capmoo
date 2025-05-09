@@ -5,10 +5,12 @@ import (
 	"log/slog"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/capmoo/api/api"
 	"github.com/capmoo/api/domain"
 	"github.com/capmoo/api/dto"
+	"github.com/capmoo/api/model"
 	"github.com/capmoo/api/upload"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
@@ -30,6 +32,64 @@ func NewActivityHandler(activityDomain domain.ActivityDomain, uploadService *upl
 		userDomain:     userDomain,
 		reviewDomain:   reviewDomain,
 	}
+}
+
+func (h *ActivityHandler) CreateActivity(c *fiber.Ctx) error {
+	ctx := c.Context()
+
+	body := new(dto.CreateActivityRequest)
+	if err := c.BodyParser(body); err != nil {
+		slog.InfoContext(ctx, "Failed to parse request body", "error", err)
+		return api.BadInput(c)
+	}
+
+	if err := h.validator.Struct(body); err != nil {
+		slog.InfoContext(ctx, "Validation failed", "error", err)
+		return api.BadInput(c)
+	}
+
+	if err := h.activityDomain.CreateActivity(ctx, &model.Activity{
+		Name:             body.Name,
+		Description:      body.Description,
+		StartDateTime:    body.StartDateTime,
+		EndDateTime:      body.EndDateTime,
+		Price:            body.Price,
+		RemainSlot:       body.RemainSlot,
+		MaxParticipation: body.MaxParticipation,
+		Images:           body.Images,
+		CategoryId:       body.CategoryId,
+		LocationId:       body.LocationId,
+		HostId:           body.HostId,
+	}); err != nil {
+		slog.InfoContext(ctx, "Failed to create activity", "error", err)
+		return api.InternalServerError(c)
+	}
+
+	return api.OkNoContent(c)
+}
+
+func (h *ActivityHandler) UploadActivityImages(c *fiber.Ctx) error {
+	ctx := c.Context()
+
+	form, err := c.MultipartForm()
+	if err != nil {
+		slog.InfoContext(ctx, "Failed to parse multipart form", "error", err)
+		return api.BadInput(c)
+	}
+
+	images := form.File["images"]
+	if len(images) == 0 {
+		slog.InfoContext(ctx, "No images found in multipart form")
+		return api.BadInput(c)
+	}
+
+	imagePaths, err := h.uploadService.UploadMultipleFiles(ctx, images, "activities")
+	if err != nil {
+		slog.InfoContext(ctx, "Failed to upload images", "error", err)
+		return api.InternalServerError(c)
+	}
+
+	return api.Ok(c, imagePaths)
 }
 
 func (h *ActivityHandler) GetCategories(c *fiber.Ctx) error {
@@ -102,15 +162,30 @@ func (h *ActivityHandler) GetActivityDetail(c *fiber.Ctx) error {
 	}
 
 	// Map activity detail to response DTO
-	response := make([]dto.GetActivityDetailResponse, 0, len(activities))
+	response := make([]dto.GetActivityResponse, 0, len(activities))
 	for _, activity := range activities {
-		response = append(response, dto.GetActivityDetailResponse{
-			Id:            activity.Id,
-			Name:          activity.Name,
-			Description:   activity.Description,
-			Price:         activity.Price,
-			StartDateTime: activity.StartDateTime,
-			Location:      activity.Location.Province,
+		presignedUrls := make([]string, 0, len(activity.Images))
+		for _, image := range activity.Images {
+			presignedUrl, err := h.uploadService.GetPresignedURL(ctx, image, 60*time.Minute)
+			if err != nil {
+				slog.InfoContext(ctx, "Failed to get presigned URL", "error", err)
+				return api.InternalServerError(c)
+			}
+			presignedUrls = append(presignedUrls, presignedUrl)
+		}
+
+		response = append(response, dto.GetActivityResponse{
+			Id:               activity.Id,
+			CreatedAt:        activity.CreatedAt,
+			UpdatedAt:        activity.UpdatedAt,
+			Name:             activity.Name,
+			Description:      activity.Description,
+			StartDateTime:    activity.StartDateTime,
+			EndDateTime:      activity.EndDateTime,
+			Price:            activity.Price,
+			RemainSlot:       activity.RemainSlot,
+			MaxParticipation: activity.MaxParticipation,
+			Images:           presignedUrls,
 		})
 	}
 
@@ -173,13 +248,30 @@ func (h *ActivityHandler) GetFilteredActivities(c *fiber.Ctx) error {
 	}
 
 	// Map activities to response DTO
-	response := make([]dto.GetActivitiesResponse, 0, len(activities))
+	response := make([]dto.GetActivityResponse, 0, len(activities))
 	for _, activity := range activities {
-		response = append(response, dto.GetActivitiesResponse{
-			Id:         activity.Id,
-			Name:       activity.Name,
-			CategoryId: activity.CategoryId,
-			LocationId: activity.LocationId,
+		presignedUrls := make([]string, 0, len(activity.Images))
+		for _, image := range activity.Images {
+			presignedUrl, err := h.uploadService.GetPresignedURL(ctx, image, 60*time.Minute)
+			if err != nil {
+				slog.InfoContext(ctx, "Failed to get presigned URL", "error", err)
+				return api.InternalServerError(c)
+			}
+			presignedUrls = append(presignedUrls, presignedUrl)
+		}
+
+		response = append(response, dto.GetActivityResponse{
+			Id:               activity.Id,
+			CreatedAt:        activity.CreatedAt,
+			UpdatedAt:        activity.UpdatedAt,
+			Name:             activity.Name,
+			Description:      activity.Description,
+			StartDateTime:    activity.StartDateTime,
+			EndDateTime:      activity.EndDateTime,
+			Price:            activity.Price,
+			RemainSlot:       activity.RemainSlot,
+			MaxParticipation: activity.MaxParticipation,
+			Images:           presignedUrls,
 		})
 	}
 
@@ -216,6 +308,16 @@ func (h *ActivityHandler) GetArchivedUserActivities(c *fiber.Ctx) error {
 
 	response := make([]dto.GetActivityResponse, 0, len(activities))
 	for _, activity := range activities {
+		presignedUrls := make([]string, 0, len(activity.Images))
+		for _, image := range activity.Images {
+			presignedUrl, err := h.uploadService.GetPresignedURL(ctx, image, 60*time.Minute)
+			if err != nil {
+				slog.InfoContext(ctx, "Failed to get presigned URL", "error", err)
+				return api.InternalServerError(c)
+			}
+			presignedUrls = append(presignedUrls, presignedUrl)
+		}
+
 		response = append(response, dto.GetActivityResponse{
 			Id:               activity.Id,
 			CreatedAt:        activity.CreatedAt,
@@ -227,6 +329,7 @@ func (h *ActivityHandler) GetArchivedUserActivities(c *fiber.Ctx) error {
 			Price:            activity.Price,
 			RemainSlot:       activity.RemainSlot,
 			MaxParticipation: activity.MaxParticipation,
+			Images:           presignedUrls,
 		})
 	}
 
@@ -281,6 +384,16 @@ func (h *ActivityHandler) GetUserActivitySchedule(c *fiber.Ctx) error {
 
 	response := make([]dto.GetActivityResponse, 0, len(activities))
 	for _, activity := range activities {
+		presignedUrls := make([]string, 0, len(activity.Images))
+		for _, image := range activity.Images {
+			presignedUrl, err := h.uploadService.GetPresignedURL(ctx, image, 60*time.Minute)
+			if err != nil {
+				slog.InfoContext(ctx, "Failed to get presigned URL", "error", err)
+				return api.InternalServerError(c)
+			}
+			presignedUrls = append(presignedUrls, presignedUrl)
+		}
+
 		response = append(response, dto.GetActivityResponse{
 			Id:               activity.Id,
 			CreatedAt:        activity.CreatedAt,
@@ -292,6 +405,7 @@ func (h *ActivityHandler) GetUserActivitySchedule(c *fiber.Ctx) error {
 			Price:            activity.Price,
 			RemainSlot:       activity.RemainSlot,
 			MaxParticipation: activity.MaxParticipation,
+			Images:           presignedUrls,
 		})
 	}
 

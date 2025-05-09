@@ -63,6 +63,8 @@ func (v1 *V1Handler) RegisterSurveyRouter(r fiber.Router) {
 func (v1 *V1Handler) RegisterActivityRouter(r fiber.Router) {
 	activityRouter := r.Group("/activities")
 
+	activityRouter.Post("/", v1.activityHandler.CreateActivity)
+	activityRouter.Post("/upload", v1.activityHandler.UploadActivityImages)
 	activityRouter.Get("/search", v1.activityHandler.GetFilteredActivities)
 	activityRouter.Get("/locations", v1.activityHandler.GetLocations)
 	activityRouter.Get("/categories", v1.activityHandler.GetCategories)

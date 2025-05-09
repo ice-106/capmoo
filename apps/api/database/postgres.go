@@ -100,7 +100,7 @@ func Seed(db *gorm.DB) error {
 			);
 
 			INSERT INTO locations (district, province, country, latitude, longitude, created_at, updated_at)
-			VALUES ('District 1', 'Bangkok', 'Thailand', 13.7563, 100.5018, NOW(), NOW());
+			VALUES ('Samyan', 'Bangkok', 'Thailand', 13.7563, 100.5018, NOW(), NOW());
 			
 			INSERT INTO activities (
 				name,
@@ -110,6 +110,7 @@ func Seed(db *gorm.DB) error {
 				price,
 				remain_slot,
 				max_participation,
+				images,
 				category_id,
 				host_id,
 				location_id,
@@ -117,13 +118,14 @@ func Seed(db *gorm.DB) error {
 				updated_at
 			)
 			VALUES (
-				'Sunset Kayaking Tour',
-				'A guided kayaking tour through scenic coastal areas during sunset.',
-				'2025-06-15 17:00:00',
-				'2025-06-15 19:00:00',
+				'Dream World Bangkok Thrills, Snow & Fantasy',
+				'Dream World Bangkok is a vibrant amusement park offering over 40 rides and attractions spread across seven themed zones. From thrilling roller coasters to enchanting snow experiences, its a perfect destination for families and adventure enthusiasts.',
+				'2025-05-15 17:00:00',
+				'2025-05-15 19:00:00',
 				45.00,
-				10,
-				10,
+				1000,
+				30,
+				ARRAY['activities/activity_4_20250509_071042.jpg'],
 				1,
 				1,
 				1,
